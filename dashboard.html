@@ -1,0 +1,3332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — Caffernaum</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Material Symbols -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="styles.css">
+
+  <!-- Print Styles -->
+  <style>
+    @media print {
+      @page {
+        size: auto;
+        margin: 12mm;
+      }
+
+      body * {
+        visibility: hidden;
+      }
+      #receiptModal,
+      #receiptModal * {
+        visibility: visible;
+      }
+      #receiptModal {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        background: white;
+        padding: 0 !important;
+        margin: 0 !important;
+        display: block !important;
+      }
+      #receiptModal > div {
+        width: 100% !important;
+        max-width: none !important;
+        max-height: none !important;
+        height: auto !important;
+        overflow: visible !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        margin: 0 !important;
+      }
+      #receiptModal .sticky {
+        position: static !important;
+      }
+      #receiptModal #receiptContent {
+        overflow: visible !important;
+        max-height: none !important;
+      }
+      #receiptModal .bg-primary {
+        background-color: #cf7317 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      #receiptModal button {
+        display: none;
+      }
+    }
+  </style>
+
+  <!-- Tailwind Config -->
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            primary: "#cf7317",
+            forest: "#183022",
+            cream: "#FDFBF7",
+            "background-light": "#f8f7f6",
+            "background-dark": "#211911",
+          },
+          fontFamily: {
+            display: ["Plus Jakarta Sans", "sans-serif"]
+          },
+          borderRadius: {
+            DEFAULT: "0.25rem",
+            lg: "0.5rem",
+            xl: "0.75rem",
+            full: "9999px"
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: #f8f7f6;
+    }
+
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+
+    .nav-link {
+      position: relative;
+      padding-bottom: 0.5rem;
+      color: #64748b;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-link:hover {
+      color: #334155;
+    }
+
+    .nav-link.active {
+      color: #cf7317;
+      border-bottom: 2px solid #cf7317;
+    }
+
+    .logo-icon {
+      transition: transform 0.25s ease;
+    }
+
+    .logo-btn:hover .logo-icon {
+      transform: rotate(18deg);
+    }
+
+    .progress-ring {
+      transform: rotate(-90deg);
+    }
+
+    .progress-ring-circle {
+      transition: stroke-dashoffset 0.35s;
+      transform-origin: 50% 50%;
+    }
+
+    .offer-card {
+      border-radius: 1rem;
+      padding: 1rem;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    @media (min-width: 640px) {
+      .offer-card {
+        padding: 1.5rem;
+      }
+    }
+
+    .offer-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+
+    .quick-reorder-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.5rem;
+      border-radius: 0.75rem;
+      background: white;
+      margin-bottom: 0.75rem;
+      transition: box-shadow 0.2s;
+    }
+
+    @media (min-width: 640px) {
+      .quick-reorder-item {
+        gap: 1rem;
+        padding: 0.75rem;
+      }
+    }
+
+    .quick-reorder-item:hover {
+      box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.1);
+    }
+
+    .quick-reorder-item img {
+      width: 48px;
+      height: 48px;
+      border-radius: 0.5rem;
+      object-fit: cover;
+    }
+
+    @media (min-width: 640px) {
+      .quick-reorder-item img {
+        width: 56px;
+        height: 56px;
+      }
+    }
+
+    .settings-link {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem;
+      border-radius: 0.5rem;
+      color: #475569;
+      font-weight: 500;
+      transition: background-color 0.2s, color 0.2s;
+      font-size: 0.875rem;
+    }
+
+    @media (min-width: 640px) {
+      .settings-link {
+        padding: 0.875rem;
+        font-size: 1rem;
+      }
+    }
+
+    .settings-link:hover {
+      background-color: rgba(207, 115, 23, 0.05);
+      color: #cf7317;
+    }
+
+    /* Real-time update animations */
+    @keyframes dataUpdate {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+
+    @keyframes pulseScale {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+
+    .data-updating {
+      animation: dataUpdate 0.3s ease-in-out;
+    }
+
+    #bagCount {
+      transition: transform 0.2s, color 0.2s;
+    }
+
+    #bagCount.updated {
+      animation: pulseScale 0.3s ease-in-out;
+      color: #cf7317;
+    }
+
+    #memberName, #memberTierBadge, #memberBeansBadge {
+      transition: all 0.3s ease-in-out;
+    }
+
+    /* Toast notification for real-time updates */
+    .toast {
+      position: fixed;
+      bottom: 1rem;
+      right: 1rem;
+      background: linear-gradient(135deg, #183022 0%, #1a3d2e 100%);
+      color: white;
+      padding: 0.75rem 1rem;
+      border-radius: 0.75rem;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      opacity: 0;
+      transform: translateY(1rem);
+      transition: all 0.3s ease-in-out;
+      z-index: 1000;
+      pointer-events: none;
+      max-width: calc(100vw - 2rem);
+    }
+
+    @media (min-width: 640px) {
+      .toast {
+        bottom: 2rem;
+        right: 2rem;
+        padding: 1rem 1.5rem;
+      }
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .toast .toast-icon {
+      width: 8px;
+      height: 8px;
+      background: #4ade80;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7); }
+      50% { opacity: 0.8; box-shadow: 0 0 0 6px rgba(74, 222, 128, 0); }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="bg-white border-b border-gray-200 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4">
+      <div class="flex items-center justify-between flex-wrap gap-3">
+        <!-- Logo & Search -->
+        <div class="flex items-center gap-3 sm:gap-6 flex-1 min-w-0">
+          <button type="button" onclick="window.location.href='dashboard.html';" class="logo-btn inline-flex items-center justify-center cursor-pointer hover:scale-110 transition-all duration-300">
+            <span class="logo-icon material-symbols-outlined text-primary text-2xl sm:text-3xl">coffee_maker</span>
+          </button>
+          <button type="button" onclick="window.location.href='dashboard.html';" class="text-lg sm:text-xl font-bold text-gray-900 cursor-pointer hover:text-primary transition-all duration-300 bg-transparent border-none p-0">Caffernaum</button>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="hidden lg:flex items-center gap-8">
+          <button id="openMenuBtn" class="nav-link">Menu</button>
+          <a href="dashboard.html" class="nav-link active">Dashboard</a>
+        </nav>
+
+        <!-- Actions -->
+        <div class="flex items-center gap-2 sm:gap-4">
+          <!-- Mobile Menu Button -->
+          <button class="lg:hidden text-gray-700 hover:text-primary p-2 -mr-2" aria-label="Menu">
+            <span class="material-symbols-outlined">menu</span>
+          </button>
+          <button id="openBagBtn" class="relative bg-primary hover:bg-primary/90 text-white px-3 sm:px-5 py-2 rounded-full font-semibold transition-all flex items-center gap-1 sm:gap-2 text-sm sm:text-base">
+            <span class="material-symbols-outlined text-lg sm:text-2xl">shopping_bag</span>
+            <span class="hidden sm:inline">Bag</span>
+            <span id="bagCount">(0)</span>
+          </button>
+          <button id="logoutBtn" class="bg-red-600 hover:bg-red-700 text-white px-3 sm:px-4 py-2 rounded-lg font-semibold transition-all flex items-center gap-1 sm:gap-2 text-sm">
+            <span class="material-symbols-outlined text-lg">logout</span>
+            <span class="hidden sm:inline">Logout</span>
+          </button>
+          <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-primary/20 flex items-center justify-center cursor-pointer hover:bg-primary/30 transition-colors">
+            <span class="material-symbols-outlined text-primary">person</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
+      <!-- Main Column -->
+      <div class="lg:col-span-2 space-y-6 sm:space-y-8">
+        <!-- Hero Section -->
+        <div class="bg-gradient-to-br from-forest to-[#1a3d2e] rounded-xl sm:rounded-2xl p-6 sm:p-8 text-white relative overflow-hidden">
+          <div class="relative z-10">
+            <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2"><span id="timeGreeting">Good Morning</span>, <span id="memberName">Member</span>!</h1>
+            <p class="text-gray-300 mb-4 sm:mb-6 text-sm sm:text-base">Your morning brew is just a few taps away.</p>
+            
+            <div class="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6 flex-wrap">
+              <span class="bg-primary px-3 sm:px-4 py-1.5 rounded-full text-xs sm:text-sm font-bold uppercase tracking-wide" id="memberTierBadge">Gold Member</span>
+              <span class="bg-white/20 backdrop-blur-sm px-3 sm:px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold" id="memberBeansBadge">750 Beans</span>            <span class="flex items-center gap-1 bg-green-500/20 backdrop-blur-sm px-2 sm:px-3 py-1 rounded-full text-xs font-semibold">
+              <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+              <span class="text-green-300">Live</span>
+            </span>            </div>
+          </div>
+
+          <!-- Progress Circle -->
+          <div class="hidden sm:block absolute right-8 top-1/2 -translate-y-1/2">
+            <div class="relative">
+              <svg class="progress-ring" width="180" height="180">
+                <circle
+                  class="text-white/20"
+                  stroke="currentColor"
+                  stroke-width="12"
+                  fill="transparent"
+                  r="70"
+                  cx="90"
+                  cy="90"
+                />
+                <circle
+                  class="progress-ring-circle text-primary"
+                  stroke="currentColor"
+                  stroke-width="12"
+                  stroke-linecap="round"
+                  fill="transparent"
+                  r="70"
+                  cx="90"
+                  cy="90"
+                  id="progressCircle"
+                />
+              </svg>
+              <div class="absolute inset-0 flex flex-col items-center justify-center">
+                <div class="text-4xl font-bold" id="progressPercent">75%</div>
+                <div class="text-xs text-gray-300 uppercase tracking-wide">Progress</div>
+              </div>
+            </div>
+            <p class="text-center mt-4 text-sm text-gray-300" id="progressText">250 more to a free drink</p>
+          </div>
+        </div>
+
+        <!-- Personalized Offers -->
+        <div>
+          <div class="flex items-center justify-between mb-4 sm:mb-6">
+            <h2 class="text-xl sm:text-2xl font-bold text-gray-900">Personalized Offers</h2>
+            <a href="#" class="text-sm sm:text-base text-primary font-semibold hover:underline">View All</a>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+            <!-- Offer 1 -->
+            <div class="offer-card bg-[#FFF5E8]">
+              <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-[#FFE4C0] flex items-center justify-center mb-3 sm:mb-4">
+                <span class="material-symbols-outlined text-primary text-2xl sm:text-3xl">percent</span>
+              </div>
+              <h3 class="text-lg sm:text-xl font-bold text-gray-900 mb-2">20% Off Cold Brews</h3>
+              <p class="text-xs sm:text-sm text-gray-600 mb-3 sm:mb-4">Valid until this Friday. For Gold members only.</p>
+              <button class="text-primary font-bold text-xs sm:text-sm uppercase tracking-wide hover:underline transition-all">Claim Now</button>
+            </div>
+
+            <!-- Offer 2 -->
+            <div class="offer-card bg-[#E8F5F1]">
+              <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-[#C0E8DC] flex items-center justify-center mb-3 sm:mb-4">
+                <span class="material-symbols-outlined text-[#0D8A6B] text-2xl sm:text-3xl">cake</span>
+              </div>
+              <h3 class="text-lg sm:text-xl font-bold text-gray-900 mb-2">Free Birthday Pastry</h3>
+              <p class="text-xs sm:text-sm text-gray-600 mb-3 sm:mb-4">Happy Birthday month! Redeem at any store.</p>
+              <button class="text-[#0D8A6B] font-bold text-xs sm:text-sm uppercase tracking-wide hover:underline transition-all">Claim Now</button>
+            </div>
+
+            <!-- Offer 3 -->
+            <div class="offer-card bg-[#F0EBFF]">
+              <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-[#DDD0FF] flex items-center justify-center mb-3 sm:mb-4">
+                <span class="material-symbols-outlined text-[#7C3AED] text-2xl sm:text-3xl">double_arrow</span>
+              </div>
+              <h3 class="text-lg sm:text-xl font-bold text-gray-900 mb-2">Double Beans Tuesday</h3>
+              <p class="text-xs sm:text-sm text-gray-600 mb-3 sm:mb-4">Earn 2× Beans on all espresso drinks today.</p>
+              <button class="text-[#7C3AED] font-bold text-xs sm:text-sm uppercase tracking-wide hover:underline transition-all">Learn More</button>
+            </div>
+
+            <!-- Offer 4 -->
+            <div class="offer-card bg-[#FFF3E6]">
+              <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-[#FFE4C4] flex items-center justify-center mb-3 sm:mb-4">
+                <span class="material-symbols-outlined text-primary text-2xl sm:text-3xl">star</span>
+              </div>
+              <h3 class="text-lg sm:text-xl font-bold text-gray-900 mb-2">New Seasonal Blend</h3>
+              <p class="text-xs sm:text-sm text-gray-600 mb-3 sm:mb-4">Early access to Autumn Maple Roast.</p>
+              <button class="text-primary font-bold text-xs sm:text-sm uppercase tracking-wide hover:underline transition-all">Explore</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidebar -->
+      <div class="space-y-4 sm:space-y-6">
+        <!-- Quick Reorder -->
+        <div class="bg-white rounded-xl p-4 sm:p-6">
+          <div class="flex items-center gap-2 mb-4">
+            <span class="material-symbols-outlined text-primary">refresh</span>
+            <h3 class="text-lg sm:text-xl font-bold text-gray-900">Quick Reorder</h3>
+          </div>
+
+          <div id="quickReorderList" class="space-y-3 mb-4">
+            <div class="text-center py-8 text-gray-400">
+              <span class="material-symbols-outlined text-4xl mb-2">receipt_long</span>
+              <p class="text-sm">Loading your favorites...</p>
+            </div>
+          </div>
+
+          <button onclick="openOrderHistoryModal()" class="w-full border-2 border-primary text-primary font-semibold py-2.5 sm:py-3 rounded-xl hover:bg-primary/5 transition-colors text-sm sm:text-base">
+            View Order History
+          </button>
+        </div>
+
+        <!-- Account Links -->
+        <div class="bg-white rounded-xl p-4 sm:p-6 space-y-2">
+          <a id="accountSettingsLink" href="#" class="settings-link" onclick="openAccountSettings(); return false;">
+            <span class="material-symbols-outlined">settings</span>
+            <span>Account Settings</span>
+          </a>
+          <a href="#" class="settings-link" onclick="openAccountSettings(); switchTab('payment-methods'); return false;">
+            <span class="material-symbols-outlined">credit_card</span>
+            <span>Payment Methods</span>
+          </a>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Account Settings Section -->
+    <div class="max-w-[1200px] mx-auto w-full px-6 py-8" id="accountSettingsPanel" style="display: none;">
+      <!-- Profile Header -->
+      <div class="flex flex-col gap-2 mb-8">
+        <h1 class="text-4xl font-black leading-tight tracking-[-0.033em] text-slate-900 dark:text-slate-100">My Profile &amp; Activity</h1>
+        <p class="text-slate-500 dark:text-slate-400 text-lg">Manage your account settings, payment methods, and coffee journey.</p>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <div class="mb-8 border-b border-slate-200 dark:border-slate-800">
+        <div class="flex gap-8">
+          <button onclick="switchTab('order-history')" class="accountTab pb-4 border-b-2 border-primary text-primary font-bold text-sm tracking-wide transition-all" data-tab="order-history">ORDER HISTORY</button>
+          <button onclick="switchTab('payment-methods')" class="accountTab pb-4 border-b-2 border-transparent text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 font-bold text-sm tracking-wide transition-all" data-tab="payment-methods">PAYMENT METHODS</button>
+          <button onclick="switchTab('account-settings')" class="accountTab pb-4 border-b-2 border-transparent text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 font-bold text-sm tracking-wide transition-all" data-tab="account-settings">ACCOUNT SETTINGS</button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 gap-12">
+        <!-- Order History Section -->
+        <section id="order-history" class="accountTabContent">
+          <div class="flex items-center justify-between mb-6">
+            <h2 class="text-2xl font-bold text-slate-900 dark:text-slate-100">Recent Purchases</h2>
+            <button class="text-primary text-sm font-bold flex items-center gap-1 hover:underline">
+              Download all receipts <span class="material-symbols-outlined text-sm">download</span>
+            </button>
+          </div>
+          <div class="overflow-hidden rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-background-dark shadow-sm">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="bg-slate-50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-800">
+                  <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Order ID</th>
+                  <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Date</th>
+                  <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Items</th>
+                  <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Total</th>
+                  <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Status</th>
+                  <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Action</th>
+                </tr>
+              </thead>
+              <tbody id="orderHistoryTableBody" class="divide-y divide-slate-100 dark:divide-slate-800">
+                <tr class="hover:bg-slate-50 dark:hover:bg-slate-900/30 transition-colors">
+                  <td colspan="6" class="px-6 py-8 text-center text-slate-500 dark:text-slate-400">
+                    <span class="material-symbols-outlined text-4xl mb-2 block">shopping_bag</span>
+                    <p class="text-sm">Loading orders...</p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Payment Methods Section -->
+        <section id="payment-methods" class="accountTabContent hidden">
+          <h2 class="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-6">Saved Payment Methods</h2>
+          <div class="bg-white dark:bg-background-dark border border-slate-200 dark:border-slate-800 rounded-xl p-8 shadow-sm">
+            <form id="paymentMethodsForm" class="grid grid-cols-1 gap-8">
+              <div class="space-y-4">
+                <div class="flex items-center justify-between">
+                  <h3 class="text-lg font-bold text-slate-900 dark:text-slate-100">GCash</h3>
+                  <label class="inline-flex items-center gap-2 text-xs font-semibold text-slate-600">
+                    <input id="pmDefaultGcash" type="radio" name="defaultPaymentMethod" value="gcash" checked class="text-primary focus:ring-primary" />
+                    Default
+                  </label>
+                </div>
+              </div>
+
+              <div class="md:col-span-2 pt-4 flex justify-between items-center border-t border-slate-100 dark:border-slate-800">
+                <p id="paymentMethodsStatus" class="text-sm text-slate-500">Saved methods sync in real time.</p>
+                <button id="savePaymentMethodsBtn" type="submit" class="px-8 py-2.5 rounded-lg bg-primary text-white font-bold shadow-md shadow-primary/20 hover:bg-primary/90 transition-all">Save Payment Methods</button>
+              </div>
+            </form>
+          </div>
+        </section>
+
+        <!-- Account Settings Form Section -->
+        <section id="account-settings" class="accountTabContent hidden">
+          <h2 class="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-6">Account Settings</h2>
+          <div class="bg-white dark:bg-background-dark border border-slate-200 dark:border-slate-800 rounded-xl p-8 shadow-sm">
+            <form id="profileSettingsForm" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div class="flex flex-col gap-4">
+                <label class="flex flex-col gap-2">
+                  <span class="text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wide">First Name</span>
+                  <input id="firstName" class="rounded-lg border border-slate-200 dark:border-slate-700 bg-background-light dark:bg-slate-900 focus:ring-primary focus:border-primary py-3 px-4" type="text" placeholder="Loading..."/>
+                </label>
+                <label class="flex flex-col gap-2">
+                  <span class="text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wide">Last Name</span>
+                  <input id="lastName" class="rounded-lg border border-slate-200 dark:border-slate-700 bg-background-light dark:bg-slate-900 focus:ring-primary focus:border-primary py-3 px-4" type="text" placeholder="Loading..."/>
+                </label>
+                <label class="flex flex-col gap-2">
+                  <span class="text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wide">Email Address</span>
+                  <input id="emailAddress" class="rounded-lg border border-slate-200 dark:border-slate-700 bg-background-light dark:bg-slate-900 focus:ring-primary focus:border-primary py-3 px-4" type="email" disabled/>
+                </label>
+              </div>
+              <div class="flex flex-col gap-4">
+                <label class="flex flex-col gap-2">
+                  <span class="text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wide">New Password</span>
+                  <input id="newPassword" class="rounded-lg border border-slate-200 dark:border-slate-700 bg-background-light dark:bg-slate-900 focus:ring-primary focus:border-primary py-3 px-4" placeholder="••••••••" type="password"/>
+                </label>
+                <label class="flex flex-col gap-2">
+                  <span class="text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wide">Confirm New Password</span>
+                  <input id="confirmPassword" class="rounded-lg border border-slate-200 dark:border-slate-700 bg-background-light dark:bg-slate-900 focus:ring-primary focus:border-primary py-3 px-4" placeholder="••••••••" type="password"/>
+                </label>
+                <div class="mt-4 p-4 rounded-lg bg-primary/5 border border-primary/20">
+                  <div class="flex items-start gap-3">
+                    <span class="material-symbols-outlined text-primary">info</span>
+                    <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">Passwords must be at least 12 characters long and include uppercase and lowercase letters, numbers, and special characters for maximum security.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="md:col-span-2 pt-4 flex justify-end gap-4 border-t border-slate-100 dark:border-slate-800">
+                <button class="px-6 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 font-bold hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors" type="reset">Discard Changes</button>
+                <button id="saveSettingsBtn" class="px-8 py-2.5 rounded-lg bg-primary text-white font-bold shadow-md shadow-primary/20 hover:bg-primary/90 transition-all" type="submit">Save Profile Settings</button>
+              </div>
+            </form>
+          </div>
+        </section>
+
+        <!-- Coffee Journey Stats -->
+        <section class="pb-12" id="coffee-journey">
+          <h2 class="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-6">Your Coffee Journey</h2>
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div class="p-6 bg-forest text-white rounded-xl flex flex-col items-center justify-center text-center">
+              <span id="cupsBrewed" class="text-4xl font-black mb-1">0</span>
+              <span class="text-xs uppercase tracking-widest opacity-70">Cups Brewed</span>
+            </div>
+            <div class="p-6 bg-primary text-white rounded-xl flex flex-col items-center justify-center text-center">
+              <span id="regionsTasted" class="text-4xl font-black mb-1">0</span>
+              <span class="text-xs uppercase tracking-widest opacity-90">Regions Tasted</span>
+            </div>
+            <div class="p-6 bg-slate-100 dark:bg-slate-800 rounded-xl flex flex-col items-center justify-center text-center">
+              <span id="coffeeSaved" class="text-4xl font-black text-slate-900 dark:text-slate-100 mb-1">0kg</span>
+              <span class="text-xs uppercase tracking-widest text-slate-500">Coffee Saved</span>
+            </div>
+            <div class="p-6 bg-slate-100 dark:bg-slate-800 rounded-xl flex flex-col items-center justify-center text-center">
+              <span class="material-symbols-outlined text-primary text-4xl mb-1">workspace_premium</span>
+              <span id="memberTier" class="text-xs uppercase tracking-widest text-slate-500">Member</span>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <!-- Firebase & Auth Check -->
+  <script type="module">
+    import { auth, db, getDoc, doc, addDoc, collection, serverTimestamp, updateDoc, query, where, orderBy, limit, getDocs, onSnapshot, setDoc } from './firebase-config.js';
+    import { onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js';
+
+    let memberUnsubscribe = null;
+    let currentUser = null;
+    let isInitialLoad = true;
+    window.currentUser = null;
+
+    // Toast notification function
+    function showToast(message = 'Data synced') {
+      const toast = document.getElementById('syncToast');
+      const toastText = toast.querySelector('span');
+      toastText.textContent = message;
+      toast.classList.add('show');
+      console.log('🔄 Real-time update:', message);
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2000);
+    }
+
+    function updatePhilippineGreeting() {
+      const greetingEl = document.getElementById('timeGreeting');
+      if (!greetingEl) return;
+
+      const now = new Date();
+      const manilaTime = new Date(
+        now.toLocaleString('en-US', { timeZone: 'Asia/Manila' })
+      );
+      const hour = manilaTime.getHours();
+
+      let greeting = 'Good Evening';
+      if (hour >= 5 && hour < 12) {
+        greeting = 'Good Morning';
+      } else if (hour >= 12 && hour < 18) {
+        greeting = 'Good Afternoon';
+      } else if (hour >= 18 && hour < 22) {
+        greeting = 'Good Evening';
+      } else {
+        greeting = 'Good Night';
+      }
+
+      greetingEl.textContent = greeting;
+    }
+
+    updatePhilippineGreeting();
+    setInterval(updatePhilippineGreeting, 60000);
+
+    // Check authentication
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        // Not logged in, redirect to home
+        window.location.href = 'index.html';
+        return;
+      }
+
+      currentUser = user;
+      window.currentUser = user;
+
+      // Initialize member profile if it doesn't exist
+      const memberRef = doc(db, 'members', user.uid);
+      
+      // Check if member document exists, if not create it
+      getDoc(memberRef).then((docSnapshot) => {
+        if (!docSnapshot.exists()) {
+          // Create new member profile with initial data
+          const newMemberProfile = {
+            uid: user.uid,
+            email: user.email || '',
+            displayName: user.displayName || user.email?.split('@')[0] || 'Member',
+            rewardPoints: 0,
+            memberSince: serverTimestamp(),
+            tier: 'Bronze',
+            createdAt: new Date().toISOString()
+          };
+          
+          // Use setDoc with merge to avoid overwriting if it exists
+          setDoc(memberRef, newMemberProfile, { merge: true }).catch(err => {
+            console.log('Could not initialize member profile:', err.message);
+          });
+        }
+      });
+
+      // Set up real-time listener for member data
+      try {
+        
+        // Real-time listener for member document
+        memberUnsubscribe = onSnapshot(memberRef, (docSnapshot) => {
+          if (docSnapshot.exists()) {
+            const memberData = docSnapshot.data();
+            
+            // Update name in real-time
+            document.getElementById('memberName').textContent = memberData.displayName || 'Member';
+
+            // Store member info in localStorage for orders
+            localStorage.setItem('memberName', memberData.displayName || 'Member');
+            localStorage.setItem('memberEmail', memberData.email || '');
+            
+            // Update rewards from Firestore if available, otherwise localStorage
+            const firestorePoints =
+              memberData.rewardPoints ??
+              memberData.beans ??
+              memberData.points ??
+              memberData.rewardBeans ??
+              0;
+            const localPoints = parseInt(localStorage.getItem('rewardPoints')) || 0;
+            
+            // Use the higher value (in case of sync issues)
+            const currentPoints = Math.max(firestorePoints, localPoints);
+            
+            // Sync to localStorage
+            localStorage.setItem('rewardPoints', currentPoints.toString());
+            
+            updateRewardsDisplay(currentPoints);
+            updateCoffeeJourneyStats(memberData);
+
+            const journeyTierEl = document.getElementById('memberTier');
+            if (journeyTierEl) {
+              const journeyTier = currentPoints >= 1500 ? 'Gold' : (currentPoints >= 500 ? 'Silver' : 'Bronze');
+              journeyTierEl.textContent = `${journeyTier} Member`;
+            }
+
+            const computedTier = currentPoints >= 1500 ? 'Gold' : (currentPoints >= 500 ? 'Silver' : 'Bronze');
+            if (memberData.tier !== computedTier) {
+              updateDoc(memberRef, { tier: computedTier }).catch(err => {
+                console.error('Failed to sync member tier:', err);
+              });
+            }
+            
+            // Show toast notification (but not on initial load)
+            if (!isInitialLoad) {
+              showToast('Profile updated');
+            }
+            isInitialLoad = false;
+          }
+        }, (error) => {
+          console.error('Error listening to member data:', error);
+        });
+      } catch (error) {
+        console.error('Error setting up real-time listener:', error);
+      }
+    });
+
+    // Listen for localStorage changes from other tabs/windows
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'rewardPoints') {
+        const newPoints = parseInt(e.newValue) || 0;
+        updateRewardsDisplay(newPoints);
+      }
+    });
+
+    // Periodic check for localStorage changes in the same tab
+    let lastKnownPoints = parseInt(localStorage.getItem('rewardPoints')) || 0;
+    setInterval(() => {
+      const currentPoints = parseInt(localStorage.getItem('rewardPoints')) || 0;
+      if (currentPoints !== lastKnownPoints) {
+        lastKnownPoints = currentPoints;
+        updateRewardsDisplay(currentPoints);
+        showToast('Rewards updated');
+      }
+    }, 1000); // Check every second
+
+    function updateRewardsDisplay(points) {
+      // Tier system
+      const tiers = [
+        { name: 'Bronze', min: 0, max: 499, color: '#CD7F32' },
+        { name: 'Silver', min: 500, max: 1499, color: '#C0C0C0' },
+        { name: 'Gold', min: 1500, max: Infinity, color: '#cf7317' }
+      ];
+
+      const currentTier = tiers.find(t => points >= t.min && points <= t.max);
+      
+      // Update tier badge with animation
+      const tierBadge = document.getElementById('memberTierBadge');
+      const beansDisplay = document.getElementById('memberBeansBadge');
+      
+      // Add animation class for smooth transition
+      if (tierBadge.textContent !== `${currentTier.name} Member`) {
+        tierBadge.classList.add('data-updating');
+        setTimeout(() => tierBadge.classList.remove('data-updating'), 300);
+      }
+      
+      if (beansDisplay.textContent !== `${points} Beans`) {
+        beansDisplay.classList.add('data-updating');
+        setTimeout(() => beansDisplay.classList.remove('data-updating'), 300);
+      }
+      
+      tierBadge.textContent = `${currentTier.name} Member`;
+      tierBadge.style.backgroundColor = currentTier.color;
+
+      const journeyTierEl = document.getElementById('memberTier');
+      if (journeyTierEl) {
+        journeyTierEl.textContent = `${currentTier.name} Member`;
+      }
+
+      // Update beans
+      beansDisplay.textContent = `${points} Beans`;
+
+      // Calculate progress to next tier
+      let progressPercent = 0;
+      let pointsToNext = 0;
+
+      if (currentTier.name === 'Bronze') {
+        progressPercent = Math.round((points / 500) * 100);
+        pointsToNext = 500 - points;
+      } else if (currentTier.name === 'Silver') {
+        progressPercent = Math.round(((points - 500) / 1000) * 100);
+        pointsToNext = 1500 - points;
+      } else {
+        progressPercent = 100;
+        pointsToNext = 0;
+      }
+
+      // Update progress circle
+      const circle = document.getElementById('progressCircle');
+      const radius = 70;
+      const circumference = 2 * Math.PI * radius;
+      const offset = circumference - (progressPercent / 100) * circumference;
+      
+      circle.style.strokeDasharray = `${circumference} ${circumference}`;
+      circle.style.strokeDashoffset = offset;
+
+      // Update text
+      document.getElementById('progressPercent').textContent = `${progressPercent}%`;
+      
+      if (pointsToNext > 0) {
+        document.getElementById('progressText').textContent = `${pointsToNext} more to ${currentTier.name === 'Bronze' ? 'Silver' : 'Gold'} tier`;
+      } else {
+        document.getElementById('progressText').textContent = 'Max tier achieved!';
+      }
+    }
+
+    function updateCoffeeJourneyStats(memberData) {
+      const cupsBrewedEl = document.getElementById('cupsBrewed');
+      const regionsTastedEl = document.getElementById('regionsTasted');
+      const coffeeSavedEl = document.getElementById('coffeeSaved');
+
+      const stats = memberData?.stats || {};
+      const cupsBrewed = stats.cupsBrewed ?? memberData?.cupsBrewed ?? 0;
+      const regionsTasted = stats.regionsTasted ?? memberData?.regionsTasted ?? 0;
+      const coffeeSaved = stats.coffeeSaved ?? memberData?.coffeeSaved ?? 0;
+
+      if (cupsBrewedEl) cupsBrewedEl.textContent = cupsBrewed;
+      if (regionsTastedEl) regionsTastedEl.textContent = regionsTasted;
+      if (coffeeSavedEl) coffeeSavedEl.textContent = `${coffeeSaved}kg`;
+    }
+
+    function updateCoffeeJourneyFromOrders(orders) {
+      const cupsBrewedEl = document.getElementById('cupsBrewed');
+      const regionsTastedEl = document.getElementById('regionsTasted');
+      const coffeeSavedEl = document.getElementById('coffeeSaved');
+      if (!cupsBrewedEl || !regionsTastedEl || !coffeeSavedEl) return;
+
+      let totalQty = 0;
+      const uniqueItems = new Set();
+
+      orders.forEach(order => {
+        (order.items || []).forEach(item => {
+          const itemName = item?.product || item?.name || item?.title || item?.productName || item?.itemName || '';
+          const itemQty = item?.quantity ?? item?.qty ?? item?.count ?? 1;
+          totalQty += Number(itemQty) || 0;
+          if (itemName) uniqueItems.add(itemName);
+        });
+      });
+
+      const coffeeSavedKg = Math.round((totalQty * 0.25) * 10) / 10;
+
+      cupsBrewedEl.textContent = totalQty;
+      regionsTastedEl.textContent = uniqueItems.size;
+      coffeeSavedEl.textContent = `${coffeeSavedKg}kg`;
+    }
+
+    window.updateCoffeeJourneyFromOrders = updateCoffeeJourneyFromOrders;
+
+    // Initialize bagCount on page load
+    function initializeBagCount() {
+      const cart = JSON.parse(localStorage.getItem('caffeCart') || '[]');
+      const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+      const bagCountEl = document.getElementById('bagCount');
+      if (bagCountEl) {
+        bagCountEl.textContent = `(${totalItems})`;
+      }
+    }
+
+    initializeBagCount();
+
+    // Cleanup listener on page unload
+    window.addEventListener('beforeunload', () => {
+      if (memberUnsubscribe) {
+        memberUnsubscribe();
+      }
+    });
+
+    // Log real-time status
+    console.log('🔴 Dashboard in REAL-TIME mode');
+    console.log('📊 Monitoring: Member data, rewards points, shopping cart');
+  </script>
+
+  <!-- Menu Modal -->
+  <div id="menuModal" class="hidden fixed inset-0 z-40 bg-black/40 overflow-hidden">
+    <div class="fixed inset-0 bg-background-light dark:bg-background-dark flex flex-col max-h-screen">
+      <!-- Top Navigation Bar -->
+      <header class="sticky top-0 z-50 w-full bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md border-b border-primary/10 px-6 py-3">
+        <div class="max-w-[1600px] mx-auto flex items-center justify-between">
+          <div class="flex items-center gap-8">
+            <div class="flex items-center gap-3">
+              <div class="text-primary">
+                <span class="material-symbols-outlined text-3xl">coffee_maker</span>
+              </div>
+              <h1 class="text-xl font-bold tracking-tight">Caffernaum Menu</h1>
+            </div>
+          </div>
+          <div class="flex items-center gap-6">
+            <button id="closeMenuModal" class="text-2xl font-bold hover:text-primary transition-colors">&times;</button>
+          </div>
+        </div>
+      </header>
+
+      <main class="flex-1 flex overflow-hidden">
+        <!-- Left Sidebar: Categories -->
+        <aside class="w-64 overflow-y-auto border-r border-primary/10 p-6 flex flex-col gap-8">
+          <div>
+            <h3 class="text-xs font-bold uppercase tracking-widest text-primary/60 mb-4">Categories</h3>
+            <nav class="flex flex-col gap-1">
+              <a class="menu-category active flex items-center gap-3 px-4 py-3 rounded-xl active-category shadow-lg shadow-primary/20" data-category="hot" href="#">
+                <span class="material-symbols-outlined">coffee</span>
+                <span class="font-semibold text-sm">Hot Coffees</span>
+              </a>
+              <a class="menu-category flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-primary/5 text-slate-600 dark:text-slate-400 transition-all" data-category="existing" href="#">
+                <span class="material-symbols-outlined">favorite</span>
+                <span class="font-medium text-sm">Your Products</span>
+              </a>
+              <a class="menu-category flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-primary/5 text-slate-600 dark:text-slate-400 transition-all" data-category="pastries" href="#">
+                <span class="material-symbols-outlined">bakery_dining</span>
+                <span class="font-medium text-sm">Pastries</span>
+              </a>
+            </nav>
+          </div>
+        </aside>
+
+        <!-- Main Product Area -->
+        <section class="flex-1 p-8 overflow-y-auto">
+          <div class="flex items-center justify-between mb-8">
+            <div>
+              <h2 id="menuCategoryTitle" class="text-3xl font-bold">Hot Coffees</h2>
+              <p class="text-slate-500 dark:text-slate-400 mt-1">Freshly roasted beans, brewed to perfection.</p>
+            </div>
+          </div>
+
+          <!-- Product Grid -->
+          <div id="menuProductGrid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            <!-- Products will be inserted here by JS -->
+          </div>
+        </section>
+
+        <!-- Right Sidebar: Your Bag -->
+        <aside class="w-80 border-l border-primary/10 p-6 flex flex-col bg-white dark:bg-slate-900 overflow-hidden">
+          <div class="flex items-center justify-between mb-6">
+            <h3 class="text-lg font-bold">Your Bag</h3>
+            <span id="menuBagCount" class="bg-primary/10 text-primary text-xs font-bold px-2 py-1 rounded-md">0 Items</span>
+          </div>
+
+          <!-- Bag Items List -->
+          <div id="menuBagItems" class="flex-1 overflow-y-auto space-y-4">
+            <div class="flex flex-col items-center justify-center h-48 text-center text-slate-400">
+              <span class="material-symbols-outlined text-4xl mb-2 opacity-50">shopping_basket</span>
+              <p class="text-sm">Your bag is empty.<br>Select something delicious!</p>
+            </div>
+          </div>
+
+          <!-- Bag Footer -->
+          <div class="mt-6 space-y-4 border-t border-primary/10 pt-6">
+            <div class="space-y-2">
+              <div class="flex justify-between text-sm">
+                <span class="text-slate-500 dark:text-slate-400">Subtotal</span>
+                <span id="menuSubtotal" class="font-medium">₱0</span>
+              </div>
+              <div class="flex justify-between text-sm">
+                <span class="text-slate-500 dark:text-slate-400">Tax (12%)</span>
+                <span id="menuTax" class="font-medium">₱0</span>
+              </div>
+              <div class="flex justify-between text-lg font-bold border-t border-primary/5 pt-2 mt-2">
+                <span>Total</span>
+                <span id="menuTotal" class="text-primary">₱0</span>
+              </div>
+            </div>
+            <button onclick="openCheckout()" class="w-full bg-primary text-white py-4 rounded-xl font-bold text-base shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2">
+              Checkout Now
+              <span class="material-symbols-outlined">arrow_forward</span>
+            </button>
+            <p class="text-[10px] text-center text-slate-400 px-4 uppercase tracking-tighter">
+              Free pickup at Caffernaum within 15 mins.
+            </p>
+          </div>
+        </aside>
+      </main>
+    </div>
+  </div>
+
+  <!-- Shopping Cart / Order Modal -->
+  <div id="cartModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+    <div class="bg-white rounded-lg shadow-2xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+      <div class="sticky top-0 bg-forest text-white p-6 flex justify-between items-center">
+        <h2 class="text-2xl font-bold">Your Order</h2>
+        <button id="closeCart" class="text-2xl font-bold cursor-pointer">&times;</button>
+      </div>
+
+      <div class="p-6">
+        <div id="cartItems" class="space-y-4">
+          <p class="text-gray-500 text-center py-8">Your cart is empty</p>
+        </div>
+
+        <div class="mt-6 border-t pt-6">
+          <div class="flex justify-between text-xl font-bold mb-6">
+            <span>Total:</span>
+            <span id="cartTotal" class="text-primary">₱0</span>
+          </div>
+
+          <form id="checkoutForm" class="space-y-4">
+            <div>
+              <label class="block text-sm font-semibold mb-2">Full Name</label>
+              <input type="text" name="fullName" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
+            </div>
+            <div>
+              <label class="block text-sm font-semibold mb-2">Phone Number</label>
+              <input type="tel" name="phone" required inputmode="numeric" pattern="\d{11}" minlength="11" maxlength="11" placeholder="11-digit number" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" oninput="this.value=this.value.replace(/\D/g,'').slice(0,11)">
+            </div>
+            <div class="bg-primary/5 border border-primary/20 rounded-lg px-4 py-3">
+              <p class="text-xs font-semibold uppercase tracking-wide text-primary">Account Email</p>
+              <p id="checkoutAccountEmail" class="text-sm font-medium text-slate-700 mt-1">Using your signed-in email</p>
+            </div>
+            <div>
+              <label class="block text-sm font-semibold mb-2">Order Type</label>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <label class="flex items-center gap-3 p-3 border border-gray-300 rounded-lg cursor-pointer hover:border-primary transition-colors">
+                  <input type="radio" name="fulfillmentType" value="delivery" checked class="text-primary focus:ring-primary" />
+                  <div>
+                    <p class="font-semibold text-sm">Delivery</p>
+                    <p class="text-xs text-gray-500">Deliver to your address</p>
+                  </div>
+                </label>
+                <label class="flex items-center gap-3 p-3 border border-gray-300 rounded-lg cursor-pointer hover:border-primary transition-colors">
+                  <input type="radio" name="fulfillmentType" value="pickup" class="text-primary focus:ring-primary" />
+                  <div>
+                    <p class="font-semibold text-sm">Pick up</p>
+                    <p class="text-xs text-gray-500">Collect at Caffernaum</p>
+                  </div>
+                </label>
+              </div>
+            </div>
+            <div id="checkoutPaymentSection">
+              <label class="block text-sm font-semibold mb-2">Mode of Payment</label>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <label class="flex items-center gap-3 p-3 border border-gray-300 rounded-lg cursor-pointer hover:border-primary transition-colors">
+                  <input type="radio" name="paymentMethod" value="gcash" checked class="text-primary focus:ring-primary" />
+                  <div>
+                    <p class="font-semibold text-sm">GCash</p>
+                    <p class="text-xs text-gray-500">Scan the QR code to pay (no number needed)</p>
+                  </div>
+                </label>
+                <label class="flex items-center gap-3 p-3 border border-gray-300 rounded-lg cursor-pointer hover:border-primary transition-colors">
+                  <input type="radio" name="paymentMethod" value="cod" class="text-primary focus:ring-primary" />
+                  <div>
+                    <p class="font-semibold text-sm">Cash on Delivery</p>
+                    <p class="text-xs text-gray-500">can you please prepare the exact amount</p>
+                  </div>
+                </label>
+              </div>
+            </div>
+            <div id="gcashFields">
+              <div class="mt-4 rounded-xl border border-primary/20 bg-primary/5 p-4 text-center">
+                <p class="text-xs font-semibold uppercase tracking-wide text-primary">Owner GCash QR</p>
+                <img src="images/owner-gcash-qr.jpg" alt="Owner GCash QR code" onerror="this.onerror=null;this.src='images/owner-gcash-qr-placeholder.svg';" class="mx-auto mt-3 h-48 w-48 rounded-lg border border-white bg-white object-contain p-2 shadow-sm">
+                <p class="mt-3 text-xs text-gray-600">Scan this QR code to pay via GCash. No number entry required.</p>
+              </div>
+            </div>
+            <div id="deliveryFields">
+            <div>
+              <label class="block text-sm font-semibold mb-2">Street Address</label>
+              <input type="text" name="street" required placeholder="House / Unit and Street" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
+            </div>
+            <div>
+              <label class="block text-sm font-semibold mb-2">Barangay / Subdivision (Optional)</label>
+              <input type="text" name="street2" placeholder="Subdivision, Barangay" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-semibold mb-2">City / Municipality</label>
+                <input type="text" name="city" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
+              </div>
+              <div>
+                <label class="block text-sm font-semibold mb-2">Province</label>
+                <input type="text" name="province" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
+              </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-semibold mb-2">Postal Code</label>
+                <input type="text" name="postalCode" required inputmode="numeric" pattern="\d{4}" minlength="4" maxlength="4" placeholder="4-digit code" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
+              </div>
+              <div>
+                <label class="block text-sm font-semibold mb-2">Country</label>
+                <input type="text" name="country" required value="Philippines" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
+              </div>
+            </div>
+            </div>
+            <div>
+              <label id="scheduleTimeLabel" class="block text-sm font-semibold mb-2">Preferred Delivery Time</label>
+              <input type="datetime-local" name="deliveryTime" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
+              <p class="text-xs text-gray-500 mt-1">Available hours: Mon-Fri 7:00am-6:00pm, Sat-Sun 8:00am-8:00pm (max 10 cups per delivery hour).</p>
+              <p id="deliverySlotStatus" class="text-xs mt-1 text-gray-500">Select a preferred time to check live slot availability.</p>
+            </div>
+            <div>
+              <label class="block text-sm font-semibold mb-2">Special Instructions (Optional)</label>
+              <textarea name="notes" rows="2" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"></textarea>
+            </div>
+
+            <button type="submit" class="w-full bg-primary text-white py-3 rounded-lg font-bold text-lg hover:bg-opacity-90 transition">
+              Place Order
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Receipt Modal -->
+  <div id="receiptModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-lg shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+      <div class="sticky top-0 bg-primary text-white p-6 flex justify-between items-center rounded-t-lg">
+        <h2 class="text-2xl font-bold">Order Receipt</h2>
+        <button id="closeReceipt" class="text-2xl font-bold cursor-pointer">&times;</button>
+      </div>
+
+      <div class="p-6" id="receiptContent">
+        <!-- Receipt content will be inserted here -->
+      </div>
+
+      <div class="p-6 border-t space-y-3">
+        <button onclick="window.print()" class="w-full bg-forest text-white py-3 rounded-lg font-bold hover:bg-opacity-90 transition flex items-center justify-center gap-2">
+          <span class="material-symbols-outlined">print</span>
+          Print Receipt
+        </button>
+        <button onclick="closeReceiptModal()" class="w-full bg-gray-200 text-gray-800 py-3 rounded-lg font-bold hover:bg-gray-300 transition">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Order History Modal -->
+  <div id="orderHistoryModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-lg shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col">
+      <div class="sticky top-0 bg-forest text-white p-6 flex justify-between items-center">
+        <div class="flex items-center gap-3">
+          <span class="material-symbols-outlined text-3xl">receipt_long</span>
+          <h2 class="text-2xl font-bold">Order History</h2>
+        </div>
+        <button id="closeOrderHistory" class="text-2xl font-bold cursor-pointer hover:bg-white/10 px-2 rounded transition">&times;</button>
+      </div>
+
+      <div class="flex-1 overflow-y-auto p-6">
+        <div id="orderHistoryList" class="space-y-4">
+          <div class="text-center py-12 text-gray-400">
+            <span class="material-symbols-outlined text-5xl mb-3">history</span>
+            <p>Loading your order history...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Shopping Bag Modal -->
+  <div id="bagModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-end p-0">
+    <div class="bg-white h-full w-full sm:w-[500px] shadow-2xl flex flex-col">
+      <!-- Header -->
+      <div class="bg-forest text-white p-6">
+        <div class="flex items-center justify-between mb-2">
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-3xl">shopping_bag</span>
+            <h2 class="text-2xl font-bold">Your Bag</h2>
+          </div>
+          <button id="closeBagBtn" class="text-white hover:text-gray-300 transition-colors">
+            <span class="material-symbols-outlined text-3xl">close</span>
+          </button>
+        </div>
+        <p class="text-gray-300 text-sm" id="bagItemsCount">0 items selected</p>
+      </div>
+
+      <!-- Cart Items -->
+      <div class="flex-1 overflow-y-auto p-6" id="bagItemsContainer">
+        <div class="flex flex-col items-center justify-center h-full text-center text-gray-400">
+          <span class="material-symbols-outlined text-6xl mb-4 opacity-30">shopping_bag</span>
+          <p class="text-gray-500">Your bag is empty.<br>Start adding items!</p>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="border-t border-gray-200 p-6 bg-gray-50">
+        <div class="space-y-3 mb-4">
+          <div class="flex justify-between text-sm">
+            <span class="text-gray-600">Subtotal</span>
+            <span class="font-semibold" id="bagSubtotal">₱0.00</span>
+          </div>
+          <div class="flex justify-between text-sm">
+            <span class="text-gray-600">Estimated Tax</span>
+            <span class="font-semibold" id="bagTax">₱0.00</span>
+          </div>
+          <div class="flex justify-between text-xl font-bold pt-3 border-t">
+            <span>Total</span>
+            <span id="bagTotal">₱0.00</span>
+          </div>
+        </div>
+        
+        <button id="proceedCheckout" class="w-full bg-primary hover:bg-primary/90 text-white py-4 rounded-xl font-bold text-lg transition-all flex items-center justify-center gap-2 mb-3">
+          Proceed to Checkout
+          <span class="material-symbols-outlined">arrow_forward</span>
+        </button>
+        
+        <p class="text-center text-sm text-gray-400 uppercase tracking-wide" id="earnBeansText">Earn beans with this order</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Handler Functions Module Script -->
+  <script type="module">
+    import { auth, db, getDoc, doc, addDoc, collection, serverTimestamp, updateDoc, query, where, orderBy, limit, getDocs, onSnapshot, setDoc } from './firebase-config.js';
+
+    // This module runs in its own scope, so provide local fallbacks.
+    const showToast = (message = 'Data synced') => {
+      if (typeof window.showToast === 'function') {
+        window.showToast(message);
+        return;
+      }
+      console.log('Toast:', message);
+    };
+
+    const initializeBagCount = () => {
+      const bagCountEl = document.getElementById('bagCount');
+      if (!bagCountEl) return;
+      const cart = JSON.parse(localStorage.getItem('caffeCart') || '[]');
+      const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 0), 0);
+      bagCountEl.textContent = `(${totalItems})`;
+    };
+
+    let profileAutosaveTimer = null;
+    let passwordAutosaveTimer = null;
+    let lastSavedProfileName = "";
+    let lastSavedPassword = "";
+    let paymentMethodsUnsubscribe = null;
+    let savedPaymentMethods = {
+      defaultMethod: 'gcash'
+    };
+    const STRONG_PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{12,}$/;
+    const ORDER_LIMIT_PER_HOUR = 10;
+    function generateOrderNumber() {
+      const now = new Date();
+      const datePart = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}`;
+      const serialPart = String(now.getTime()).slice(-6);
+      return `CAF-${datePart}-${serialPart}`;
+    }
+    const PASTRY_PRODUCT_NAMES = new Set([
+      'Butter Croissant',
+      'Pain au Chocolat',
+      'Blueberry Muffin',
+      'Chocolate Brownie'
+    ]);
+    const BUSINESS_HOURS = {
+      weekday: { open: 7, close: 18 },
+      weekend: { open: 8, close: 20 }
+    };
+    let deliveryStatusRequestId = 0;
+
+    function parseDateTimeLocal(value) {
+      if (!value) return null;
+      const parsed = new Date(value);
+      return Number.isNaN(parsed.getTime()) ? null : parsed;
+    }
+
+    function getOpeningHoursForDate(date) {
+      const day = date.getDay();
+      const isWeekend = day === 0 || day === 6;
+      return isWeekend ? BUSINESS_HOURS.weekend : BUSINESS_HOURS.weekday;
+    }
+
+    function isWithinOpeningHours(date) {
+      const { open, close } = getOpeningHoursForDate(date);
+      const hourValue = date.getHours() + (date.getMinutes() / 60);
+      return hourValue >= open && hourValue < close;
+    }
+
+    function toHourLabel(hourValue) {
+      if (hourValue === 0) return '12am';
+      if (hourValue < 12) return `${hourValue}am`;
+      if (hourValue === 12) return '12pm';
+      return `${hourValue - 12}pm`;
+    }
+
+    function openingHoursLabel(date) {
+      const { open, close } = getOpeningHoursForDate(date);
+      return `${toHourLabel(open)}-${toHourLabel(close)}`;
+    }
+
+    function getStartOfHourTimestamp(date) {
+      const hourStart = new Date(date);
+      hourStart.setMinutes(0, 0, 0);
+      return hourStart.getTime();
+    }
+
+    function isPastryItem(item) {
+      const name = String(item?.product || item?.name || item?.title || item?.productName || item?.itemName || '').trim();
+      const category = String(item?.category || '').toLowerCase();
+      return category === 'pastries' || PASTRY_PRODUCT_NAMES.has(name);
+    }
+
+    function getCartCupCount(cartItems) {
+      return (cartItems || []).reduce((sum, item) => {
+        if (isPastryItem(item)) return sum;
+        return sum + (Number(item.quantity) || 0);
+      }, 0);
+    }
+
+    function isDeliveryOrderRecord(orderData) {
+      const topLevelType = String(orderData?.orderType || orderData?.fulfillmentType || '').toLowerCase();
+      const customerType = String(orderData?.customer?.fulfillmentType || '').toLowerCase();
+      return topLevelType === 'delivery' || customerType === 'delivery';
+    }
+
+    async function getBookedCupsForSlot(slotStartTimestamp) {
+      const slotEndTimestamp = slotStartTimestamp + (60 * 60 * 1000);
+      const slotQuery = query(
+        collection(db, 'orders'),
+        where('deliverySlotTimestamp', '>=', slotStartTimestamp),
+        where('deliverySlotTimestamp', '<', slotEndTimestamp)
+      );
+
+      const snapshot = await getDocs(slotQuery);
+      let bookedCups = 0;
+      snapshot.forEach((docSnap) => {
+        const data = docSnap.data();
+        if (!isDeliveryOrderRecord(data)) return;
+        const items = Array.isArray(data.items) ? data.items : [];
+        bookedCups += items.reduce((sum, item) => {
+          if (isPastryItem(item)) return sum;
+          return sum + (Number(item.quantity) || 0);
+        }, 0);
+      });
+      return bookedCups;
+    }
+
+    async function updateDeliverySlotStatus() {
+      const form = document.getElementById('checkoutForm');
+      const deliveryTimeInput = form?.querySelector('input[name="deliveryTime"]');
+      const statusEl = document.getElementById('deliverySlotStatus');
+      if (!deliveryTimeInput || !statusEl || !form) return;
+
+      const selectedValue = deliveryTimeInput.value;
+      if (!selectedValue) {
+        deliveryTimeInput.setCustomValidity('');
+        statusEl.className = 'text-xs mt-1 text-gray-500';
+        statusEl.textContent = 'Select a preferred time to check live slot availability.';
+        return;
+      }
+
+      const selectedDate = parseDateTimeLocal(selectedValue);
+      if (!selectedDate) {
+        deliveryTimeInput.setCustomValidity('Please enter a valid date and time.');
+        statusEl.className = 'text-xs mt-1 text-red-600';
+        statusEl.textContent = 'Please enter a valid date and time.';
+        return;
+      }
+
+      if (!isWithinOpeningHours(selectedDate)) {
+        deliveryTimeInput.setCustomValidity(`Time must be within opening hours (${openingHoursLabel(selectedDate)} on this day).`);
+        statusEl.className = 'text-xs mt-1 text-red-600';
+        statusEl.textContent = `Outside opening hours for this day (${openingHoursLabel(selectedDate)}).`;
+        return;
+      }
+
+      deliveryTimeInput.setCustomValidity('');
+      const fulfillmentType = form.querySelector('input[name="fulfillmentType"]:checked')?.value || 'delivery';
+      if (fulfillmentType !== 'delivery') {
+        statusEl.className = 'text-xs mt-1 text-green-700';
+        statusEl.textContent = 'Valid pick-up schedule within opening hours.';
+        return;
+      }
+
+      statusEl.className = 'text-xs mt-1 text-gray-500';
+      statusEl.textContent = 'Checking live slot availability...';
+
+      const requestId = ++deliveryStatusRequestId;
+      try {
+        const slotTimestamp = getStartOfHourTimestamp(selectedDate);
+        const bookedCups = await getBookedCupsForSlot(slotTimestamp);
+        if (requestId !== deliveryStatusRequestId) return;
+
+        const remaining = Math.max(0, ORDER_LIMIT_PER_HOUR - bookedCups);
+        if (remaining === 0) {
+          statusEl.className = 'text-xs mt-1 text-red-600';
+          statusEl.textContent = 'This hour is full (0/10 cups left). Please choose another time.';
+        } else {
+          statusEl.className = 'text-xs mt-1 text-green-700';
+          statusEl.textContent = `${remaining}/10 cups left for this delivery hour.`;
+        }
+      } catch (error) {
+        if (requestId !== deliveryStatusRequestId) return;
+        console.error('Error checking delivery slot availability:', error);
+        statusEl.className = 'text-xs mt-1 text-amber-700';
+        statusEl.textContent = 'Unable to fetch live slot availability right now.';
+      }
+    }
+
+    function updateProfileSaveButtonState(label, disabled = false) {
+      const saveBtn = document.getElementById('saveSettingsBtn');
+      if (!saveBtn) return;
+      saveBtn.textContent = label;
+      saveBtn.disabled = disabled;
+      saveBtn.classList.toggle('opacity-70', disabled);
+      saveBtn.classList.toggle('cursor-not-allowed', disabled);
+    }
+
+    async function autosaveProfileName() {
+      if (!currentUser) return;
+
+      const firstName = (document.getElementById('firstName')?.value || '').trim();
+      const lastName = (document.getElementById('lastName')?.value || '').trim();
+      if (!firstName) return;
+
+      const displayName = `${firstName}${lastName ? ' ' + lastName : ''}`;
+      if (displayName === lastSavedProfileName) return;
+
+      try {
+        updateProfileSaveButtonState('Saving...', true);
+        await updateDoc(doc(db, 'members', currentUser.uid), {
+          firstName,
+          lastName,
+          displayName,
+          updatedAt: serverTimestamp(),
+        });
+
+        lastSavedProfileName = displayName;
+        localStorage.setItem('memberName', displayName);
+
+        const memberNameEl = document.getElementById('memberName');
+        if (memberNameEl) memberNameEl.textContent = displayName;
+
+        updateProfileSaveButtonState('Saved', false);
+        setTimeout(() => updateProfileSaveButtonState('Save Profile Settings', false), 900);
+      } catch (error) {
+        console.error('Real-time profile autosave failed:', error);
+        updateProfileSaveButtonState('Save Profile Settings', false);
+      }
+    }
+
+    function scheduleProfileAutosave() {
+      if (profileAutosaveTimer) clearTimeout(profileAutosaveTimer);
+      updateProfileSaveButtonState('Saving...', true);
+      profileAutosaveTimer = setTimeout(() => {
+        autosaveProfileName();
+      }, 500);
+    }
+
+    async function autosaveProfilePassword() {
+      if (!currentUser) return;
+
+      const newPasswordInput = document.getElementById('newPassword');
+      const confirmPasswordInput = document.getElementById('confirmPassword');
+      if (!newPasswordInput || !confirmPasswordInput) return;
+
+      const newPassword = newPasswordInput.value;
+      const confirmPassword = confirmPasswordInput.value;
+
+      if (!newPassword || !confirmPassword) {
+        updateProfileSaveButtonState('Save Profile Settings', false);
+        return;
+      }
+
+      if (newPassword !== confirmPassword) {
+        updateProfileSaveButtonState('Passwords do not match', false);
+        return;
+      }
+
+      if (newPassword.length < 12) {
+        updateProfileSaveButtonState('Min 12 chars required', false);
+        return;
+      }
+
+      if (!STRONG_PASSWORD_REGEX.test(newPassword)) {
+        updateProfileSaveButtonState('Use upper/lower/num/symbol', false);
+        return;
+      }
+
+      if (newPassword === lastSavedPassword) {
+        updateProfileSaveButtonState('Save Profile Settings', false);
+        return;
+      }
+
+      try {
+        updateProfileSaveButtonState('Updating Password...', true);
+        const { updatePassword } = await import('https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js');
+        await updatePassword(currentUser, newPassword);
+
+        lastSavedPassword = newPassword;
+        newPasswordInput.value = '';
+        confirmPasswordInput.value = '';
+
+        updateProfileSaveButtonState('Password Updated', false);
+        setTimeout(() => updateProfileSaveButtonState('Save Profile Settings', false), 1100);
+      } catch (error) {
+        console.error('Real-time password update failed:', error);
+        if (error?.code === 'auth/requires-recent-login') {
+          updateProfileSaveButtonState('Re-login required', false);
+          showToast('Please re-login before changing password.');
+        } else {
+          updateProfileSaveButtonState('Save Profile Settings', false);
+        }
+      }
+    }
+
+    function schedulePasswordAutosave() {
+      if (passwordAutosaveTimer) clearTimeout(passwordAutosaveTimer);
+      passwordAutosaveTimer = setTimeout(() => {
+        autosaveProfilePassword();
+      }, 700);
+    }
+
+    function attachProfileRealtimeListeners() {
+      const firstNameInput = document.getElementById('firstName');
+      const lastNameInput = document.getElementById('lastName');
+      const newPasswordInput = document.getElementById('newPassword');
+      const confirmPasswordInput = document.getElementById('confirmPassword');
+      if (!firstNameInput || !lastNameInput) return;
+
+      if (firstNameInput.dataset.realtimeBound === 'true') return;
+
+      firstNameInput.addEventListener('input', scheduleProfileAutosave);
+      lastNameInput.addEventListener('input', scheduleProfileAutosave);
+
+      if (newPasswordInput && confirmPasswordInput) {
+        newPasswordInput.addEventListener('input', schedulePasswordAutosave);
+        confirmPasswordInput.addEventListener('input', schedulePasswordAutosave);
+      }
+
+      firstNameInput.dataset.realtimeBound = 'true';
+      lastNameInput.dataset.realtimeBound = 'true';
+    }
+
+    function normalizeDigits(value) {
+      return String(value || '').replace(/\D/g, '');
+    }
+
+    function applySavedPaymentMethodsToCheckout() {
+      const checkoutForm = document.getElementById('checkoutForm');
+      if (!checkoutForm) return;
+
+      const defaultMethod = savedPaymentMethods?.defaultMethod === 'card' ? 'gcash' : (savedPaymentMethods?.defaultMethod || 'gcash');
+      const methodRadio = checkoutForm.querySelector(`input[name="paymentMethod"][value="${defaultMethod}"]`);
+      if (methodRadio) methodRadio.checked = true;
+
+      updateCheckoutPaymentUI();
+    }
+
+    function updateCheckoutPaymentUI() {
+      const form = document.getElementById('checkoutForm');
+      if (!form) return;
+
+      const selectedType = form.querySelector('input[name="fulfillmentType"]:checked')?.value || 'delivery';
+      const method = form.querySelector('input[name="paymentMethod"]:checked')?.value || 'gcash';
+      const paymentSection = document.getElementById('checkoutPaymentSection');
+      const gcashFields = document.getElementById('gcashFields');
+      const paymentInputs = form.querySelectorAll('input[name="paymentMethod"]');
+
+      const isPickup = selectedType === 'pickup';
+      const isCod = method === 'cod';
+      if (paymentSection) paymentSection.classList.toggle('hidden', isPickup);
+      paymentInputs.forEach((input) => {
+        input.disabled = isPickup;
+        input.required = !isPickup;
+      });
+      if (gcashFields) gcashFields.classList.toggle('hidden', isPickup || isCod);
+    }
+
+    function setupPaymentMethods() {
+      if (!window.currentUser?.uid) return;
+
+      const memberRef = doc(db, 'members', window.currentUser.uid);
+
+      if (paymentMethodsUnsubscribe) {
+        paymentMethodsUnsubscribe();
+      }
+
+      paymentMethodsUnsubscribe = onSnapshot(memberRef, (snap) => {
+        if (!snap.exists()) return;
+        const data = snap.data() || {};
+        const payment = data.paymentMethods || {};
+
+        savedPaymentMethods = {
+          defaultMethod: payment.defaultMethod === 'card' ? 'gcash' : (payment.defaultMethod || 'gcash')
+        };
+
+        const pmDefaultGcash = document.getElementById('pmDefaultGcash');
+
+        if (pmDefaultGcash) pmDefaultGcash.checked = savedPaymentMethods.defaultMethod === 'gcash';
+
+        applySavedPaymentMethodsToCheckout();
+      });
+    }
+
+    async function savePaymentMethods(e) {
+      e.preventDefault();
+      if (!window.currentUser?.uid) return;
+
+      const saveBtn = document.getElementById('savePaymentMethodsBtn');
+      const status = document.getElementById('paymentMethodsStatus');
+
+      const defaultMethod = document.querySelector('input[name="defaultPaymentMethod"]:checked')?.value || 'gcash';
+
+      try {
+        if (saveBtn) {
+          saveBtn.disabled = true;
+          saveBtn.textContent = 'Saving...';
+        }
+
+        await setDoc(doc(db, 'members', window.currentUser.uid), {
+          paymentMethods: {
+            defaultMethod
+          },
+          updatedAt: serverTimestamp()
+        }, { merge: true });
+
+        if (status) status.textContent = 'Payment methods saved.';
+      } catch (error) {
+        console.error('Failed to save payment methods:', error);
+        if (status) status.textContent = 'Failed to save payment methods.';
+      } finally {
+        if (saveBtn) {
+          saveBtn.disabled = false;
+          saveBtn.textContent = 'Save Payment Methods';
+        }
+      }
+    }
+
+    // Menu Products Data
+    const menuProducts = {
+      hot: [
+        { name: 'Caramel Macchiato', price: 319, img: 'images/caramel macchiato.png' },
+        { name: 'Vanilla Latte', price: 475, img: 'images/warm vanila latte.png' },
+        { name: 'Cappuccino', price: 349, img: 'images/classic cappuccino with frothy milk.png' },
+        { name: 'Americano', price: 279, img: 'images/Americano coffee in a white ceramic mug.png' },
+        { name: 'Mocha', price: 399, img: 'images/Cafe mocha with chocolate shavings on top.png' },
+        { name: 'Flat White', price: 369, img: 'images/flat-white.jpg' }
+      ],
+      existing: [
+        { name: 'Spiced Honey Latte', price: 319, img: 'images/honey latter.png' },
+        { name: 'Cold Brew Tonic', price: 529, img: 'images/cold brew.png' },
+        { name: 'Maple Pecan Flat White', price: 549, img: 'images/maple-latte.webp' },
+        { name: 'Oak-Aged Espresso', price: 429, img: 'images/small espresso.png' }
+      ],
+      pastries: [
+        { name: 'Butter Croissant', price: 95, img: 'images/croissant.jpg' },
+        { name: 'Pain au Chocolat', price: 120, img: 'images/pain-au-chocolat.jpg' },
+        { name: 'Blueberry Muffin', price: 85, img: 'images/muffin.jpg' },
+        { name: 'Chocolate Brownie', price: 95, img: 'images/brownies.webp' }
+      ]
+    };
+
+    function renderMenuProducts(category) {
+      const grid = document.getElementById('menuProductGrid');
+      const products = menuProducts[category] || [];
+      const categoryTitles = {
+        hot: 'Hot Coffees',
+        existing: 'Your Products',
+        pastries: 'Pastries'
+      };
+      
+      document.getElementById('menuCategoryTitle').textContent = categoryTitles[category] || 'Menu';
+      
+      grid.innerHTML = products.map((product, idx) => `
+        <div class="group bg-white dark:bg-slate-900 rounded-2xl border border-primary/5 hover:border-primary/30 hover:shadow-xl hover:shadow-primary/5 transition-all p-4 flex flex-col">
+          <div class="relative aspect-square overflow-hidden rounded-xl mb-4 bg-gray-200">
+            ${product.img ? `<img src="${product.img}" alt="${product.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">` : `<div class="w-full h-full flex items-center justify-center text-gray-400">${product.name}</div>`}
+          </div>
+          <div class="flex-1">
+            <h4 class="text-lg font-bold text-slate-900 dark:text-slate-100">${product.name}</h4>
+            <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">${category === 'pastries' ? 'Premium quality pastry' : 'Premium quality coffee'}</p>
+          </div>
+          <div class="flex items-center justify-between mt-4">
+            <span class="text-lg font-bold text-primary">₱${product.price}</span>
+            <button class="menu-add-btn bg-primary text-white px-4 py-2 rounded-lg font-bold text-sm hover:bg-opacity-90 transition-all" data-product="${product.name}" data-price="${product.price}" data-img="${product.img || ''}">
+              Add to Bag
+            </button>
+          </div>
+        </div>
+      `).join('');
+
+      // Attach event listeners to new buttons
+      document.querySelectorAll('.menu-add-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const product = btn.dataset.product;
+          const price = parseInt(btn.dataset.price);
+          const img = btn.dataset.img;
+          
+          // Get cart from localStorage
+          let cart = JSON.parse(localStorage.getItem('caffeCart') || '[]');
+          const existingItem = cart.find(item => item.product === product);
+          
+          if (existingItem) {
+            existingItem.quantity += 1;
+          } else {
+            cart.push({ product, price, quantity: 1, img });
+          }
+          
+          localStorage.setItem('caffeCart', JSON.stringify(cart));
+          
+          // Trigger storage event for real-time sync
+          window.dispatchEvent(new Event('storage'));
+          
+          updateMenuBag();
+          btn.textContent = 'Added! ✓';
+          setTimeout(() => { btn.textContent = 'Add to Bag'; }, 2000);
+        });
+      });
+    }
+
+    function updateMenuBag() {
+      const container = document.getElementById('menuBagItems');
+      const total = document.getElementById('menuTotal');
+      const subtotal = document.getElementById('menuSubtotal');
+      const tax = document.getElementById('menuTax');
+      const count = document.getElementById('menuBagCount');
+      const headerBagCount = document.getElementById('bagCount');
+
+      // Get cart from localStorage
+      let cart = JSON.parse(localStorage.getItem('caffeCart') || '[]');
+
+      if (cart.length === 0) {
+        container.innerHTML = '<div class="flex flex-col items-center justify-center h-48 text-center text-slate-400"><span class="material-symbols-outlined text-4xl mb-2 opacity-50">shopping_basket</span><p class="text-sm">Your bag is empty.<br>Select something delicious!</p></div>';
+        total.textContent = '₱0';
+        subtotal.textContent = '₱0';
+        tax.textContent = '₱0';
+        count.textContent = '0 Items';
+        headerBagCount.textContent = '(0)';
+        return;
+      }
+
+      const subtotalAmount = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      const taxAmount = Math.round(subtotalAmount * 0.12);
+      const totalAmount = subtotalAmount + taxAmount;
+      const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+      container.innerHTML = cart.map((item, idx) => `
+        <div class="flex gap-3">
+          ${item.img ? `<div class="size-16 rounded-xl overflow-hidden border border-primary/10 flex-shrink-0 bg-gray-100"><img src="${item.img}" alt="${item.product}" class="w-full h-full object-cover"></div>` : ''}
+          <div class="flex-1">
+            <h5 class="text-sm font-bold">${item.product}</h5>
+            <p class="text-xs text-slate-500 dark:text-slate-400">₱${item.price}</p>
+          </div>
+          <div class="flex items-center border border-primary/10 rounded-lg overflow-hidden bg-primary/5">
+            <button class="menu-qty-btn px-2 py-0.5 hover:bg-primary/10 text-primary transition-colors text-sm" data-idx="${idx}" data-action="decrease">−</button>
+            <span class="px-2 text-xs font-bold">${item.quantity}</span>
+            <button class="menu-qty-btn px-2 py-0.5 hover:bg-primary/10 text-primary transition-colors text-sm" data-idx="${idx}" data-action="increase">+</button>
+          </div>
+          <button class="menu-remove-btn text-slate-400 hover:text-red-500 transition-colors" data-idx="${idx}">
+            <span class="material-symbols-outlined text-lg">delete</span>
+          </button>
+        </div>
+      `).join('');
+
+      subtotal.textContent = '₱' + subtotalAmount;
+      tax.textContent = '₱' + taxAmount;
+      total.textContent = '₱' + totalAmount;
+      count.textContent = cart.length + (cart.length === 1 ? ' Item' : ' Items');
+      headerBagCount.textContent = `(${totalItems})`;
+
+      // Update bagModal if it's open
+      if (!document.getElementById('bagModal').classList.contains('hidden')) {
+        renderBagModal();
+      }
+
+      // Attach event listeners for quantity buttons
+      document.querySelectorAll('.menu-qty-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const idx = parseInt(btn.dataset.idx);
+          const action = btn.dataset.action;
+          let cart = JSON.parse(localStorage.getItem('caffeCart') || '[]');
+          
+          if (action === 'increase') {
+            cart[idx].quantity += 1;
+          } else if (action === 'decrease') {
+            cart[idx].quantity -= 1;
+            if (cart[idx].quantity <= 0) {
+              cart.splice(idx, 1);
+            }
+          }
+          
+          localStorage.setItem('caffeCart', JSON.stringify(cart));
+          window.dispatchEvent(new Event('storage'));
+          updateMenuBag();
+        });
+      });
+
+      // Attach event listeners for remove buttons
+      document.querySelectorAll('.menu-remove-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          if (!confirmItemRemoval()) return;
+          const idx = parseInt(btn.dataset.idx);
+          let cart = JSON.parse(localStorage.getItem('caffeCart') || '[]');
+          cart.splice(idx, 1);
+          localStorage.setItem('caffeCart', JSON.stringify(cart));
+          window.dispatchEvent(new Event('storage'));
+          updateMenuBag();
+        });
+      });
+    }
+
+    // Menu modal event listeners
+    document.getElementById('openMenuBtn').addEventListener('click', () => {
+      // Toggle active state
+      document.getElementById('openMenuBtn').classList.add('active');
+      document.querySelector('a[href="dashboard.html"]').classList.remove('active');
+      
+      // Open menu modal
+      document.getElementById('menuModal').classList.remove('hidden');
+      renderMenuProducts('hot');
+      updateMenuBag();
+    });
+
+    document.getElementById('closeMenuModal').addEventListener('click', () => {
+      // Restore active state to Dashboard
+      document.getElementById('openMenuBtn').classList.remove('active');
+      document.querySelector('a[href="dashboard.html"]').classList.add('active');
+      
+      // Close menu modal
+      document.getElementById('menuModal').classList.add('hidden');
+    });
+
+    document.querySelectorAll('.menu-category').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        document.querySelectorAll('.menu-category').forEach(l => {
+          l.classList.remove('active-category', 'shadow-lg', 'shadow-primary/20', 'text-white');
+          l.classList.add('hover:bg-primary/5', 'text-slate-600', 'dark:text-slate-400');
+        });
+        link.classList.add('active-category', 'shadow-lg', 'shadow-primary/20', 'text-white');
+        link.classList.remove('hover:bg-primary/5', 'text-slate-600', 'dark:text-slate-400');
+        
+        const category = link.dataset.category;
+        renderMenuProducts(category);
+        updateMenuBag();
+      });
+    });
+
+    // Make functions globally accessible
+    window.renderMenuProducts = renderMenuProducts;
+    window.updateMenuBag = updateMenuBag;
+
+    // Bag Modal Functions
+    function openBagModal() {
+      document.getElementById('menuModal').classList.add('hidden');
+      document.getElementById('bagModal').classList.remove('hidden');
+      renderBagModal();
+    }
+
+    function closeBagModal() {
+      document.getElementById('bagModal').classList.add('hidden');
+    }
+
+    function openCheckout() {
+      document.getElementById('bagModal').classList.add('hidden');
+      document.getElementById('cartModal').classList.remove('hidden');
+      renderCart();
+      updateCheckoutFulfillmentUI();
+      applySavedPaymentMethodsToCheckout();
+      updateDeliverySlotStatus();
+      const checkoutAccountEmail = document.getElementById('checkoutAccountEmail');
+      if (checkoutAccountEmail) {
+        checkoutAccountEmail.textContent = localStorage.getItem('memberEmail') || window.currentUser?.email || 'Using your signed-in email';
+      }
+    }
+
+    function closeCheckout() {
+      document.getElementById('cartModal').classList.add('hidden');
+    }
+
+    function openCartModal() {
+      openCheckout();
+    }
+
+    function closeCartModal() {
+      closeCheckout();
+    }
+
+    function updateCheckoutFulfillmentUI() {
+      const form = document.getElementById('checkoutForm');
+      if (!form) return;
+
+      const selectedType = form.querySelector('input[name="fulfillmentType"]:checked')?.value || 'delivery';
+      const deliveryFields = document.getElementById('deliveryFields');
+      const scheduleLabel = document.getElementById('scheduleTimeLabel');
+      const addressInputs = form.querySelectorAll('input[name="street"], input[name="city"], input[name="province"], input[name="postalCode"], input[name="country"]');
+
+      const isPickup = selectedType === 'pickup';
+
+      if (deliveryFields) {
+        deliveryFields.classList.toggle('hidden', isPickup);
+      }
+
+      addressInputs.forEach((input) => {
+        input.required = !isPickup;
+      });
+
+      if (scheduleLabel) {
+        scheduleLabel.textContent = isPickup ? 'Preferred Pick-up Time' : 'Preferred Delivery Time';
+      }
+
+      updateCheckoutPaymentUI();
+      updateDeliverySlotStatus();
+    }
+
+    function confirmItemRemoval() {
+      return window.confirm('Are you sure you want to remove this item?');
+    }
+
+    function renderBagModal() {
+      const cart = JSON.parse(localStorage.getItem('caffeCart') || '[]');
+      const container = document.getElementById('bagItemsContainer');
+      const count = document.getElementById('bagItemsCount');
+      const subtotalEl = document.getElementById('bagSubtotal');
+      const taxEl = document.getElementById('bagTax');
+      const totalEl = document.getElementById('bagTotal');
+      const beansEl = document.getElementById('earnBeansText');
+
+      if (cart.length === 0) {
+        container.innerHTML = '<div class="flex flex-col items-center justify-center h-full text-center text-gray-400"><span class="material-symbols-outlined text-6xl mb-4 opacity-30">shopping_bag</span><p class="text-gray-500">Your bag is empty.<br>Start adding items!</p></div>';
+        count.textContent = '0 items selected';
+        subtotalEl.textContent = '₱0';
+        taxEl.textContent = '₱0';
+        totalEl.textContent = '₱0';
+        return;
+      }
+
+      const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      const tax = Math.round(subtotal * 0.12);
+      const total = subtotal + tax;
+      const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+      const earnedBeans = Math.round(total * 0.1);
+
+      container.innerHTML = cart.map((item, idx) => `
+        <div class="flex gap-4 pb-4 border-b border-gray-200">
+          ${item.img ? `<div class="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 bg-gray-200"><img src="${item.img}" alt="${item.product}" class="w-full h-full object-cover"></div>` : ''}
+          <div class="flex-1">
+            <h3 class="font-bold text-lg">${item.product}</h3>
+            <p class="text-sm text-gray-500 mb-2"></p>
+            <p class="text-primary font-bold">₱${item.price}</p>
+          </div>
+          <div class="flex flex-col items-end gap-2">
+            <div class="flex items-center border border-gray-300 rounded-lg">
+              <button onclick="updateCartQuantity(${idx}, ${item.quantity - 1})" class="px-2 py-1 text-gray-500 hover:text-primary">−</button>
+              <span class="px-3 font-bold">${item.quantity}</span>
+              <button onclick="updateCartQuantity(${idx}, ${item.quantity + 1})" class="px-2 py-1 text-gray-500 hover:text-primary">+</button>
+            </div>
+            <button onclick="removeCartItem(${idx})" class="text-red-500 text-sm font-bold uppercase">REMOVE</button>
+          </div>
+        </div>
+      `).join('');
+
+      count.textContent = totalItems + ' item' + (totalItems !== 1 ? 's' : '') + ' selected';
+      subtotalEl.textContent = '₱' + subtotal;
+      taxEl.textContent = '₱' + tax;
+      totalEl.textContent = '₱' + total;
+      beansEl.textContent = `EARN ${earnedBeans} BEANS WITH THIS ORDER`;
+    }
+
+    function renderCart() {
+      const container = document.getElementById('cartItems');
+      const total = document.getElementById('cartTotal');
+      let cart = JSON.parse(localStorage.getItem('caffeCart') || '[]');
+
+      if (cart.length === 0) {
+        container.innerHTML = '<p class="text-gray-500 text-center py-8">Your cart is empty</p>';
+        total.textContent = '₱0';
+        return;
+      }
+
+      const totalAmount = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+      container.innerHTML = cart.map((item, idx) => `
+        <div class="flex items-center justify-between bg-gray-100 p-4 rounded-lg">
+          <div>
+            <h3 class="font-semibold">${item.product}</h3>
+            <p class="text-primary text-lg">₱${item.price}</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="updateCartQuantity(${idx}, ${item.quantity - 1})" class="bg-gray-300 px-3 py-1 rounded">−</button>
+            <span class="w-8 text-center font-bold">${item.quantity}</span>
+            <button onclick="updateCartQuantity(${idx}, ${item.quantity + 1})" class="bg-gray-300 px-3 py-1 rounded">+</button>
+            <button onclick="removeCartItem(${idx})" class="ml-2 text-red-500 font-bold">Remove</button>
+          </div>
+        </div>
+      `).join('');
+
+      total.textContent = '₱' + totalAmount;
+    }
+
+    function updateCartQuantity(idx, newQuantity) {
+      let cart = JSON.parse(localStorage.getItem('caffeCart') || '[]');
+      if (newQuantity <= 0) {
+        cart.splice(idx, 1);
+      } else {
+        cart[idx].quantity = newQuantity;
+      }
+      localStorage.setItem('caffeCart', JSON.stringify(cart));
+      window.dispatchEvent(new Event('storage'));
+
+      updateMenuBag();
+      initializeBagCount();
+      
+      // Update whichever modal is open
+      if (!document.getElementById('bagModal').classList.contains('hidden')) {
+        renderBagModal();
+      } else if (!document.getElementById('cartModal').classList.contains('hidden')) {
+        renderCart();
+      }
+    }
+
+    function removeCartItem(idx) {
+      if (!confirmItemRemoval()) return;
+      let cart = JSON.parse(localStorage.getItem('caffeCart') || '[]');
+      cart.splice(idx, 1);
+      localStorage.setItem('caffeCart', JSON.stringify(cart));
+      window.dispatchEvent(new Event('storage'));
+      
+      // Update whichever modal is open
+      if (!document.getElementById('bagModal').classList.contains('hidden')) {
+        renderBagModal();
+      } else if (!document.getElementById('cartModal').classList.contains('hidden')) {
+        renderCart();
+      }
+    }
+
+    async function checkoutOrder(e) {
+      e.preventDefault();
+      const form = e.target;
+      const formData = new FormData(form);
+      let cart = JSON.parse(localStorage.getItem('caffeCart') || '[]');
+      
+      if (cart.length === 0) {
+        alert('Your cart is empty!');
+        return;
+      }
+
+      // Show loading state
+      const submitBtn = form.querySelector('button[type="submit"]');
+      const originalBtnText = submitBtn.innerHTML;
+      submitBtn.innerHTML = '<span class="material-symbols-outlined animate-spin">progress_activity</span> Processing...';
+      submitBtn.disabled = true;
+
+      const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      const tax = Math.round(subtotal * 0.12);
+      const totalAmount = subtotal + tax;
+
+      const fulfillmentType = formData.get('fulfillmentType') || 'delivery';
+      const isPickup = fulfillmentType === 'pickup';
+      const paymentMethod = isPickup ? 'Pay at Pickup' : (formData.get('paymentMethod') || 'gcash');
+      const selectedScheduleDate = parseDateTimeLocal(formData.get('deliveryTime'));
+      const orderNumber = generateOrderNumber();
+
+      if (!selectedScheduleDate) {
+        alert('Please select a valid preferred time.');
+        submitBtn.innerHTML = originalBtnText;
+        submitBtn.disabled = false;
+        return;
+      }
+
+      if (!isWithinOpeningHours(selectedScheduleDate)) {
+        alert(`Please select a time within opening hours (${openingHoursLabel(selectedScheduleDate)} on this day).`);
+        submitBtn.innerHTML = originalBtnText;
+        submitBtn.disabled = false;
+        return;
+      }
+
+      let deliverySlotTimestamp = null;
+      if (!isPickup) {
+        deliverySlotTimestamp = getStartOfHourTimestamp(selectedScheduleDate);
+        try {
+          const requestedCups = getCartCupCount(cart);
+          const bookedCups = await getBookedCupsForSlot(deliverySlotTimestamp);
+          if (bookedCups + requestedCups > ORDER_LIMIT_PER_HOUR) {
+            const remaining = Math.max(0, ORDER_LIMIT_PER_HOUR - bookedCups);
+            alert(`This delivery hour is full. Only ${remaining} cup(s) left in that slot. Please choose another time.`);
+            submitBtn.innerHTML = originalBtnText;
+            submitBtn.disabled = false;
+            return;
+          }
+        } catch (error) {
+          console.error('Error validating delivery slot capacity:', error);
+          alert('Unable to validate delivery slot capacity right now. Please try again.');
+          submitBtn.innerHTML = originalBtnText;
+          submitBtn.disabled = false;
+          return;
+        }
+      }
+      
+      const addressDetails = {
+        street: formData.get('street') || '',
+        street2: formData.get('street2') || '',
+        city: formData.get('city') || '',
+        province: formData.get('province') || '',
+        postalCode: formData.get('postalCode') || '',
+        country: formData.get('country') || ''
+      };
+      const addressParts = [
+        addressDetails.street,
+        addressDetails.street2,
+        addressDetails.city,
+        addressDetails.province,
+        addressDetails.postalCode,
+        addressDetails.country
+      ].filter(Boolean);
+      
+      // Get member info
+      const memberUid = localStorage.getItem('memberUid');
+      const memberEmail = localStorage.getItem('memberEmail');
+      const memberName = localStorage.getItem('memberName');
+      const signedInEmail = memberEmail || window.currentUser?.email || '';
+
+      if (!signedInEmail) {
+        alert('Unable to detect your account email. Please sign in again.');
+        submitBtn.innerHTML = originalBtnText;
+        submitBtn.disabled = false;
+        return;
+      }
+      
+      const order = {
+        orderNumber,
+        items: cart,
+        subtotal: subtotal,
+        tax: tax,
+        total: totalAmount,
+        status: 'new',
+        fulfillmentType,
+        ...(!isPickup && { deliverySlotTimestamp }),
+        paymentMethod,
+        memberUid: memberUid || null,
+        memberEmail: signedInEmail,
+        payment: {
+          method: paymentMethod,
+          gcashNumber: '',
+          codNote: !isPickup && paymentMethod === 'cod' ? 'can you please prepare the exact amount' : '',
+          status: 'pending',
+          paidAt: null
+        },
+        customer: {
+          name: formData.get('fullName'),
+          phone: formData.get('phone'),
+          email: signedInEmail,
+          fulfillmentType,
+          address: isPickup ? 'Pickup at Caffernaum' : addressParts.join(', '),
+          addressDetails: isPickup ? null : addressDetails,
+          deliveryTime: formData.get('deliveryTime'),
+          notes: formData.get('notes') || ''
+        },
+        createdAt: serverTimestamp(),
+        timestamp: Date.now(),
+        orderDate: new Date().toISOString()
+      };
+
+      try {
+        const docRef = await addDoc(collection(db, "orders"), order);
+        const orderId = docRef.id;
+        const pointsEarned = Math.floor(order.total * 0.1);
+        
+        console.log('✅ Order Placed:', orderId, order);
+        
+        // Generate and show receipt IMMEDIATELY
+        showReceipt({
+          orderId: order.orderNumber,
+          orderDate: new Date().toLocaleString('en-PH', { 
+            dateStyle: 'medium', 
+            timeStyle: 'short' 
+          }),
+          items: cart,
+          subtotal,
+          tax,
+          total: totalAmount,
+          customer: order.customer,
+          payment: order.payment,
+          pointsEarned,
+          memberName: memberName || order.customer.name
+        });
+        
+        // Clear cart and close IMMEDIATELY
+        localStorage.setItem('caffeCart', '[]');
+        window.dispatchEvent(new Event('storage'));
+        form.reset();
+        closeCartModal();
+        
+        // Reset button
+        submitBtn.innerHTML = originalBtnText;
+        submitBtn.disabled = false;
+
+        // Start real-time order tracking
+        startOrderTracking(orderId);
+
+        // Update member points in BACKGROUND (non-blocking)
+        if (memberUid) {
+          getDoc(doc(db, 'members', memberUid))
+            .then(memberSnap => {
+              if (memberSnap.exists()) {
+                const currentPoints = memberSnap.data().rewardPoints || 0;
+                const newPoints = currentPoints + pointsEarned;
+                return updateDoc(doc(db, 'members', memberUid), { rewardPoints: newPoints });
+              }
+            })
+            .then(() => {
+              localStorage.setItem('rewardPoints', String(parseInt(localStorage.getItem('rewardPoints')) || 0 + pointsEarned));
+              console.log('✅ Points updated in background');
+            })
+            .catch(err => console.log('⚠️ Background points error:', err.message));
+        }
+      } catch (error) {
+        console.error('❌ Error placing order:', error);
+        alert('Error placing order: ' + error.message);
+        submitBtn.innerHTML = originalBtnText;
+        submitBtn.disabled = false;
+      }
+    }
+
+    // Cart modal event listeners
+    document.getElementById('closeCart').addEventListener('click', closeCartModal);
+
+    // Receipt Modal Functions
+    function showReceipt(orderData) {
+      const receiptContent = document.getElementById('receiptContent');
+      const paymentMethodRaw = String(orderData.payment?.method || 'gcash').toLowerCase();
+      const paymentMethodLabel = paymentMethodRaw === 'cod'
+        ? 'Cash on Delivery'
+        : (paymentMethodRaw === 'pay at pickup' ? 'Pay at Pickup' : 'GCash');
+      const paymentStatusRaw = String(orderData.payment?.status || 'pending').toLowerCase();
+      const paymentStatusLabel = paymentStatusRaw === 'paid' ? 'PAID' : 'UNPAID';
+      const paymentStatusClasses = paymentStatusRaw === 'paid'
+        ? 'bg-emerald-100 text-emerald-700 border border-emerald-200'
+        : 'bg-amber-100 text-amber-700 border border-amber-200';
+      const paidAtValue = orderData.payment?.paidAt;
+      let paidAtText = 'Not yet confirmed';
+      if (paidAtValue?.toDate) {
+        paidAtText = paidAtValue.toDate().toLocaleString('en-PH', { dateStyle: 'medium', timeStyle: 'short' });
+      } else if (typeof paidAtValue === 'string' || typeof paidAtValue === 'number') {
+        const parsedPaidAt = new Date(paidAtValue);
+        if (!Number.isNaN(parsedPaidAt.getTime())) {
+          paidAtText = parsedPaidAt.toLocaleString('en-PH', { dateStyle: 'medium', timeStyle: 'short' });
+        }
+      }
+      
+      receiptContent.innerHTML = `
+        <div class="text-center mb-6 pb-6 border-b">
+          <div class="flex items-center justify-center gap-2 mb-2">
+            <span class="material-symbols-outlined text-4xl text-primary">coffee_maker</span>
+          </div>
+          <h3 class="text-2xl font-bold text-gray-900">Caffernaum</h3>
+          <p class="text-sm text-gray-600">Premium Coffee Experience</p>
+        </div>
+
+        <div class="mb-6 text-center">
+          <div class="inline-flex items-center gap-2 bg-green-100 text-green-800 px-4 py-2 rounded-full mb-3">
+            <span class="material-symbols-outlined animate-spin text-lg">progress_activity</span>
+            <span class="font-bold" data-order-status>${(orderData.status || 'new').toUpperCase()}</span>
+          </div>
+          <p class="text-sm text-gray-600">Order #${orderData.orderId}</p>
+          <p class="text-sm text-gray-600">${orderData.orderDate}</p>
+          <p class="text-xs text-gray-500 mt-2">🔴 Live Updates Enabled</p>
+        </div>
+
+        <div class="mb-6 pb-6 border-b">
+          <h4 class="font-bold text-gray-900 mb-3">Customer Details</h4>
+          <div class="space-y-1 text-sm">
+            <p><span class="text-gray-600">Name:</span> <span class="font-semibold">${orderData.customer.name}</span></p>
+            <p><span class="text-gray-600">Email:</span> ${orderData.customer.email}</p>
+            <p><span class="text-gray-600">Phone:</span> ${orderData.customer.phone}</p>
+            <p><span class="text-gray-600">Order Type:</span> ${orderData.customer.fulfillmentType === 'pickup' ? 'Pick up' : 'Delivery'}</p>
+            <p><span class="text-gray-600">Payment:</span> ${paymentMethodLabel}</p>
+            <p class="flex items-center justify-between"><span class="text-gray-600">Payment Status:</span><span data-payment-status class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold uppercase ${paymentStatusClasses}">${paymentStatusLabel}</span></p>
+            <p><span class="text-gray-600">Paid At:</span> <span data-payment-paid-at>${paidAtText}</span></p>
+            <p><span class="text-gray-600">Address:</span> ${orderData.customer.address}</p>
+            <p><span class="text-gray-600">${orderData.customer.fulfillmentType === 'pickup' ? 'Pick-up Time' : 'Delivery Time'}:</span> ${orderData.customer.deliveryTime}</p>
+            ${orderData.customer.notes ? `<p><span class="text-gray-600">Notes:</span> ${orderData.customer.notes}</p>` : ''}
+          </div>
+        </div>
+
+        <div class="mb-6 pb-6 border-b">
+          <h4 class="font-bold text-gray-900 mb-3">Order Items</h4>
+          <div class="space-y-3">
+            ${orderData.items.map(item => `
+              <div class="flex justify-between text-sm">
+                <div class="flex-1">
+                  <p class="font-semibold">${item.product || item.name || item.title || item.productName || item.itemName || 'Item'}</p>
+                  <p class="text-gray-600">₱${item.price || 0} × ${item.quantity || 1}</p>
+                </div>
+                <p class="font-semibold">₱${(item.price || 0) * (item.quantity || 1)}</p>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+
+        <div class="mb-6 pb-6 border-b space-y-2">
+          <div class="flex justify-between text-sm">
+            <span class="text-gray-600">Subtotal</span>
+            <span class="font-medium">₱${orderData.subtotal}</span>
+          </div>
+          <div class="flex justify-between text-sm">
+            <span class="text-gray-600">Tax (12%)</span>
+            <span class="font-medium">₱${orderData.tax}</span>
+          </div>
+          <div class="flex justify-between text-xl font-bold pt-2">
+            <span>Total</span>
+            <span class="text-primary">₱${orderData.total}</span>
+          </div>
+        </div>
+
+        <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
+          <div class="flex items-start gap-3">
+            <span class="material-symbols-outlined text-yellow-600">stars</span>
+            <div>
+              <p class="font-bold text-yellow-900">Rewards Earned!</p>
+              <p class="text-sm text-yellow-800">You earned <span class="font-bold">${orderData.pointsEarned} beans</span> from this order.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="text-center text-sm text-gray-600">
+          <p class="mb-2">Thank you for your order, ${orderData.memberName}!</p>
+          <p>We'll contact you shortly at ${orderData.customer.phone}</p>
+          <p class="mt-4 text-xs text-gray-500">A copy of this receipt has been sent to ${orderData.customer.email}</p>
+        </div>
+      `;
+
+      document.getElementById('receiptModal').classList.remove('hidden');
+    }
+
+    function closeReceiptModal() {
+      document.getElementById('receiptModal').classList.add('hidden');
+    }
+
+    // Receipt modal event listeners
+    document.getElementById('closeReceipt').addEventListener('click', closeReceiptModal);
+
+    // Order History Functions
+    let orderHistoryUnsubscribe = null;
+
+    async function loadQuickReorder() {
+      const memberUid = localStorage.getItem('memberUid');
+      if (!memberUid) {
+        document.getElementById('quickReorderList').innerHTML = `
+          <div class="text-center py-6 text-gray-400">
+            <span class="material-symbols-outlined text-4xl mb-2">receipt_long</span>
+            <p class="text-sm">Login to see your favorites</p>
+          </div>
+        `;
+        return;
+      }
+
+      try {
+        // Get recent orders for this user
+        const ordersQuery = query(
+          collection(db, 'orders'),
+          where('memberUid', '==', memberUid),
+          orderBy('timestamp', 'desc'),
+          limit(10)
+        );
+
+        // Set up real-time listener
+        onSnapshot(ordersQuery, (snapshot) => {
+          const orderedDocs = snapshot.docs;
+          if (orderedDocs.length === 0) {
+            document.getElementById('quickReorderList').innerHTML = `
+              <div class="text-center py-6 text-gray-400">
+                <span class="material-symbols-outlined text-4xl mb-2">shopping_bag</span>
+                <p class="text-sm">No orders yet. Start shopping!</p>
+              </div>
+            `;
+            return;
+          }
+
+          // Get unique items from the most recent order
+          const latestOrder = orderedDocs[0].data();
+          const items = latestOrder.items || [];
+          
+          // Get up to 3 most recent unique items
+          const uniqueItems = items.slice(0, 3);
+
+          if (uniqueItems.length === 0) {
+            document.getElementById('quickReorderList').innerHTML = `
+              <div class="text-center py-6 text-gray-400">
+                <span class="material-symbols-outlined text-4xl mb-2">receipt_long</span>
+                <p class="text-sm">No items to reorder</p>
+              </div>
+            `;
+            return;
+          }
+
+          document.getElementById('quickReorderList').innerHTML = uniqueItems.map(item => `
+            <div class="quick-reorder-item">
+              ${item.img ? `<img src="${item.img}" alt="${item.product}" onerror="this.src='https://via.placeholder.com/56x56/cf7317/ffffff?text=Coffee'">` : '<div class="w-14 h-14 bg-primary/10 rounded-lg flex items-center justify-center"><span class="material-symbols-outlined text-primary">coffee</span></div>'}
+              <div class="flex-1 min-w-0">
+                <h4 class="font-semibold text-gray-900 text-sm">${item.product}</h4>
+                <p class="text-xs text-gray-500">Qty: ${item.quantity}</p>
+                <p class="text-primary font-bold text-sm mt-1">₱${item.price}</p>
+              </div>
+              <button onclick="reorderItem('${item.product.replace(/'/g, "\\'")}', ${item.price}, '${(item.customization || '').replace(/'/g, "\\'")}', '${(item.img || '').replace(/'/g, "\\'")}', ${item.quantity})" class="text-primary hover:bg-primary/10 p-1.5 sm:p-2 rounded-lg transition-colors">
+                <span class="material-symbols-outlined text-xl sm:text-2xl">shopping_cart</span>
+              </button>
+            </div>
+          `).join('');
+        }, (error) => {
+          console.error('Error loading quick reorder:', error);
+          document.getElementById('quickReorderList').innerHTML = `
+            <div class="text-center py-6 text-gray-400">
+              <span class="material-symbols-outlined text-4xl mb-2">error</span>
+              <p class="text-sm">Error loading favorites</p>
+            </div>
+          `;
+        });
+      } catch (error) {
+        console.error('Error loading quick reorder:', error);
+      }
+    }
+
+    function reorderItem(product, price, customization, img, quantity) {
+      // Add item to cart
+      let cart = JSON.parse(localStorage.getItem('caffeCart') || '[]');
+      const existingItem = cart.find(item => item.product === product);
+      
+      if (existingItem) {
+        existingItem.quantity += quantity || 1;
+      } else {
+        cart.push({ 
+          product, 
+          price, 
+          quantity: quantity || 1, 
+          customization: customization || '',
+          img 
+        });
+      }
+      
+      localStorage.setItem('caffeCart', JSON.stringify(cart));
+      window.dispatchEvent(new Event('storage'));
+
+      updateMenuBag();
+      initializeBagCount();
+      
+      // Open bag modal
+      openBagModal();
+      
+      // Show feedback
+      showToast(`Added ${product} to bag!`);
+    }
+
+    async function openOrderHistoryModal() {
+      const memberUid = localStorage.getItem('memberUid');
+      if (!memberUid) {
+        alert('Please login to view your order history');
+        return;
+      }
+
+      document.getElementById('orderHistoryModal').classList.remove('hidden');
+      
+      // Check if member has any orders
+      const orderHistoryContent = document.querySelector('#orderHistoryModal .order-history-content');
+      if (orderHistoryContent && orderHistoryContent.children.length === 1 && orderHistoryContent.children[0].textContent.includes('No orders found')) {
+        alert('You need to order to show your previous orders');
+        return;
+      }
+      
+      loadOrderHistory();
+    }
+
+    function closeOrderHistoryModal() {
+      document.getElementById('orderHistoryModal').classList.add('hidden');
+    }
+
+    async function loadOrderHistory() {
+      const memberUid = localStorage.getItem('memberUid');
+      const container = document.getElementById('orderHistoryList');
+
+      try {
+        // Get all orders for this user
+        const ordersQuery = query(
+          collection(db, 'orders'),
+          where('memberUid', '==', memberUid),
+          orderBy('timestamp', 'desc')
+        );
+
+        // Set up real-time listener for order history
+        if (orderHistoryUnsubscribe) {
+          orderHistoryUnsubscribe();
+        }
+
+        orderHistoryUnsubscribe = onSnapshot(ordersQuery, (snapshot) => {
+          const orderedDocs = snapshot.docs;
+          if (orderedDocs.length === 0) {
+            container.innerHTML = `
+              <div class="text-center py-12 text-gray-400">
+                <span class="material-symbols-outlined text-5xl mb-3">shopping_bag</span>
+                <p class="text-lg font-semibold mb-2">No orders yet</p>
+                <p class="text-sm">Start shopping to see your order history here</p>
+              </div>
+            `;
+            return;
+          }
+
+          const orders = orderedDocs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+          container.innerHTML = orders.map(order => {
+            const orderDate = order.orderDate ? new Date(order.orderDate).toLocaleString('en-PH', { 
+              dateStyle: 'medium', 
+              timeStyle: 'short' 
+            }) : new Date(order.timestamp).toLocaleString('en-PH', { 
+              dateStyle: 'medium', 
+              timeStyle: 'short' 
+            });
+            const paymentStatus = String(order?.payment?.status || 'pending').toLowerCase();
+            const paymentStatusClass = paymentStatus === 'paid'
+              ? 'bg-emerald-100 text-emerald-700'
+              : 'bg-amber-100 text-amber-700';
+            const paymentStatusLabel = paymentStatus === 'paid' ? 'Paid' : 'Unpaid';
+
+            const statusColors = {
+              'new': 'bg-yellow-100 text-yellow-800',
+              'preparing': 'bg-purple-100 text-purple-800',
+              'ready': 'bg-green-100 text-green-800',
+              'completed': 'bg-gray-100 text-gray-800',
+              'cancelled': 'bg-red-100 text-red-800'
+            };
+
+            const statusColor = statusColors[order.status] || statusColors['new'];
+
+            return `
+              <div class="bg-white border border-gray-200 rounded-xl p-4 sm:p-6 hover:shadow-lg transition-shadow" data-order-id="${order.id}">
+                <div class="flex items-start justify-between mb-4">
+                  <div>
+                    <div class="flex items-center gap-2 mb-1">
+                      <span class="material-symbols-outlined text-primary">receipt</span>
+                      <h3 class="font-bold text-gray-900">Order #${order.orderNumber || order.id.substring(0, 8)}</h3>
+                    </div>
+                    <p class="text-sm text-gray-600">${orderDate}</p>
+                    <div class="mt-2 inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold uppercase ${paymentStatusClass}">${paymentStatusLabel}</div>
+                  </div>
+                  <span class="px-3 py-1 rounded-full text-xs font-bold ${statusColor} uppercase" data-status>
+                    ${order.status || 'new'}
+                  </span>
+                </div>
+
+                <div class="space-y-2 mb-4">
+                  ${order.items.map(item => `
+                    <div class="flex items-center justify-between text-sm">
+                      <div class="flex items-center gap-2">
+                        ${item.img ? `<img src="${item.img}" alt="${item.product}" class="w-10 h-10 rounded-lg object-cover">` : ''}
+                        <div>
+                          <p class="font-semibold">${item.product}</p>
+                          <p class="text-gray-500">×${item.quantity}</p>
+                        </div>
+                      </div>
+                      <p class="font-semibold text-primary">₱${item.price * item.quantity}</p>
+                    </div>
+                  `).join('')}
+                </div>
+
+                <div class="border-t pt-3 flex items-center justify-between">
+                  <div>
+                    <p class="text-sm text-gray-600">Delivery: ${new Date(order.customer.deliveryTime).toLocaleString('en-PH', { dateStyle: 'medium', timeStyle: 'short' })}</p>
+                    <p class="text-lg font-bold text-primary mt-1">Total: ₱${order.total}</p>
+                  </div>
+                  <button onclick="reorderFromHistory('${order.id}')" class="bg-primary text-white px-4 py-2 rounded-lg font-semibold hover:bg-opacity-90 transition text-sm flex items-center gap-1">
+                    <span class="material-symbols-outlined text-lg">refresh</span>
+                    Reorder
+                  </button>
+                </div>
+              </div>
+            `;
+          }).join('');
+        }, (error) => {
+          console.error('Error loading order history:', error);
+          container.innerHTML = `
+            <div class="text-center py-12 text-red-400">
+              <span class="material-symbols-outlined text-5xl mb-3">error</span>
+              <p class="text-lg font-semibold">Error loading orders</p>
+              <p class="text-sm">${error.message}</p>
+            </div>
+          `;
+        });
+      } catch (error) {
+        console.error('Error loading order history:', error);
+        container.innerHTML = `
+          <div class="text-center py-12 text-red-400">
+            <span class="material-symbols-outlined text-5xl mb-3">error</span>
+            <p class="text-lg font-semibold">Error loading orders</p>
+            <p class="text-sm">${error.message}</p>
+          </div>
+        `;
+      }
+    }
+
+    async function reorderFromHistory(orderId) {
+      try {
+        const orderDoc = await getDoc(doc(db, 'orders', orderId));
+        if (!orderDoc.exists()) {
+          alert('Order not found');
+          return;
+        }
+
+        const order = orderDoc.data();
+        let cart = JSON.parse(localStorage.getItem('caffeCart') || '[]');
+
+        // Add all items from the order to cart
+        order.items.forEach(item => {
+          const existingItem = cart.find(cartItem => cartItem.product === item.product);
+          if (existingItem) {
+            existingItem.quantity += item.quantity;
+          } else {
+            cart.push({
+              product: item.product,
+              price: item.price,
+              quantity: item.quantity,
+              img: item.img || '',
+              customization: item.customization || ''
+            });
+          }
+        });
+
+        localStorage.setItem('caffeCart', JSON.stringify(cart));
+        window.dispatchEvent(new Event('storage'));
+
+        closeOrderHistoryModal();
+        openBagModal();
+        showToast('Order items added to bag!');
+      } catch (error) {
+        console.error('Error reordering:', error);
+        alert('Error reordering: ' + error.message);
+      }
+    }
+
+    async function openOrderDetails(orderId) {
+      try {
+        console.log('🔎 Opening order details for:', orderId);
+        const orderDoc = await getDoc(doc(db, 'orders', orderId));
+        if (!orderDoc.exists()) {
+          alert('Order not found');
+          return;
+        }
+
+        const order = orderDoc.data();
+        const orderDate = order.orderDate
+          ? new Date(order.orderDate).toLocaleString('en-PH', { dateStyle: 'medium', timeStyle: 'short' })
+          : (order.createdAt?.toDate ? order.createdAt.toDate().toLocaleString('en-PH', { dateStyle: 'medium', timeStyle: 'short' }) : 'N/A');
+
+        const pointsEarned = Math.floor((order.total || 0) * 0.1);
+        const memberName = localStorage.getItem('memberName') || 'Member';
+
+        showReceipt({
+          orderId: order.orderNumber || orderDoc.id.substring(0, 8),
+          orderDate,
+          status: order.status || 'new',
+          payment: order.payment || { method: order.paymentMethod || 'gcash', gcashNumber: '', status: 'pending', paidAt: null },
+          customer: order.customer || {
+            name: memberName,
+            email: order.memberEmail || '',
+            phone: '',
+            address: '',
+            deliveryTime: ''
+          },
+          items: order.items || [],
+          subtotal: order.subtotal || 0,
+          tax: order.tax || 0,
+          total: order.total || 0,
+          pointsEarned,
+          memberName
+        });
+
+        startOrderTracking(orderDoc.id);
+      } catch (error) {
+        console.error('Error opening order details:', error);
+        alert('Error opening order details: ' + error.message);
+      }
+    }
+
+    // Order history modal event listeners
+    document.getElementById('closeOrderHistory').addEventListener('click', closeOrderHistoryModal);
+
+    // Real-time Order Status Tracking
+    let orderStatusUnsubscribe = null;
+
+    function startOrderTracking(orderId) {
+      const memberUid = localStorage.getItem('memberUid');
+      if (!memberUid) return;
+
+      if (orderStatusUnsubscribe) {
+        orderStatusUnsubscribe();
+      }
+
+      const orderRef = doc(db, 'orders', orderId);
+      orderStatusUnsubscribe = onSnapshot(orderRef, (snap) => {
+        if (snap.exists()) {
+          const orderData = snap.data();
+          
+          // Update receipt modal if open
+          const receiptModal = document.getElementById('receiptModal');
+          if (!receiptModal.classList.contains('hidden')) {
+            const statusBadgeEl = receiptModal.querySelector('[data-order-status]');
+            const paymentBadgeEl = receiptModal.querySelector('[data-payment-status]');
+            const paymentPaidAtEl = receiptModal.querySelector('[data-payment-paid-at]');
+            if (statusBadgeEl) {
+              const statusColors = {
+                'new': 'bg-yellow-100 text-yellow-800',
+                'preparing': 'bg-purple-100 text-purple-800',
+                'ready': 'bg-green-100 text-green-800',
+                'completed': 'bg-gray-100 text-gray-800'
+              };
+              statusBadgeEl.textContent = (orderData.status || 'new').toUpperCase();
+              statusBadgeEl.className = 'px-3 py-1 rounded-full text-xs font-bold uppercase ' + (statusColors[orderData.status] || statusColors['new']);
+              
+              // Show notification on status change
+              const currentStatus = sessionStorage.getItem(`order-${orderId}-status`);
+              if (currentStatus && currentStatus !== orderData.status) {
+                const statusMessages = {
+                  'preparing': 'Your order is being prepared! ☕',
+                  'ready': 'Your order is ready for pickup! 🎉',
+                  'completed': 'Thanks for your order!'
+                };
+                showToast(statusMessages[orderData.status] || 'Order status updated');
+              }
+              sessionStorage.setItem(`order-${orderId}-status`, orderData.status);
+            }
+
+            if (paymentBadgeEl) {
+              const paymentStatus = String(orderData?.payment?.status || 'pending').toLowerCase();
+              const isPaid = paymentStatus === 'paid';
+              paymentBadgeEl.textContent = isPaid ? 'PAID' : 'UNPAID';
+              paymentBadgeEl.className = `inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold uppercase ${isPaid ? 'bg-emerald-100 text-emerald-700 border border-emerald-200' : 'bg-amber-100 text-amber-700 border border-amber-200'}`;
+            }
+
+            if (paymentPaidAtEl) {
+              const paidAt = orderData?.payment?.paidAt;
+              let paidAtText = 'Not yet confirmed';
+              if (paidAt?.toDate) {
+                paidAtText = paidAt.toDate().toLocaleString('en-PH', { dateStyle: 'medium', timeStyle: 'short' });
+              } else if (typeof paidAt === 'string' || typeof paidAt === 'number') {
+                const parsedPaidAt = new Date(paidAt);
+                if (!Number.isNaN(parsedPaidAt.getTime())) {
+                  paidAtText = parsedPaidAt.toLocaleString('en-PH', { dateStyle: 'medium', timeStyle: 'short' });
+                }
+              }
+              paymentPaidAtEl.textContent = paidAtText;
+            }
+          }
+
+          // Update order history if modal is open
+          const orderHistoryModal = document.getElementById('orderHistoryModal');
+          if (!orderHistoryModal.classList.contains('hidden')) {
+            const orderCard = document.querySelector(`[data-order-id="${orderId}"]`);
+            if (orderCard) {
+              const statusCards = {
+                'new': 'bg-yellow-100 text-yellow-800',
+                'preparing': 'bg-purple-100 text-purple-800',
+                'ready': 'bg-green-100 text-green-800',
+                'completed': 'bg-gray-100 text-gray-800'
+              };
+              const statusEl = orderCard.querySelector('[data-status]');
+              if (statusEl) {
+                statusEl.textContent = (orderData.status || 'new').toUpperCase();
+                statusEl.className = 'px-3 py-1 rounded-full text-xs font-bold uppercase ' + (statusCards[orderData.status] || statusCards['new']);
+              }
+            }
+          }
+        }
+      });
+    }
+
+    // Store most recent order ID for tracking
+    // Load quick reorder on page load
+    loadQuickReorder();
+
+    // Attach button listeners
+    document.getElementById('closeBagBtn').addEventListener('click', closeBagModal);
+    document.getElementById('proceedCheckout').addEventListener('click', openCheckout);
+
+    // Attach checkout form listener
+    if (document.getElementById('checkoutForm')) {
+      const checkoutForm = document.getElementById('checkoutForm');
+      checkoutForm.addEventListener('submit', checkoutOrder);
+
+      const checkoutAccountEmail = document.getElementById('checkoutAccountEmail');
+      if (checkoutAccountEmail) {
+        checkoutAccountEmail.textContent = localStorage.getItem('memberEmail') || window.currentUser?.email || 'Using your signed-in email';
+      }
+
+      checkoutForm.querySelectorAll('input[name="fulfillmentType"]').forEach((radio) => {
+        radio.addEventListener('change', updateCheckoutFulfillmentUI);
+      });
+
+      const checkoutDeliveryTime = checkoutForm.querySelector('input[name="deliveryTime"]');
+      if (checkoutDeliveryTime) {
+        checkoutDeliveryTime.addEventListener('input', updateDeliverySlotStatus);
+        checkoutDeliveryTime.addEventListener('change', updateDeliverySlotStatus);
+      }
+
+      checkoutForm.querySelectorAll('input[name="paymentMethod"]').forEach((radio) => {
+        radio.addEventListener('change', updateCheckoutPaymentUI);
+      });
+
+      updateCheckoutFulfillmentUI();
+      updateCheckoutPaymentUI();
+      updateDeliverySlotStatus();
+    }
+
+    // Logout Function
+    async function logout() {
+      try {
+        // Sign out from Firebase
+        try {
+          await signOut(auth);
+        } catch (signOutError) {
+          console.warn('Firebase signOut error (continuing anyway):', signOutError);
+        }
+        
+        // Clear all local storage
+        localStorage.clear();
+        sessionStorage.clear();
+        
+        // Redirect to customer login
+        setTimeout(() => {
+          window.location.href = 'customer-login.html';
+        }, 500);
+      } catch (error) {
+        console.error('Logout error:', error);
+        // Force redirect even if there's an error
+        localStorage.clear();
+        sessionStorage.clear();
+        window.location.href = 'customer-login.html';
+      }
+    }
+
+    // Account Settings Tab Switching Function
+    function switchTab(tabName) {
+      // Hide all content sections
+      const allContent = document.querySelectorAll('.accountTabContent');
+      allContent.forEach(section => {
+        section.classList.add('hidden');
+      });
+
+      // Remove active state from all tabs
+      const allTabs = document.querySelectorAll('.accountTab');
+      allTabs.forEach(tab => {
+        tab.classList.remove('border-primary', 'text-primary');
+        tab.classList.add('border-transparent', 'text-slate-500');
+      });
+
+      // Show selected content
+      const selectedContent = document.getElementById(tabName);
+      if (selectedContent) {
+        selectedContent.classList.remove('hidden');
+      }
+
+      // Highlight selected tab
+      const selectedTab = document.querySelector(`.accountTab[data-tab="${tabName}"]`);
+      if (selectedTab) {
+        selectedTab.classList.remove('border-transparent', 'text-slate-500');
+        selectedTab.classList.add('border-primary', 'text-primary');
+      }
+    }
+
+    // Open Account Settings Panel
+    function openAccountSettings() {
+      const settingsPanel = document.getElementById('accountSettingsPanel');
+      const mainContent = document.querySelector('main > div:first-of-type');
+      
+      if (settingsPanel) {
+        settingsPanel.style.display = 'block';
+      }
+      if (mainContent) {
+        mainContent.style.display = 'none';
+      }
+      window.scrollTo(0, 0);
+    }
+
+    // Close Account Settings (if needed)
+    function closeAccountSettings() {
+      const settingsPanel = document.getElementById('accountSettingsPanel');
+      const mainContent = document.querySelector('main > div:first-of-type');
+      
+      if (settingsPanel) {
+        settingsPanel.style.display = 'none';
+      }
+      if (mainContent) {
+        mainContent.style.display = 'block';
+      }
+    }
+
+    // Real-time order history loader - SIMPLIFIED
+    function setupOrderHistory() {
+      try {
+        if (!currentUser || !currentUser.uid) {
+          console.warn('❌ setupOrderHistory: currentUser not available', currentUser);
+          return;
+        }
+
+        const uid = currentUser.uid;
+        console.log('🔍 setupOrderHistory - User UID:', uid);
+
+        const orderTableBody = document.getElementById('orderHistoryTableBody');
+        if (!orderTableBody) {
+          console.error('❌ orderHistoryTableBody not found in DOM');
+          return;
+        }
+
+        // Load all orders and filter client-side
+        const ordersRef = collection(db, 'orders');
+        console.log('Setting up real-time listener on orders collection...');
+        
+        const unsubscribe = onSnapshot(ordersRef, (querySnapshot) => {
+          console.log('📦 Real-time snapshot:', querySnapshot.size, 'total orders in database');
+          
+          // Log first 5 orders to see their structure
+          let count = 0;
+          querySnapshot.forEach(doc => {
+            if (count < 5) {
+              console.log(`Order ${count}:`, doc.id, doc.data());
+              count++;
+            }
+          });
+
+          // Filter for current user
+          const userOrders = [];
+          querySnapshot.forEach(doc => {
+            const order = doc.data();
+            
+            // Log memberUid comparison
+            if (count < 10) {
+              console.log(`Checking: memberUid="${order.memberUid}" vs uid="${uid}" - Match: ${order.memberUid === uid}`);
+              count++;
+            }
+            
+            if (order.memberUid === uid) {
+              userOrders.push({ id: doc.id, ...order });
+            }
+          });
+
+          console.log('✅ Filtered orders for user:', userOrders.length);
+          if (window.updateCoffeeJourneyFromOrders) {
+            window.updateCoffeeJourneyFromOrders(userOrders);
+          } else {
+            const cupsBrewedEl = document.getElementById('cupsBrewed');
+            const regionsTastedEl = document.getElementById('regionsTasted');
+            const coffeeSavedEl = document.getElementById('coffeeSaved');
+            if (cupsBrewedEl && regionsTastedEl && coffeeSavedEl) {
+              let totalQty = 0;
+              const uniqueItems = new Set();
+              userOrders.forEach(order => {
+                (order.items || []).forEach(item => {
+                  const itemName = item?.product || item?.name || item?.title || item?.productName || item?.itemName || '';
+                  const itemQty = item?.quantity ?? item?.qty ?? item?.count ?? 1;
+                  totalQty += Number(itemQty) || 0;
+                  if (itemName) uniqueItems.add(itemName);
+                });
+              });
+              const coffeeSavedKg = Math.round((totalQty * 0.25) * 10) / 10;
+              cupsBrewedEl.textContent = totalQty;
+              regionsTastedEl.textContent = uniqueItems.size;
+              coffeeSavedEl.textContent = `${coffeeSavedKg}kg`;
+            }
+          }
+
+          // Clear table
+          orderTableBody.innerHTML = '';
+
+          if (userOrders.length === 0) {
+            orderTableBody.innerHTML = `
+              <tr>
+                <td colspan="6" class="px-6 py-8 text-center text-slate-500 dark:text-slate-400">
+                  <span class="material-symbols-outlined text-4xl mb-2 block">shopping_bag</span>
+                  <p class="text-sm">No orders yet. Start shopping!</p>
+                </td>
+              </tr>
+            `;
+            console.log('Showing empty state');
+            return;
+          }
+
+          // Sort by date
+          userOrders.sort((a, b) => {
+            const dateA = a.createdAt?.toDate ? a.createdAt.toDate() : new Date(a.orderDate || 0);
+            const dateB = b.createdAt?.toDate ? b.createdAt.toDate() : new Date(b.orderDate || 0);
+            return dateB - dateA;
+          });
+
+          // Display each order
+          userOrders.forEach((order, idx) => {
+            const orderId = order.orderNumber || order.id.slice(0, 6).toUpperCase();
+            const dateObj = order.createdAt?.toDate ? order.createdAt.toDate() : new Date(order.orderDate);
+            const date = dateObj.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+            
+            let itemsText = 'Order';
+            if (order.items && Array.isArray(order.items)) {
+              itemsText = order.items.map(item => {
+                const itemName = item?.product || item?.name || item?.title || item?.productName || item?.itemName || 'Item';
+                const itemQty = item?.quantity ?? item?.qty ?? item?.count ?? 1;
+                return `${itemName} (${itemQty}x)`;
+              }).join(', ');
+            }
+            
+            const total = order.total ? `₱${order.total.toFixed(2)}` : '₱0.00';
+            const status = order.status || 'Pending';
+
+            let statusClass = 'bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-300';
+            if (status === 'delivered' || status === 'Delivered') {
+              statusClass = 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400';
+            } else if (status === 'processing' || status === 'Processing' || status === 'new') {
+              statusClass = 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400';
+            } else if (status === 'shipped' || status === 'Shipped') {
+              statusClass = 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400';
+            } else if (status === 'cancelled' || status === 'Cancelled') {
+              statusClass = 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400';
+            }
+
+            const row = document.createElement('tr');
+            row.className = 'hover:bg-slate-50 dark:hover:bg-slate-900/30 transition-colors';
+            row.innerHTML = `
+              <td class="px-6 py-4 font-mono text-sm text-slate-600 dark:text-slate-400">#${orderId}</td>
+              <td class="px-6 py-4 text-sm">${date}</td>
+              <td class="px-6 py-4 text-sm font-medium">${itemsText}</td>
+              <td class="px-6 py-4 text-sm font-bold">${total}</td>
+              <td class="px-6 py-4 text-sm">
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${statusClass}">${status}</span>
+              </td>
+              <td class="px-6 py-4 text-sm"><a href="#" class="text-primary hover:underline cursor-pointer" data-order-details="${order.id}">View Details</a></td>
+            `;
+            orderTableBody.appendChild(row);
+          });
+          
+          console.log('🎉 Rendered', userOrders.length, 'orders');
+        }, (error) => {
+          console.error('❌ Snapshot error:', error.code, error.message);
+          if (orderTableBody) {
+            orderTableBody.innerHTML = `
+              <tr>
+                <td colspan="6" class="px-6 py-8 text-center text-red-500">
+                  <p class="text-sm">Error: ${error.message}</p>
+                </td>
+              </tr>
+            `;
+          }
+        });
+
+        return unsubscribe;
+      } catch (err) {
+        console.error('❌ setupOrderHistory error:', err);
+      }
+    }
+
+    // Real-time profile form handler
+    function setupProfileForm() {
+      try {
+        if (!currentUser || !currentUser.uid) {
+          console.warn('⚠️ setupProfileForm: currentUser not available', currentUser);
+          return;
+        }
+
+        const memberRef = doc(db, 'members', currentUser.uid);
+        console.log('📝 Setting up profile form for user:', currentUser.uid);
+        
+        // Real-time listener for member data
+        const unsubscribe = onSnapshot(memberRef, (docSnapshot) => {
+          if (docSnapshot.exists()) {
+            const memberData = docSnapshot.data();
+            console.log('✅ Profile data loaded:', memberData);
+            
+            // Prefer dedicated fields, fallback to displayName split.
+            const displayName = memberData.displayName || '';
+            const splitName = displayName.split(' ');
+            const inferredFirstName = splitName[0] || '';
+            const inferredLastName = splitName.slice(1).join(' ') || '';
+            const firstName = memberData.firstName || inferredFirstName;
+            const lastName = memberData.lastName || inferredLastName;
+            
+            // Populate form fields
+            const firstNameInput = document.getElementById('firstName');
+            const lastNameInput = document.getElementById('lastName');
+            const emailInput = document.getElementById('emailAddress');
+            
+            if (firstNameInput && document.activeElement !== firstNameInput) firstNameInput.value = firstName || '';
+            if (lastNameInput && document.activeElement !== lastNameInput) lastNameInput.value = lastName || '';
+            if (emailInput) emailInput.value = memberData.email || currentUser.email || '';
+
+            lastSavedProfileName = `${firstName}${lastName ? ' ' + lastName : ''}`.trim();
+            attachProfileRealtimeListeners();
+            
+            // Update Coffee Journey stats
+            const cupsBrewed = document.getElementById('cupsBrewed');
+            const regionsTasted = document.getElementById('regionsTasted');
+            const coffeeSaved = document.getElementById('coffeeSaved');
+            const memberTier = document.getElementById('memberTier');
+            
+            const stats = memberData.stats || {};
+            if (cupsBrewed) cupsBrewed.textContent = stats.cupsBrewed || 0;
+            if (regionsTasted) regionsTasted.textContent = stats.regionsTasted || 0;
+            if (coffeeSaved) coffeeSaved.textContent = (stats.coffeeSaved || 0) + 'kg';
+            if (memberTier) memberTier.textContent = (memberData.tier || 'Member') + ' Member';
+          } else {
+            console.warn('⚠️ Profile document does not exist');
+          }
+        }, (error) => {
+          console.error('❌ Error loading profile:', error);
+        });
+        
+        // Store unsubscribe function
+        window.memberFormUnsubscribe = unsubscribe;
+      } catch (err) {
+        console.error('❌ setupProfileForm error:', err);
+      }
+    }
+
+    // Handle profile form submission
+    async function handleProfileFormSubmit(e) {
+      e.preventDefault();
+      
+      if (!currentUser) return;
+
+      const firstName = document.getElementById('firstName').value.trim();
+      const lastName = document.getElementById('lastName').value.trim();
+      const newPassword = document.getElementById('newPassword').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+      const saveBtn = document.getElementById('saveSettingsBtn');
+      
+      try {
+        // Validate inputs
+        if (!firstName) {
+          alert('Please enter a first name');
+          return;
+        }
+        
+        // Update profile in Firestore
+        const memberRef = doc(db, 'members', currentUser.uid);
+        const displayName = `${firstName}${lastName ? ' ' + lastName : ''}`;
+        
+        await updateDoc(memberRef, {
+          firstName,
+          lastName,
+          displayName: displayName,
+          updatedAt: serverTimestamp()
+        });
+        
+        // Handle password change if provided
+        if (newPassword) {
+          if (newPassword !== confirmPassword) {
+            alert('Passwords do not match');
+            return;
+          }
+          
+          if (newPassword.length < 12) {
+            alert('Password must be at least 12 characters long');
+            return;
+          }
+
+          if (!STRONG_PASSWORD_REGEX.test(newPassword)) {
+            alert('Password must include uppercase, lowercase, number, and special character.');
+            return;
+          }
+          
+          // Update password in Firebase Auth
+          const { updatePassword } = await import('https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js');
+          await updatePassword(currentUser, newPassword);
+          
+          // Clear password fields
+          document.getElementById('newPassword').value = '';
+          document.getElementById('confirmPassword').value = '';
+        }
+        
+        // Show success message
+        showToast('Profile updated successfully!');
+        console.log('✅ Profile saved:', displayName);
+        
+        // Optionally reset form
+        setTimeout(() => {
+          if (document.getElementById('profileSettingsForm')) {
+            document.getElementById('profileSettingsForm').reset();
+            // Repopulate form with fresh data
+            setupProfileForm();
+          }
+        }, 500);
+        
+      } catch (error) {
+        console.error('Profile update error:', error);
+        alert('Error updating profile: ' + error.message);
+      }
+    }
+
+    // Attach profile form listener when account settings panel opens
+    const originalOpenAccountSettings = openAccountSettings;
+    openAccountSettings = function() {
+      const activeUser = window.currentUser || null;
+      console.log('openAccountSettings called, currentUser:', activeUser?.uid);
+      
+      originalOpenAccountSettings();
+      
+      // Only setup forms if user is authenticated
+      if (!activeUser) {
+        console.warn('⚠️ currentUser not available yet');
+        setTimeout(() => {
+          if (window.currentUser) {
+            console.log('Retrying setup with user:', window.currentUser.uid);
+            setupProfileForm();
+            setupOrderHistory();
+            setupPaymentMethods();
+          }
+        }, 500);
+        return;
+      }
+      
+      setupProfileForm();
+      setupOrderHistory();
+      setupPaymentMethods();
+    };
+
+    // Add click handlers for Account Settings link
+    document.addEventListener('DOMContentLoaded', function() {
+      const links = document.querySelectorAll('.settings-link');
+      if (links.length > 0) {
+        // First settings-link is Account Settings
+        links[0].addEventListener('click', (e) => {
+          e.preventDefault();
+          openAccountSettings();
+        });
+      }
+      
+      // Setup profile form submission listener
+      const profileForm = document.getElementById('profileSettingsForm');
+      if (profileForm) {
+        profileForm.addEventListener('submit', handleProfileFormSubmit);
+      }
+
+      const paymentMethodsForm = document.getElementById('paymentMethodsForm');
+      if (paymentMethodsForm) {
+        paymentMethodsForm.addEventListener('submit', savePaymentMethods);
+      }
+
+      // Handle order details clicks from the history table
+      document.addEventListener('click', (event) => {
+        const target = event.target.closest('[data-order-details]');
+        if (!target) return;
+        event.preventDefault();
+        const orderId = target.getAttribute('data-order-details');
+        if (orderId) {
+          openOrderDetails(orderId);
+        }
+      });
+    });
+
+    // Attach logout button listener
+    document.getElementById('logoutBtn').addEventListener('click', logout);
+
+    // Attach bag button listener
+    document.getElementById('openBagBtn').addEventListener('click', openBagModal);
+
+    // Make cart functions globally accessible
+    window.openCartModal = openCartModal;
+    window.openBagModal = openBagModal;
+    window.closeBagModal = closeBagModal;
+    window.openCheckout = openCheckout;
+    window.closeCheckout = closeCheckout;
+    window.updateCartQuantity = updateCartQuantity;
+    window.removeCartItem = removeCartItem;
+    window.closeReceiptModal = closeReceiptModal;
+    window.openOrderHistoryModal = openOrderHistoryModal;
+    window.closeOrderHistoryModal = closeOrderHistoryModal;
+    window.reorderItem = reorderItem;
+    window.reorderFromHistory = reorderFromHistory;
+    window.logout = logout;
+    window.switchTab = switchTab;
+    window.openAccountSettings = openAccountSettings;
+    window.closeAccountSettings = closeAccountSettings;
+  </script>
+
+  <!-- Footer -->
+  <footer class="bg-cream border-t border-gray-200 mt-8 sm:mt-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-6">
+      <div class="flex items-center justify-between flex-wrap gap-4">
+        <!-- Logo & Copyright -->
+        <div class="flex items-center gap-3 sm:gap-6 flex-wrap">
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary text-xl sm:text-2xl">coffee_maker</span>
+            <span class="text-base sm:text-lg font-bold text-gray-900">Caffernaum</span>
+          </div>
+          <span class="text-xs sm:text-sm text-gray-500">© 2024 Caffernaum Coffee Co.</span>
+        </div>
+
+        <!-- Footer Links -->
+        <nav class="flex items-center gap-4 sm:gap-8 flex-wrap">
+          <a href="#" class="text-xs sm:text-sm text-gray-600 hover:text-primary transition-colors font-medium uppercase tracking-wide">Privacy Policy</a>
+          <a href="#" class="text-xs sm:text-sm text-gray-600 hover:text-primary transition-colors font-medium uppercase tracking-wide">Terms of Service</a>
+          <a href="#" class="text-xs sm:text-sm text-gray-600 hover:text-primary transition-colors font-medium uppercase tracking-wide">Support</a>
+        </nav>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Real-time Update Toast Notification -->
+  <div id="syncToast" class="toast">
+    <div class="toast-icon"></div>
+    <span class="text-sm font-medium">Data synced</span>
+  </div>
+</body>
+</html>

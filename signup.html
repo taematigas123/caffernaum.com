@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Caffernaum — Create Account</title>
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="styles.css" />
+
+    <style>
+      body {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+      }
+
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+    </style>
+  </head>
+  <body class="auth-page">
+    <header class="site-header">
+      <div class="container nav-row">
+        <div class="brand">
+          <span class="material-symbols-outlined brand-icon">coffee_maker</span>
+          <span class="brand-text">Caffernaum</span>
+        </div>
+        <div class="actions">
+          <a class="btn btn-outline" href="index.html">Back to Home</a>
+        </div>
+      </div>
+    </header>
+
+    <main class="auth-main">
+      <div class="container auth-grid">
+        <section class="auth-card">
+          <h1>Create your account</h1>
+          <p>Join the rewards circle and start earning points on every purchase.</p>
+          <form id="signupForm" class="auth-form">
+            <div>
+              <label for="fullName">Full Name</label>
+              <input id="fullName" name="fullName" type="text" required />
+            </div>
+            <div class="auth-row">
+              <div>
+                <label for="email">Email</label>
+                <input id="email" name="email" type="email" required />
+              </div>
+              <div>
+                <label for="phone">Phone</label>
+                <input
+                  id="phone"
+                  name="phone"
+                  type="tel"
+                  required
+                  inputmode="numeric"
+                  pattern="\d{11}"
+                  minlength="11"
+                  maxlength="11"
+                  placeholder="11-digit number"
+                />
+              </div>
+            </div>
+            <div class="auth-row">
+              <div>
+                <label for="password">Password</label>
+                <input id="password" name="password" type="password" required />
+              </div>
+              <div>
+                <label for="confirmPassword">Confirm Password</label>
+                <input id="confirmPassword" name="confirmPassword" type="password" required />
+              </div>
+            </div>
+            <label class="auth-note">
+              <input type="checkbox" required />
+              I agree to the terms and privacy policy.
+            </label>
+            <button type="submit" class="btn btn-cta">Create account</button>
+            <p class="auth-note">Already a member? Use the login button on the homepage.</p>
+          </form>
+        </section>
+
+        <aside class="auth-side">
+          <h2>Rewards made simple.</h2>
+          <p>Earn 1 point per ₱10 and climb tiers for better perks.</p>
+          <ul>
+            <li>Track points and tier status</li>
+            <li>Redeem discounts faster</li>
+            <li>Member-only surprises</li>
+          </ul>
+        </aside>
+      </div>
+    </main>
+
+    <script type="module">
+      import {
+        auth,
+        db,
+        createUserWithEmailAndPassword,
+        updateProfile,
+        setDoc,
+        doc,
+        serverTimestamp
+      } from './firebase-config.js';
+
+      const form = document.getElementById('signupForm');
+      const phoneInput = document.getElementById('phone');
+      const STRONG_PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{12,}$/;
+      if (phoneInput) {
+        phoneInput.addEventListener('input', (event) => {
+          const digitsOnly = event.target.value.replace(/\D/g, '').slice(0, 11);
+          event.target.value = digitsOnly;
+        });
+      }
+
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const password = form.password.value;
+        const confirm = form.confirmPassword.value;
+        if (!STRONG_PASSWORD_REGEX.test(password)) {
+          alert('Password must be at least 12 characters and include uppercase, lowercase, number, and special character.');
+          return;
+        }
+        if (password !== confirm) {
+          alert('Passwords do not match.');
+          return;
+        }
+
+        const fullName = form.fullName.value.trim();
+        const email = form.email.value.trim();
+        const phone = form.phone.value.trim();
+
+        try {
+          const credential = await createUserWithEmailAndPassword(auth, email, password);
+          await updateProfile(credential.user, { displayName: fullName });
+
+          await setDoc(doc(db, 'members', credential.user.uid), {
+            fullName,
+            email,
+            phone,
+            createdAt: serverTimestamp()
+          });
+
+          localStorage.setItem('memberLoggedIn', 'true');
+          localStorage.setItem('memberUid', credential.user.uid);
+          alert('Account created! Redirecting you to the homepage.');
+          form.reset();
+          window.location.href = 'index.html';
+        } catch (error) {
+          console.error('Signup error:', error);
+          alert(error.message || 'Unable to create account. Please try again.');
+        }
+      });
+    </script>
+  </body>
+</html>

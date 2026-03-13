@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Caffernaum Staff Portal Login</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "forest-green": "#1a2e21",
+                        "deep-forest": "#112115",
+                        "burnt-orange": "#d97706",
+                        "cream": "#fdfbf7",
+                        "primary": "#d97706",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style type="text/tailwindcss">
+        :root {
+            --forest-green: #112115;
+            --burnt-orange: #d97706;
+            --cream: #fdfbf7;
+        }
+        .glass-effect {
+            background: rgba(17, 33, 21, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(253, 251, 247, 0.1);
+        }
+        .bg-coffee-bar {
+            background-image: linear-gradient(rgba(17, 33, 21, 0.8), rgba(17, 33, 21, 0.9)), url(https://lh3.googleusercontent.com/aida-public/AB6AXuB0kcH1POs0t8-h-BUxeyYOrj1VBKD3Qv-bJYBMXdnaNd4FjabFA28svhaavOX0CW-UQHO5asrUJOsypr3P2pQoB6MoXlMlDKJbCEkAqZV1q6bpBM2ajTxL87QpAEtg_ifH6YXLThgK5pglr5y6EL8Om0baKMcwNJ9UnFLFH2xqzpr85HmX9ECTPJsHzRtvnnSVqrR88MSeYgmsXDDyp2EUBYgmlqAkRKPQfMIZu-IgxgXiNTtkD8q52A6bEwZ_taRa-ynvqr_tpg);
+            background-size: cover;
+            background-position: center;
+        }
+    </style>
+</head>
+<body class="font-display bg-deep-forest text-cream min-h-screen flex items-center justify-center bg-coffee-bar" data-alt="Blurred background of a modern coffee bar interior">
+<div class="w-full max-w-[440px] px-6">
+<div class="glass-effect p-8 md:p-10 rounded-xl shadow-2xl">
+<div class="flex flex-col items-center mb-10 text-center">
+<div class="mb-4 bg-burnt-orange/10 p-4 rounded-full">
+<span class="material-symbols-outlined text-burnt-orange text-5xl">coffee</span>
+</div>
+<h1 class="text-3xl font-bold tracking-tight text-cream mb-2">Caffernaum</h1>
+<p class="text-cream/70 font-medium">Staff Portal Access</p>
+</div>
+<form id="loginForm" class="space-y-6" method="POST">
+<div class="space-y-2">
+<label class="text-sm font-semibold text-cream/90 ml-1" for="employee-id">
+                    Employee ID
+                </label>
+<div class="relative group">
+<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-cream/40 group-focus-within:text-burnt-orange transition-colors">badge</span>
+</div>
+<input class="block w-full pl-11 pr-4 py-3.5 bg-forest-green/50 border border-cream/10 rounded-lg text-cream placeholder-cream/30 focus:outline-none focus:ring-2 focus:ring-burnt-orange/30 focus:border-burnt-orange transition-all duration-200" id="employee-id" name="employee-id" placeholder="CF-00000" type="text" required/>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between items-center px-1">
+<label class="text-sm font-semibold text-cream/90" for="password">
+                        Password
+                    </label>
+<a class="text-xs font-semibold text-burnt-orange hover:text-burnt-orange/80 transition-colors" href="#">
+                        Forgot Password?
+                    </a>
+</div>
+<div class="relative group">
+<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-cream/40 group-focus-within:text-burnt-orange transition-colors">lock</span>
+</div>
+<input class="block w-full pl-11 pr-12 py-3.5 bg-forest-green/50 border border-cream/10 rounded-lg text-cream placeholder-cream/30 focus:outline-none focus:ring-2 focus:ring-burnt-orange/30 focus:border-burnt-orange transition-all duration-200" id="password" name="password" placeholder="••••••••" type="password" required/>
+<button class="absolute inset-y-0 right-0 pr-4 flex items-center text-cream/40 hover:text-burnt-orange transition-colors" type="button" id="togglePassword">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+</button>
+</div>
+</div>
+<div class="flex items-center px-1">
+<input class="h-4 w-4 rounded border-cream/20 bg-forest-green/50 text-burnt-orange focus:ring-burnt-orange" id="remember-me" name="remember-me" type="checkbox"/>
+<label class="ml-2 block text-sm text-cream/70" for="remember-me">
+                    Stay signed in
+                </label>
+</div>
+<div id="errorMsg" class="hidden p-3 rounded-lg bg-red-500/20 border border-red-500/30 text-red-200 text-sm"></div>
+<button class="w-full flex justify-center items-center py-4 px-4 border border-transparent rounded-full shadow-sm text-base font-bold text-cream bg-burnt-orange hover:bg-burnt-orange/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-forest-green focus:ring-burnt-orange transition-all active:scale-[0.98]" type="submit">
+<span class="material-symbols-outlined mr-2">login</span>
+                Sign In to Portal
+            </button>
+</form>
+<div class="mt-10 pt-6 border-t border-cream/10 text-center">
+<p class="text-xs text-cream/40">
+                Restricted Access. Unauthorized entry is monitored and logged.
+            </p>
+<div class="mt-4 flex justify-center space-x-4 text-xs font-medium text-cream/40">
+<a class="hover:text-burnt-orange transition-colors" href="#">Security Policy</a>
+<span>•</span>
+<a class="hover:text-burnt-orange transition-colors" href="#">IT Support</a>
+</div>
+</div>
+</div>
+<p class="text-center mt-8 text-cream/40 text-sm font-medium">
+        © 2024 Caffernaum Specialty Coffee. All rights reserved.
+    </p>
+</div>
+
+<script>
+// Demo login credentials
+const VALID_CREDENTIALS = [
+    {
+        employeeId: 'CF-00001',
+        password: 'coffee123',
+        name: 'Jamil Payapag',
+        role: 'Lead Barista',
+        avatar: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR5vkPutJJPZEhtFRtqWJub0mUrVsZ8JgYRRw&s'
+    },
+    {
+        employeeId: 'CF-00002',
+        password: 'coffee456',
+        name: 'Christian James',
+        role: 'Head Barista',
+        avatar: 'https://i.pinimg.com/236x/1c/05/b6/1c05b61730b32b01cb76bc7848029e14.jpg'
+    },
+    {
+        employeeId: 'CF-00003',
+        password: 'coffee789',
+        name: 'Joshua Biglang-awa',
+        role: 'Barista',
+        avatar: 'https://cdn.medcom.id/dynamic/content/2026/02/06/1803558/T3mXR9oVnz.jpg?w=700'
+    }
+];
+
+const loginForm = document.getElementById('loginForm');
+const togglePasswordBtn = document.getElementById('togglePassword');
+const passwordInput = document.getElementById('password');
+const errorMsg = document.getElementById('errorMsg');
+
+// Toggle password visibility
+togglePasswordBtn.addEventListener('click', (e) => {
+	e.preventDefault();
+	if (passwordInput.type === 'password') {
+		passwordInput.type = 'text';
+		togglePasswordBtn.innerHTML = '<span class="material-symbols-outlined text-[20px]">visibility_off</span>';
+	} else {
+		passwordInput.type = 'password';
+		togglePasswordBtn.innerHTML = '<span class="material-symbols-outlined text-[20px]">visibility</span>';
+	}
+});
+
+// Handle login
+loginForm.addEventListener('submit', (e) => {
+	e.preventDefault();
+	
+	const employeeId = document.getElementById('employee-id').value.trim();
+	const password = document.getElementById('password').value;
+	const rememberMe = document.getElementById('remember-me').checked;
+	
+	// Validate credentials
+	const validUser = VALID_CREDENTIALS.find(cred => 
+		cred.employeeId === employeeId && cred.password === password
+	);
+	
+	if (validUser) {
+		// Login successful
+        localStorage.setItem('staffLoggedIn', 'true');
+        localStorage.setItem('staffEmployeeId', employeeId);
+        localStorage.setItem('staffName', validUser.name);
+        localStorage.setItem('staffRole', validUser.role);
+        localStorage.setItem('staffAvatar', validUser.avatar);
+		if (rememberMe) {
+			localStorage.setItem('staffRememberMe', 'true');
+		}
+		window.location.href = 'staff.html';
+	} else {
+		// Login failed
+		errorMsg.textContent = 'Invalid Employee ID or Password. Try CF-00001 / coffee123';
+		errorMsg.classList.remove('hidden');
+		passwordInput.value = '';
+	}
+});
+
+// Auto-fill if remember me was checked
+window.addEventListener('load', () => {
+	if (localStorage.getItem('staffRememberMe') === 'true') {
+		const savedEmployeeId = localStorage.getItem('staffEmployeeId');
+		if (savedEmployeeId) {
+			document.getElementById('employee-id').value = savedEmployeeId;
+			document.getElementById('remember-me').checked = true;
+		}
+	}
+});
+</script>
+</body></html>

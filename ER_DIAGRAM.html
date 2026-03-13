@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Caffernaum ER Diagram</title>
+  <style>
+    :root {
+      --ink: #1e2a22;
+      --muted: #5f6f66;
+      --brand: #b46823;
+      --brand-soft: #f7e4cf;
+      --auth: #1f6fb8;
+      --auth-soft: #dfefff;
+      --ops: #6a4d3b;
+      --ops-soft: #efe7e1;
+      --ok: #1f7b4d;
+      --ok-soft: #dcf4e8;
+      --paper: #fffefb;
+      --line: #e9ded2;
+      --bg-top: #f5f0e8;
+      --bg-bottom: #efe6d8;
+      --shadow: 0 14px 36px rgba(27, 35, 31, 0.09);
+      --radius: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: "Trebuchet MS", "Segoe UI", Tahoma, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(1200px 500px at 10% -10%, #ffffff 0%, rgba(255, 255, 255, 0) 65%),
+        linear-gradient(165deg, var(--bg-top), var(--bg-bottom));
+      padding: 32px 18px 56px;
+    }
+
+    .shell {
+      max-width: 1380px;
+      margin: 0 auto;
+    }
+
+    .hero {
+      text-align: center;
+      margin-bottom: 26px;
+    }
+
+    .hero h1 {
+      font-size: clamp(1.65rem, 2.5vw, 2.2rem);
+      letter-spacing: 0.01em;
+      margin-bottom: 7px;
+    }
+
+    .hero p {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .actions {
+      margin-top: 14px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .print-btn {
+      border: 1px solid #8f5d2f;
+      background: linear-gradient(160deg, #c98036, #aa6223);
+      color: #fff;
+      font-weight: 800;
+      font-size: 0.8rem;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      border-radius: 999px;
+      padding: 9px 14px;
+      cursor: pointer;
+      box-shadow: 0 8px 18px rgba(68, 41, 14, 0.24);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .print-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 20px rgba(68, 41, 14, 0.3);
+    }
+
+    .legend {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+
+    .chip {
+      border: 1px solid var(--line);
+      background: var(--paper);
+      border-radius: 999px;
+      font-size: 0.74rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      padding: 6px 10px;
+      color: #45554d;
+    }
+
+    .canvas {
+      position: relative;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: calc(var(--radius) + 4px);
+      box-shadow: var(--shadow);
+      padding: 32px;
+      overflow: hidden;
+    }
+
+    .canvas::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(to right, rgba(207, 190, 172, 0.22) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(207, 190, 172, 0.22) 1px, transparent 1px);
+      background-size: 24px 24px;
+      pointer-events: none;
+      mask-image: radial-gradient(circle at center, black 55%, transparent 100%);
+    }
+
+    .diagram-grid {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: 290px 320px 290px;
+      grid-template-rows: auto auto auto;
+      grid-template-areas:
+        "auth members inventory"
+        ". orders ."
+        "staff . .";
+      gap: 28px 34px;
+      justify-content: center;
+      align-items: start;
+    }
+
+    .entity {
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background: #fff;
+      box-shadow: 0 8px 22px rgba(30, 42, 34, 0.08);
+      overflow: hidden;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      animation: lift 0.5s ease both;
+    }
+
+    .entity:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 28px rgba(30, 42, 34, 0.14);
+    }
+
+    .entity.auth { grid-area: auth; border-top: 5px solid var(--auth); }
+    .entity.members { grid-area: members; border-top: 5px solid var(--brand); }
+    .entity.inventory { grid-area: inventory; border-top: 5px solid var(--ok); }
+    .entity.orders { grid-area: orders; border-top: 5px solid var(--brand); }
+    .entity.staff { grid-area: staff; border-top: 5px solid var(--ops); }
+
+    .head {
+      padding: 14px 16px 12px;
+      border-bottom: 1px solid #f1e8dd;
+    }
+
+    .name {
+      font-weight: 800;
+      font-size: 0.98rem;
+      letter-spacing: 0.01em;
+    }
+
+    .meta {
+      margin-top: 3px;
+      font-size: 0.72rem;
+      color: #7a8780;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 700;
+    }
+
+    .rows {
+      padding: 8px 0;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 40px 1fr auto;
+      gap: 8px;
+      align-items: center;
+      padding: 6px 14px;
+      border-bottom: 1px dashed #f2e9de;
+      font-size: 0.76rem;
+    }
+
+    .row:last-child {
+      border-bottom: none;
+    }
+
+    .k {
+      justify-self: start;
+      font-size: 0.62rem;
+      font-weight: 800;
+      border-radius: 4px;
+      padding: 2px 4px;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+
+    .pk {
+      background: #fbead7;
+      border: 1px solid #ebc79e;
+      color: #8b4d13;
+    }
+
+    .fk {
+      background: #e4f4e9;
+      border: 1px solid #a8d5bb;
+      color: #175a36;
+    }
+
+    .f {
+      font-weight: 700;
+      color: #2f3e36;
+      overflow-wrap: anywhere;
+    }
+
+    .t {
+      color: #79867f;
+      font-style: italic;
+      font-size: 0.72rem;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .conn {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .conn path {
+      fill: none;
+      stroke-width: 2.4;
+      stroke-linecap: round;
+    }
+
+    .note {
+      margin-top: 20px;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px 14px;
+      color: #55665d;
+      font-size: 0.86rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .relationships {
+      margin-top: 28px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .relationships h2 {
+      background: #2c3d34;
+      color: #fff;
+      padding: 14px 18px;
+      font-size: 0.95rem;
+      letter-spacing: 0.02em;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+    }
+
+    th {
+      text-align: left;
+      background: #f7f0e6;
+      color: #44534b;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--line);
+      white-space: nowrap;
+      font-size: 0.78rem;
+    }
+
+    td {
+      padding: 10px 12px;
+      border-bottom: 1px solid #f0e8dd;
+      color: #36443d;
+      vertical-align: top;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    .card {
+      display: inline-block;
+      border-radius: 999px;
+      padding: 2px 7px;
+      font-size: 0.66rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      border: 1px solid;
+    }
+
+    .one { background: #fdebd9; border-color: #ebbf91; color: #8b511c; }
+    .many { background: #e5f4ea; border-color: #a9d4b9; color: #1f6842; }
+
+    .role-ers {
+      margin-top: 28px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .role-panel {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .role-head {
+      padding: 12px 16px;
+      font-size: 0.9rem;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: 0.01em;
+    }
+
+    .role-head.staff {
+      background: linear-gradient(90deg, #5f4637, #7c5943);
+    }
+
+    .role-head.customer {
+      background: linear-gradient(90deg, #215e96, #2f78ba);
+    }
+
+    .role-body {
+      padding: 14px;
+    }
+
+    .mini-grid {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .mini-card {
+      border: 1px solid #eadfd2;
+      border-radius: 10px;
+      background: #fff;
+      overflow: hidden;
+    }
+
+    .mini-card h4 {
+      font-size: 0.76rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: #33443c;
+      padding: 9px 10px;
+      border-bottom: 1px solid #f0e7db;
+      background: #fcf8f2;
+    }
+
+    .mini-card ul {
+      list-style: none;
+      padding: 8px 10px 10px;
+    }
+
+    .mini-card li {
+      font-size: 0.74rem;
+      color: #4d5d55;
+      padding: 4px 0;
+      border-bottom: 1px dashed #f1e8dc;
+      overflow-wrap: anywhere;
+    }
+
+    .mini-card li:last-child {
+      border-bottom: none;
+    }
+
+    .mini-link {
+      width: 86px;
+      height: 62px;
+    }
+
+    .mini-link line,
+    .mini-link path {
+      stroke: #6b7a73;
+      stroke-width: 2.2;
+      fill: none;
+      stroke-linecap: round;
+    }
+
+    .mini-link text {
+      fill: #5e6d66;
+      font-size: 9px;
+      font-weight: 800;
+      text-anchor: middle;
+      letter-spacing: 0.03em;
+    }
+
+    .role-note {
+      margin-top: 10px;
+      font-size: 0.75rem;
+      color: #67776f;
+      font-weight: 600;
+    }
+
+    @keyframes lift {
+      from {
+        transform: translateY(8px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    @media (max-width: 1180px) {
+      .diagram-grid {
+        grid-template-columns: 1fr 1fr;
+        grid-template-areas:
+          "auth members"
+          "inventory orders"
+          "staff staff";
+      }
+
+      .conn {
+        display: none;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .canvas {
+        padding: 18px;
+      }
+
+      .diagram-grid {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+          "auth"
+          "members"
+          "orders"
+          "inventory"
+          "staff";
+        gap: 16px;
+      }
+
+      .row {
+        grid-template-columns: 34px 1fr;
+      }
+
+      .t {
+        grid-column: 2;
+        text-align: left;
+        white-space: normal;
+      }
+
+      table,
+      thead,
+      tbody,
+      th,
+      td,
+      tr {
+        display: block;
+      }
+
+      thead {
+        display: none;
+      }
+
+      tr {
+        border-bottom: 1px solid #f0e8dd;
+      }
+
+      td {
+        border-bottom: none;
+        padding: 7px 12px;
+      }
+
+      .role-ers {
+        grid-template-columns: 1fr;
+      }
+
+      .mini-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .mini-link {
+        width: 100%;
+        height: 40px;
+        justify-self: center;
+      }
+    }
+
+    @media print {
+      @page {
+        size: A4 portrait;
+        margin: 12mm;
+      }
+
+      body {
+        background: #fff;
+        color: #000;
+        padding: 0;
+        font-size: 11px;
+      }
+
+      .shell {
+        max-width: none;
+      }
+
+      .actions {
+        display: none;
+      }
+
+      .hero {
+        margin-bottom: 14px;
+      }
+
+      .hero p {
+        color: #333;
+      }
+
+      .chip {
+        background: #fff;
+      }
+
+      .canvas,
+      .relationships,
+      .role-panel,
+      .note {
+        box-shadow: none;
+        background: #fff;
+      }
+
+      .canvas,
+      .relationships,
+      .role-panel {
+        border-color: #bbb;
+      }
+
+      .canvas::before {
+        display: none;
+      }
+
+      .entity {
+        animation: none;
+        box-shadow: none;
+        break-inside: avoid;
+      }
+
+      .relationships,
+      .role-panel,
+      tr {
+        break-inside: avoid;
+      }
+
+      table,
+      thead,
+      tbody,
+      th,
+      td,
+      tr {
+        display: table;
+      }
+
+      thead {
+        display: table-header-group;
+      }
+
+      tbody {
+        display: table-row-group;
+      }
+
+      tr {
+        display: table-row;
+      }
+
+      th,
+      td {
+        display: table-cell;
+      }
+
+      .role-ers {
+        grid-template-columns: 1fr;
+      }
+
+      .mini-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .mini-link {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <div class="hero">
+      <h1>Caffernaum Data Model ER Diagram</h1>
+      <p>A cleaner, presentation-ready view of Firestore collections, authentication, and operational data.</p>
+      <div class="legend">
+        <span class="chip">PK Primary Key</span>
+        <span class="chip">FK Foreign Key</span>
+        <span class="chip">Firestore + Auth + Local State</span>
+      </div>
+      <div class="actions">
+        <button class="print-btn" type="button" onclick="window.print()">Print ER Diagram</button>
+      </div>
+    </div>
+
+    <section class="canvas" aria-label="Entity relationship diagram">
+      <svg class="conn" viewBox="0 0 1200 850" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="mBrand" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+            <path d="M0,0 L0,9 L9,4.5 Z" fill="#b46823" />
+          </marker>
+          <marker id="mAuth" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+            <path d="M0,0 L0,9 L9,4.5 Z" fill="#1f6fb8" />
+          </marker>
+          <marker id="mOps" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+            <path d="M0,0 L0,9 L9,4.5 Z" fill="#6a4d3b" />
+          </marker>
+          <marker id="mOk" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+            <path d="M0,0 L0,9 L9,4.5 Z" fill="#1f7b4d" />
+          </marker>
+        </defs>
+
+        <path d="M 265 146 C 338 146, 358 146, 432 146" stroke="#1f6fb8" stroke-dasharray="6 4" marker-end="url(#mAuth)" />
+        <path d="M 592 280 C 592 340, 592 380, 592 448" stroke="#b46823" marker-end="url(#mBrand)" />
+        <path d="M 760 478 C 890 442, 935 288, 976 170" stroke="#1f7b4d" stroke-dasharray="6 4" marker-end="url(#mOk)" />
+        <path d="M 204 645 C 350 558, 437 540, 503 500" stroke="#6a4d3b" stroke-dasharray="7 4" marker-end="url(#mOps)" />
+        <path d="M 232 620 C 486 574, 765 410, 972 182" stroke="#6a4d3b" stroke-dasharray="7 4" marker-end="url(#mOps)" />
+      </svg>
+
+      <div class="diagram-grid">
+        <article class="entity auth">
+          <div class="head">
+            <div class="name">Firebase Auth</div>
+            <div class="meta">Authentication Service</div>
+          </div>
+          <div class="rows">
+            <div class="row"><span class="k pk">PK</span><span class="f">uid</span><span class="t">string</span></div>
+            <div class="row"><span class="k"></span><span class="f">email</span><span class="t">string</span></div>
+            <div class="row"><span class="k"></span><span class="f">displayName</span><span class="t">string</span></div>
+            <div class="row"><span class="k"></span><span class="f">emailVerified</span><span class="t">boolean</span></div>
+            <div class="row"><span class="k"></span><span class="f">createdAt</span><span class="t">timestamp</span></div>
+          </div>
+        </article>
+
+        <article class="entity members">
+          <div class="head">
+            <div class="name">members</div>
+            <div class="meta">Firestore Collection</div>
+          </div>
+          <div class="rows">
+            <div class="row"><span class="k pk">PK</span><span class="f">uid (= auth.uid)</span><span class="t">string</span></div>
+            <div class="row"><span class="k"></span><span class="f">fullName</span><span class="t">string</span></div>
+            <div class="row"><span class="k"></span><span class="f">email</span><span class="t">string</span></div>
+            <div class="row"><span class="k"></span><span class="f">phone</span><span class="t">string</span></div>
+            <div class="row"><span class="k"></span><span class="f">rewardPoints</span><span class="t">number</span></div>
+            <div class="row"><span class="k"></span><span class="f">tier</span><span class="t">Bronze|Silver|Gold</span></div>
+            <div class="row"><span class="k"></span><span class="f">stats (map)</span><span class="t">object</span></div>
+          </div>
+        </article>
+
+        <article class="entity inventory">
+          <div class="head">
+            <div class="name">inventory</div>
+            <div class="meta">Firestore Collection</div>
+          </div>
+          <div class="rows">
+            <div class="row"><span class="k pk">PK</span><span class="f">id</span><span class="t">auto id</span></div>
+            <div class="row"><span class="k"></span><span class="f">sku</span><span class="t">string</span></div>
+            <div class="row"><span class="k"></span><span class="f">name</span><span class="t">string</span></div>
+            <div class="row"><span class="k"></span><span class="f">category</span><span class="t">enum</span></div>
+            <div class="row"><span class="k"></span><span class="f">currentStock</span><span class="t">number</span></div>
+            <div class="row"><span class="k"></span><span class="f">maxStock</span><span class="t">number</span></div>
+            <div class="row"><span class="k"></span><span class="f">lastUpdated</span><span class="t">timestamp</span></div>
+          </div>
+        </article>
+
+        <article class="entity orders">
+          <div class="head">
+            <div class="name">orders</div>
+            <div class="meta">Firestore Collection</div>
+          </div>
+          <div class="rows">
+            <div class="row"><span class="k pk">PK</span><span class="f">id</span><span class="t">auto id</span></div>
+            <div class="row"><span class="k fk">FK</span><span class="f">memberUid</span><span class="t">string|null</span></div>
+            <div class="row"><span class="k"></span><span class="f">status</span><span class="t">new|preparing|ready|completed</span></div>
+            <div class="row"><span class="k"></span><span class="f">subtotal / tax / total</span><span class="t">number</span></div>
+            <div class="row"><span class="k"></span><span class="f">items[]</span><span class="t">array of maps</span></div>
+            <div class="row"><span class="k"></span><span class="f">customer map</span><span class="t">object</span></div>
+            <div class="row"><span class="k"></span><span class="f">createdAt / updatedAt</span><span class="t">timestamp</span></div>
+          </div>
+        </article>
+
+        <article class="entity staff">
+          <div class="head">
+            <div class="name">staff</div>
+            <div class="meta">localStorage / app state</div>
+          </div>
+          <div class="rows">
+            <div class="row"><span class="k pk">PK</span><span class="f">employeeId</span><span class="t">string</span></div>
+            <div class="row"><span class="k"></span><span class="f">name</span><span class="t">string</span></div>
+            <div class="row"><span class="k"></span><span class="f">role</span><span class="t">Lead|Head|Barista</span></div>
+            <div class="row"><span class="k"></span><span class="f">password</span><span class="t">string</span></div>
+            <div class="row"><span class="k"></span><span class="f">avatar</span><span class="t">url</span></div>
+          </div>
+        </article>
+      </div>
+
+      <div class="note">
+        Relationship lines: Auth to Members (1:1), Members to Orders (1:N), Orders to Inventory (N:M conceptual), Staff to Orders/Inventory (operational management).
+      </div>
+    </section>
+
+    <section class="relationships" aria-label="Relationship summary table">
+      <h2>Relationship Summary</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>From</th>
+            <th>Cardinality</th>
+            <th>To</th>
+            <th>Link</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Firebase Auth</td>
+            <td><span class="card one">1</span> to <span class="card one">1</span></td>
+            <td>members</td>
+            <td><code>auth.uid = members.uid</code></td>
+            <td>One account maps to one profile document.</td>
+          </tr>
+          <tr>
+            <td>members</td>
+            <td><span class="card one">1</span> to <span class="card many">N</span></td>
+            <td>orders</td>
+            <td><code>orders.memberUid</code></td>
+            <td>Member orders are linked; guest orders may use null.</td>
+          </tr>
+          <tr>
+            <td>orders.items</td>
+            <td><span class="card many">N</span> to <span class="card many">M</span></td>
+            <td>inventory</td>
+            <td><code>items[].product ~ inventory.name</code></td>
+            <td>Conceptual ingredient dependency, not a strict foreign key.</td>
+          </tr>
+          <tr>
+            <td>staff</td>
+            <td><span class="card many">N</span> to <span class="card many">N</span></td>
+            <td>orders, inventory</td>
+            <td>Operational</td>
+            <td>Staff users manage statuses and stock workflows.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="role-ers" aria-label="Role specific ER diagrams">
+      <article class="role-panel">
+        <div class="role-head staff">Staff ER Diagram (staff.html)</div>
+        <div class="role-body">
+          <div class="mini-grid">
+            <div class="mini-card">
+              <h4>localStorage.staffSession</h4>
+              <ul>
+                <li>PK: staffEmployeeId</li>
+                <li>staffLoggedIn</li>
+                <li>staffName, staffRole</li>
+                <li>staffAvatar</li>
+              </ul>
+            </div>
+
+            <svg class="mini-link" viewBox="0 0 86 62" role="img" aria-label="one to many operational relation">
+              <line x1="10" y1="31" x2="70" y2="31"></line>
+              <line x1="16" y1="22" x2="16" y2="40"></line>
+              <line x1="70" y1="31" x2="80" y2="24"></line>
+              <line x1="70" y1="31" x2="80" y2="31"></line>
+              <line x1="70" y1="31" x2="80" y2="38"></line>
+              <text x="43" y="14">1 : N</text>
+            </svg>
+
+            <div class="mini-card">
+              <h4>Firestore.orders</h4>
+              <ul>
+                <li>PK: id</li>
+                <li>status</li>
+                <li>customer map</li>
+                <li>items[]</li>
+              </ul>
+            </div>
+          </div>
+          <div class="role-note">Staff sessions are local, while order workflow reads and updates Firestore in real time.</div>
+        </div>
+      </article>
+
+      <article class="role-panel">
+        <div class="role-head customer">Customer ER Diagram (index.html)</div>
+        <div class="role-body">
+          <div class="mini-grid">
+            <div class="mini-card">
+              <h4>localStorage.customerState</h4>
+              <ul>
+                <li>PK: memberUid (optional)</li>
+                <li>memberLoggedIn</li>
+                <li>caffeCart[]</li>
+                <li>rewardPoints</li>
+              </ul>
+            </div>
+
+            <svg class="mini-link" viewBox="0 0 86 62" role="img" aria-label="checkout relation">
+              <line x1="10" y1="31" x2="70" y2="31"></line>
+              <line x1="16" y1="22" x2="16" y2="40"></line>
+              <line x1="70" y1="31" x2="80" y2="24"></line>
+              <line x1="70" y1="31" x2="80" y2="31"></line>
+              <line x1="70" y1="31" x2="80" y2="38"></line>
+              <text x="43" y="14">1 : N</text>
+            </svg>
+
+            <div class="mini-card">
+              <h4>Firestore.orders</h4>
+              <ul>
+                <li>PK: id</li>
+                <li>memberUid (optional FK)</li>
+                <li>items[] + total</li>
+                <li>customer + addressDetails</li>
+              </ul>
+            </div>
+          </div>
+          <div class="role-note">Customer cart and rewards are local first, then checkout writes normalized order records to Firestore.</div>
+        </div>
+      </article>
+    </section>
+  </div>
+</body>
+</html>

@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Caffernaum Inventory Management</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                "primary": "#cf7317",
+                "background-light": "#f8f7f6",
+                "background-dark": "#211911",
+              },
+              fontFamily: {
+                "display": ["Plus Jakarta Sans", "sans-serif"]
+              },
+              borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+            },
+          },
+        }
+    </script>
+<style>
+        body {
+            font-family: "Plus Jakarta Sans", sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .active-nav {
+            background-color: rgba(207, 115, 23, 0.1);
+            border-left: 4px solid #cf7317;
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen">
+<div class="flex h-screen overflow-hidden">
+<!-- Sidebar Navigation -->
+<aside class="w-64 flex-shrink-0 border-r border-primary/10 bg-white dark:bg-slate-900 flex flex-col">
+<div class="p-6 flex items-center gap-3">
+<div class="bg-primary p-2 rounded-lg text-white">
+<span class="material-symbols-outlined">coffee</span>
+</div>
+<div>
+<h1 class="text-lg font-bold tracking-tight text-slate-900 dark:text-white">Caffernaum</h1>
+<p class="text-xs font-medium text-primary uppercase tracking-wider">Staff Portal</p>
+</div>
+</div>
+<nav class="flex-1 px-4 space-y-1 mt-4">
+<a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-primary/5 hover:text-primary rounded-lg transition-colors" href="staff.html">
+<span class="material-symbols-outlined">list_alt</span>
+                    Active Orders
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-primary/5 hover:text-primary rounded-lg transition-colors" href="index.html" target="_blank">
+<span class="material-symbols-outlined">store</span>
+                    Customer Site
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 text-sm font-semibold rounded-lg active-nav text-primary" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+                    Inventory
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-primary/5 hover:text-primary rounded-lg transition-colors" href="staff.html#income">
+<span class="material-symbols-outlined">payments</span>
+					Income
+				</a>
+</nav>
+<div class="p-4 border-t border-primary/10">
+<div class="flex items-center gap-3 p-2 rounded-xl bg-primary/5">
+<img alt="Staff Profile" class="size-10 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBSnv9cze9VzPj2Q08M9IAqLo4xOJjZkaB7T90uNmYQPJ6ygv95eJUfhnpi4La-RwEot4Y_G1pZWQ_7zAaQ4WWTi2zArBbfhpMclPzY5PBloyQLkHh7GeweYhAXWUer2Iv-KUaOzXTnIBvY6rJYpehznPzfQOc6OxuP8UFD6piQAlxuK9pUzgdySjZraqo4sDktHLhKU-WSxXS0QS3pxoEF17175vzEBCxTqYn2H2vgrO49wHVyB38o9JGImBBl2bHVxWhHLErbFQ"/>
+<div class="flex-1 min-w-0">
+<p class="text-sm font-bold truncate" id="staffName">Jamill Payapag</p>
+<p class="text-xs text-slate-500 truncate">Lead Barista</p>
+</div>
+<button id="logoutBtn" class="w-10 h-10 rounded-full bg-amber-100 hover:bg-primary text-slate-600 hover:text-white transition-all duration-200 flex items-center justify-center shadow-sm hover:shadow-md transform hover:scale-105 cursor-pointer" title="Logout">
+<span class="material-symbols-outlined text-lg">logout</span>
+</button>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col min-w-0 bg-background-light dark:bg-background-dark overflow-hidden">
+<!-- Header -->
+<header class="h-20 bg-white dark:bg-slate-900 border-b border-primary/10 px-8 flex items-center justify-between z-10">
+<div class="flex items-center gap-6 flex-1">
+<h2 class="text-xl font-bold">Inventory Management</h2>
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+<input id="searchInput" class="w-full bg-slate-100 dark:bg-slate-800 border-none rounded-xl pl-10 pr-4 py-2 text-sm focus:ring-2 focus:ring-primary/50 transition-all" placeholder="Search by name, SKU, or category..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button id="exportBtn" class="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-300 font-bold text-sm hover:border-primary/50 transition-all shadow-sm">
+<span class="material-symbols-outlined !text-lg">file_download</span>
+                        Export
+                    </button>
+<button id="addItemBtn" class="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg font-bold text-sm hover:brightness-110 transition-all shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined !text-lg">add</span>
+                        Add Item
+                    </button>
+</div>
+</header>
+<!-- Filter Tabs -->
+<div class="px-8 pt-6">
+<div class="flex items-center gap-2 border-b border-slate-200 dark:border-slate-800">
+<button id="filterAll" class="filter-btn px-6 py-3 text-sm font-bold text-primary border-b-2 border-primary" data-filter="all">All Items (<span id="countAll">0</span>)</button>
+<button id="filterBeans" class="filter-btn px-6 py-3 text-sm font-semibold text-slate-500 hover:text-slate-700 dark:hover:text-slate-300" data-filter="beans">Coffee Beans (<span id="countBeans">0</span>)</button>
+<button id="filterDairy" class="filter-btn px-6 py-3 text-sm font-semibold text-slate-500 hover:text-slate-700 dark:hover:text-slate-300" data-filter="dairy">Milk &amp; Dairy (<span id="countDairy">0</span>)</button>
+<button id="filterSyrups" class="filter-btn px-6 py-3 text-sm font-semibold text-slate-500 hover:text-slate-700 dark:hover:text-slate-300" data-filter="syrups">Syrups (<span id="countSyrups">0</span>)</button>
+<button id="filterSpices" class="filter-btn px-6 py-3 text-sm font-semibold text-slate-500 hover:text-slate-700 dark:hover:text-slate-300" data-filter="spices">Spices (<span id="countSpices">0</span>)</button>
+<button id="filterSweetener" class="filter-btn px-6 py-3 text-sm font-semibold text-slate-500 hover:text-slate-700 dark:hover:text-slate-300" data-filter="sweetener">Sweetener (<span id="countSweetener">0</span>)</button>
+<button id="filterPastries" class="filter-btn px-6 py-3 text-sm font-semibold text-slate-500 hover:text-slate-700 dark:hover:text-slate-300" data-filter="pastries">Pastries (<span id="countPastries">0</span>)</button>
+</div>
+</div>
+<!-- Scrollable Content -->
+<div class="flex-1 overflow-y-auto p-8">
+<div class="space-y-8">
+<!-- KPI Summary Cards -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="kpiCards">
+<div class="bg-white dark:bg-slate-800 p-5 rounded-xl border border-primary/10 shadow-sm flex flex-col justify-between group hover:border-primary/30 transition-all">
+<div class="flex justify-between items-start">
+<p class="text-slate-500 dark:text-slate-400 text-sm font-semibold">Total Daily Sales</p>
+<div class="size-8 bg-green-100 dark:bg-green-900/30 text-green-600 rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined !text-xl">payments</span>
+</div>
+</div>
+<div class="mt-4">
+<p class="text-3xl font-extrabold text-slate-900 dark:text-slate-100">$1,240.50</p>
+<p class="text-green-600 text-xs font-bold mt-1 flex items-center gap-1">
+<span class="material-symbols-outlined !text-xs">trending_up</span>
+                                +12.4% from yesterday
+                            </p>
+</div>
+</div>
+<div class="bg-white dark:bg-slate-800 p-5 rounded-xl border border-primary/10 shadow-sm flex flex-col justify-between group hover:border-primary/30 transition-all">
+<div class="flex justify-between items-start">
+<p class="text-slate-500 dark:text-slate-400 text-sm font-semibold">Top Selling Item</p>
+<div class="size-8 bg-primary/10 text-primary rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined !text-xl">star</span>
+</div>
+</div>
+<div class="mt-4">
+<p class="text-2xl font-extrabold text-slate-900 dark:text-slate-100">Iced Oat Latte</p>
+<p class="text-slate-500 dark:text-slate-400 text-xs font-bold mt-1 uppercase tracking-wider">42 units sold today</p>
+</div>
+</div>
+<div class="bg-white dark:bg-slate-800 p-5 rounded-xl border border-red-100 dark:border-red-900/30 shadow-sm flex flex-col justify-between group hover:border-red-300 transition-all">
+<div class="flex justify-between items-start">
+<p class="text-slate-500 dark:text-slate-400 text-sm font-semibold">Critical Stock</p>
+<div class="size-8 bg-red-100 dark:bg-red-900/30 text-red-600 rounded-lg flex items-center justify-center animate-pulse">
+<span class="material-symbols-outlined !text-xl">warning</span>
+</div>
+</div>
+<div class="mt-4">
+<p class="text-3xl font-extrabold text-red-600">4 Items</p>
+<p class="text-slate-500 dark:text-slate-400 text-xs font-bold mt-1 flex items-center gap-1">
+                                Requires immediate restock
+                            </p>
+</div>
+</div>
+<div class="bg-white dark:bg-slate-800 p-5 rounded-xl border border-primary/10 shadow-sm flex flex-col justify-between group hover:border-primary/30 transition-all">
+<div class="flex justify-between items-start">
+<p class="text-slate-500 dark:text-slate-400 text-sm font-semibold">Inventory Value</p>
+<div class="size-8 bg-blue-100 dark:bg-blue-900/30 text-blue-600 rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined !text-xl">inventory_2</span>
+</div>
+</div>
+<div class="mt-4">
+<p class="text-3xl font-extrabold text-slate-900 dark:text-slate-100">$4,821.00</p>
+<p class="text-slate-500 dark:text-slate-400 text-xs font-bold mt-1">156 Total unique SKUs</p>
+</div>
+</div>
+</div>
+<!-- Inventory Table -->
+<div class="bg-white dark:bg-slate-800 rounded-xl border border-primary/10 shadow-xl overflow-hidden">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-slate-50 dark:bg-slate-900/50 text-slate-500 dark:text-slate-400 text-xs uppercase tracking-wider font-bold">
+<th class="px-6 py-4">Item Details</th>
+<th class="px-6 py-4">Category</th>
+<th class="px-6 py-4">SKU</th>
+<th class="px-6 py-4">Stock Level</th>
+<th class="px-6 py-4">Status</th>
+<th class="px-6 py-4 text-right">Actions</th>
+</tr>
+</thead>
+<tbody id="inventoryTableBody" class="divide-y divide-slate-100 dark:divide-slate-700">
+<!-- Items will be populated by JavaScript -->
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<!-- Dashboard Footer Stats -->
+<footer class="h-14 bg-white dark:bg-slate-900 border-t border-primary/10 px-8 flex items-center justify-between text-xs font-semibold text-slate-500">
+<div class="flex gap-8">
+<span class="flex items-center gap-2"><span class="size-2 rounded-full bg-primary"></span> <span id="totalItems">0</span> Total Items</span>
+<span class="flex items-center gap-2"><span class="size-2 rounded-full bg-red-500"></span> <span id="lowStockItems">0</span> Low Stock</span>
+<span class="flex items-center gap-2"><span class="size-2 rounded-full bg-emerald-500"></span> ₱<span id="totalValue">0</span> Total Value</span>
+</div>
+<div id="lastUpdated">Last updated: Just now</div>
+</footer>
+</main>
+</div>
+
+<!-- Add Item Modal -->
+<div id="addItemModal" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+	<div class="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+		<div class="sticky top-0 bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 px-6 py-4 flex items-center justify-between">
+			<h3 class="text-xl font-bold text-slate-900 dark:text-slate-100">Add New Item</h3>
+			<button onclick="inventoryManager.closeAddModal()" class="size-8 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center justify-center transition-colors">
+				<span class="material-symbols-outlined text-slate-400">close</span>
+			</button>
+		</div>
+		<form id="addItemForm" class="p-6 space-y-4">
+			<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+				<div>
+					<label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Item Name *</label>
+					<input type="text" id="itemName" required class="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-primary/50 focus:border-primary" placeholder="e.g., Colombian Supremo">
+				</div>
+				<div>
+					<label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">SKU/ID *</label>
+					<input type="text" id="itemId" required class="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-primary/50 focus:border-primary" placeholder="e.g., BEA-COL-002">
+				</div>
+			</div>
+			<div>
+				<label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Description *</label>
+				<input type="text" id="itemDescription" required class="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-primary/50 focus:border-primary" placeholder="e.g., Medium Roast, 1kg Bags">
+			</div>
+			<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+				<div>
+					<label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Category *</label>
+					<select id="itemCategory" required class="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-primary/50 focus:border-primary">
+						<option value="">Select category</option>
+						<option value="beans">Coffee Beans</option>
+						<option value="dairy">Milk & Dairy</option>
+						<option value="syrups">Syrups & Ingredients</option>
+						<option value="spices">Spices</option>
+						<option value="sweetener">Sweetener</option>
+						<option value="pastries">Pastries</option>
+					</select>
+				</div>
+				<div>
+					<label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Unit *</label>
+					<input type="text" id="itemUnit" required class="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-primary/50 focus:border-primary" placeholder="e.g., kg, units, left">
+				</div>
+			</div>
+			<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+				<div>
+					<label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Current Stock *</label>
+					<input type="number" id="itemCurrent" required min="0" class="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-primary/50 focus:border-primary" placeholder="0">
+				</div>
+				<div>
+					<label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Max Stock *</label>
+					<input type="number" id="itemMax" required min="1" class="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-primary/50 focus:border-primary" placeholder="0">
+				</div>
+				<div>
+					<label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Price per Unit *</label>
+					<input type="number" id="itemPrice" required min="0" step="0.01" class="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-primary/50 focus:border-primary" placeholder="0.00">
+				</div>
+			</div>
+			<div class="flex gap-3 pt-4 border-t border-slate-200 dark:border-slate-700">
+				<button type="submit" class="flex-1 px-6 py-3 bg-primary text-white rounded-lg font-bold hover:brightness-110 transition-all shadow-lg shadow-primary/20">
+					<span class="flex items-center justify-center gap-2">
+						<span class="material-symbols-outlined !text-lg">add</span>
+						Add Item
+					</span>
+				</button>
+				<button type="button" onclick="inventoryManager.closeAddModal()" class="px-6 py-3 bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg font-bold hover:bg-slate-300 dark:hover:bg-slate-600 transition-colors">
+					Cancel
+				</button>
+			</div>
+		</form>
+	</div>
+</div>
+
+<script type="module">
+	import { 
+		db, 
+		collection, 
+		addDoc, 
+		setDoc,
+		getDocs,
+		doc,
+		getDoc,
+		updateDoc,
+		deleteDoc,
+		onSnapshot,
+		serverTimestamp
+	} from './firebase-config.js';
+
+	// Check if user is logged in
+	if (!localStorage.getItem('staffLoggedIn')) {
+		window.location.href = 'login.html';
+	}
+
+	// Inventory Management System
+	class InventoryManager {
+	constructor() {
+		this.items = [];
+		this.currentFilter = 'all';
+		this.searchTerm = '';
+		this.initApp();
+	}
+
+	async initApp() {
+		await this.loadInventory();
+		this.setupRealtimeListener();
+		this.renderAll();
+		this.setupFilters();
+		this.setupSearch();
+		this.setupButtons();
+	}
+
+	async loadInventory() {
+		try {
+			const querySnapshot = await getDocs(collection(db, "inventory"));
+			
+			// If database is empty, seed it with default items
+			if (querySnapshot.empty) {
+				console.log("📦 Database empty - seeding with default items...");
+				await this.seedDatabase();
+				// Reload after seeding
+				const reloadSnapshot = await getDocs(collection(db, "inventory"));
+				this.items = [];
+				reloadSnapshot.forEach((doc) => {
+					this.items.push({ id: doc.id, ...doc.data() });
+				});
+			} else {
+				this.items = [];
+				querySnapshot.forEach((doc) => {
+					this.items.push({ id: doc.id, ...doc.data() });
+				});
+				
+				const addedCount = await this.ensureDefaultItems();
+				if (addedCount > 0) {
+					const reloadSnapshot = await getDocs(collection(db, "inventory"));
+					this.items = [];
+					reloadSnapshot.forEach((doc) => {
+						this.items.push({ id: doc.id, ...doc.data() });
+					});
+				}
+			}
+			
+			console.log("✅ Loaded", this.items.length, "items from Firebase");
+		} catch (error) {
+			console.error("❌ Error loading inventory:", error);
+			alert("Error loading inventory: " + error.message);
+		}
+	}
+
+	async seedDatabase() {
+		try {
+			const defaultItems = this.getDefaultItems();
+			
+			// Convert field names and add to Firebase
+			for (const item of defaultItems) {
+				const firestoreItem = {
+					name: item.name,
+					description: item.description || '',
+					category: item.category,
+					categoryDisplay: item.categoryDisplay,
+					icon: item.icon || 'coffee',
+					currentStock: item.current,  // Rename: current → currentStock
+					maxStock: item.max,           // Rename: max → maxStock
+					unit: item.unit,
+					price: item.pricePerUnit,     // Rename: pricePerUnit → price
+					sku: item.id,                 // Use the old id as sku
+					createdAt: serverTimestamp()
+				};
+				
+				const itemRef = doc(db, "inventory", item.id);
+				await setDoc(itemRef, firestoreItem);
+			}
+			
+			console.log("✅ Seeded database with", defaultItems.length, "items");
+		} catch (error) {
+			console.error("❌ Error seeding database:", error);
+		}
+	}
+
+	async ensureDefaultItems() {
+		try {
+			const defaultItems = this.getDefaultItems();
+			const existingSkus = new Set(this.items.map(item => item.sku || item.id));
+			const missingItems = defaultItems.filter(item => !existingSkus.has(item.id));
+
+			if (missingItems.length === 0) return 0;
+
+			for (const item of missingItems) {
+				const firestoreItem = {
+					name: item.name,
+					description: item.description || '',
+					category: item.category,
+					categoryDisplay: item.categoryDisplay,
+					icon: item.icon || 'coffee',
+					currentStock: item.current,
+					maxStock: item.max,
+					unit: item.unit,
+					price: item.pricePerUnit,
+					sku: item.id,
+					createdAt: serverTimestamp()
+				};
+
+				await setDoc(doc(db, "inventory", item.id), firestoreItem);
+			}
+
+			console.log("✅ Added missing default items:", missingItems.length);
+			return missingItems.length;
+		} catch (error) {
+			console.error("❌ Error adding missing default items:", error);
+			return 0;
+		}
+	}
+
+	setupRealtimeListener() {
+		onSnapshot(collection(db, "inventory"), (snapshot) => {
+			this.items = [];
+			snapshot.forEach((doc) => {
+				this.items.push({ id: doc.id, ...doc.data() });
+			});
+			
+			console.log("📡 Inventory updated in real-time!");
+			this.renderAll();
+		});
+	}
+
+	// Default inventory items - Complete ingredients for all menu products (for reference only)
+	getDefaultItems() {
+		return [
+			// Coffee Beans
+			{
+				id: 'BEA-ETH-001',
+				name: 'Ethiopian Yirgacheffe',
+				description: 'Light Roast, 1kg Bags',
+				category: 'beans',
+				categoryDisplay: 'Beans',
+				icon: 'coffee',
+				current: 12,
+				max: 20,
+				unit: 'kg',
+				pricePerUnit: 450
+			},
+			{
+				id: 'BEA-COL-002',
+				name: 'Colombian Supremo',
+				description: 'Medium Roast, 1kg Bags',
+				category: 'beans',
+				categoryDisplay: 'Beans',
+				icon: 'coffee',
+				current: 18,
+				max: 20,
+				unit: 'kg',
+				pricePerUnit: 420
+			},
+			{
+				id: 'BEA-ESP-003',
+				name: 'Espresso Blend',
+				description: 'Dark Roast, 1kg Bags',
+				category: 'beans',
+				categoryDisplay: 'Beans',
+				icon: 'coffee',
+				current: 25,
+				max: 40,
+				unit: 'kg',
+				pricePerUnit: 480
+			},
+			{
+				id: 'BEA-OAK-004',
+				name: 'Oak-Aged Coffee Beans',
+				description: 'Barrel-Aged, 500g',
+				category: 'beans',
+				categoryDisplay: 'Beans',
+				icon: 'coffee',
+				current: 3,
+				max: 10,
+				unit: 'kg',
+				pricePerUnit: 920
+			},
+			{
+				id: 'BEA-COL-005',
+				name: 'Cold Brew Blend',
+				description: 'Coarse Ground, 1kg',
+				category: 'beans',
+				categoryDisplay: 'Beans',
+				icon: 'coffee',
+				current: 15,
+				max: 25,
+				unit: 'kg',
+				pricePerUnit: 440
+			},
+			// Dairy & Milk
+			{
+				id: 'MLK-WHL-005',
+				name: 'Whole Milk',
+				description: 'Full Cream 1L',
+				category: 'dairy',
+				categoryDisplay: 'Dairy',
+				icon: 'water_drop',
+				current: 24,
+				max: 40,
+				unit: 'units',
+				pricePerUnit: 65
+			},
+			{
+				id: 'MLK-OAT-009',
+				name: 'Oatly Barista Edition',
+				description: '1L Carton, Case of 6',
+				category: 'dairy',
+				categoryDisplay: 'Dairy Free',
+				icon: 'water_drop',
+				current: 12,
+				max: 48,
+				unit: 'units',
+				pricePerUnit: 85
+			},
+			{
+				id: 'MLK-ALM-006',
+				name: 'Almond Milk',
+				description: 'Unsweetened 1L',
+				category: 'dairy',
+				categoryDisplay: 'Dairy Free',
+				icon: 'water_drop',
+				current: 8,
+				max: 30,
+				unit: 'units',
+				pricePerUnit: 95
+			},
+			{
+				id: 'MLK-CRM-007',
+				name: 'Heavy Cream',
+				description: 'Whipping Cream 500ml',
+				category: 'dairy',
+				categoryDisplay: 'Dairy',
+				icon: 'water_drop',
+				current: 10,
+				max: 20,
+				unit: 'units',
+				pricePerUnit: 120
+			},
+			// Syrups & Sweeteners
+			{
+				id: 'SYR-VAN-022',
+				name: 'Vanilla Syrup',
+				description: 'Monin 750ml Bottle',
+				category: 'syrups',
+				categoryDisplay: 'Syrups',
+				icon: 'icecream',
+				current: 8,
+				max: 12,
+				unit: 'units',
+				pricePerUnit: 320
+			},
+			{
+				id: 'SYR-CAR-023',
+				name: 'Caramel Syrup',
+				description: 'Monin 750ml Bottle',
+				category: 'syrups',
+				categoryDisplay: 'Syrups',
+				icon: 'icecream',
+				current: 3,
+				max: 12,
+				unit: 'units',
+				pricePerUnit: 320
+			},
+			{
+				id: 'SYR-HAZ-024',
+				name: 'Hazelnut Syrup',
+				description: 'Monin 750ml Bottle',
+				category: 'syrups',
+				categoryDisplay: 'Syrups',
+				icon: 'icecream',
+				current: 6,
+				max: 12,
+				unit: 'units',
+				pricePerUnit: 320
+			},
+			{
+				id: 'SYR-MAP-025',
+				name: 'Maple Syrup',
+				description: 'Pure Canadian 500ml',
+				category: 'syrups',
+				categoryDisplay: 'Syrups',
+				icon: 'icecream',
+				current: 4,
+				max: 10,
+				unit: 'units',
+				pricePerUnit: 450
+			},
+			{
+				id: 'SYR-HON-026',
+				name: 'Honey',
+				description: 'Raw Organic 1kg',
+				category: 'syrups',
+				categoryDisplay: 'Syrups',
+				icon: 'icecream',
+				current: 7,
+				max: 15,
+				unit: 'kg',
+				pricePerUnit: 380
+			},
+			// Pastries
+			{
+				id: 'PAS-CRO-042',
+				name: 'Butter Croissant',
+				description: 'Hand-rolled sourdough',
+				category: 'pastries',
+				categoryDisplay: 'Pastries',
+				icon: 'bakery_dining',
+				current: 5,
+				max: 30,
+				unit: 'left',
+				pricePerUnit: 95
+			},
+			{
+				id: 'PAS-PAC-045',
+				name: 'Pain au Chocolat',
+				description: 'Daily Fresh Baked',
+				category: 'pastries',
+				categoryDisplay: 'Pastries',
+				icon: 'bakery_dining',
+				current: 0,
+				max: 24,
+				unit: 'left',
+				pricePerUnit: 120
+			},
+			{
+				id: 'PAS-MUF-043',
+				name: 'Blueberry Muffin',
+				description: 'Fresh Baked Daily',
+				category: 'pastries',
+				categoryDisplay: 'Pastries',
+				icon: 'bakery_dining',
+				current: 12,
+				max: 24,
+				unit: 'left',
+				pricePerUnit: 85
+			},
+			{
+				id: 'PAS-BRO-044',
+				name: 'Chocolate Brownie',
+				description: 'Fudgy Center',
+				category: 'pastries',
+				categoryDisplay: 'Pastries',
+				icon: 'bakery_dining',
+				current: 8,
+				max: 20,
+				unit: 'left',
+				pricePerUnit: 95
+			},
+			// Spices
+			{
+				id: 'SPI-CIN-050',
+				name: 'Cinnamon Powder',
+				description: 'Aromatic ground cinnamon, 1kg',
+				category: 'spices',
+				categoryDisplay: 'Spices',
+				icon: 'local_florist',
+				current: 4,
+				max: 12,
+				unit: 'kg',
+				pricePerUnit: 180
+			},
+			{
+				id: 'SPI-CAR-051',
+				name: 'Cardamom Pods',
+				description: 'Whole pods, 500g',
+				category: 'spices',
+				categoryDisplay: 'Spices',
+				icon: 'local_florist',
+				current: 2,
+				max: 8,
+				unit: 'kg',
+				pricePerUnit: 320
+			},
+			// Sweetener
+			{
+				id: 'SWT-BRO-060',
+				name: 'Brown Sugar',
+				description: 'Rich muscovado, 1kg',
+				category: 'sweetener',
+				categoryDisplay: 'Sweetener',
+				icon: 'honey',
+				current: 10,
+				max: 25,
+				unit: 'kg',
+				pricePerUnit: 95
+			},
+			{
+				id: 'SWT-STE-061',
+				name: 'Stevia Packets',
+				description: 'Zero-calorie sweetener, box of 100',
+				category: 'sweetener',
+				categoryDisplay: 'Sweetener',
+				icon: 'honey',
+				current: 80,
+				max: 200,
+				unit: 'units',
+				pricePerUnit: 3
+			},
+			// Additional Ingredients
+			{
+				id: 'ING-COC-030',
+				name: 'Cocoa Powder',
+				description: 'Premium Dutch 1kg',
+				category: 'syrups',
+				categoryDisplay: 'Ingredients',
+				icon: 'icecream',
+				current: 2,
+				max: 5,
+				unit: 'kg',
+				pricePerUnit: 580
+			},
+			{
+				id: 'ING-CHO-031',
+				name: 'Chocolate Chips',
+				description: 'Dark 70%, 500g',
+				category: 'syrups',
+				categoryDisplay: 'Ingredients',
+				icon: 'icecream',
+				current: 5,
+				max: 10,
+				unit: 'kg',
+				pricePerUnit: 420
+			},
+			{
+				id: 'ING-SPI-032',
+				name: 'Spice Mix',
+				description: 'Cinnamon, Cardamom, Nutmeg',
+				category: 'syrups',
+				categoryDisplay: 'Ingredients',
+				icon: 'icecream',
+				current: 1,
+				max: 3,
+				unit: 'kg',
+				pricePerUnit: 650
+			},
+			{
+				id: 'ING-PEC-033',
+				name: 'Roasted Pecans',
+				description: 'Chopped, 500g',
+				category: 'syrups',
+				categoryDisplay: 'Ingredients',
+				icon: 'icecream',
+				current: 2,
+				max: 8,
+				unit: 'kg',
+				pricePerUnit: 720
+			},
+			{
+				id: 'ING-TON-034',
+				name: 'Tonic Water',
+				description: 'Premium 1L Bottles',
+				category: 'dairy',
+				categoryDisplay: 'Beverages',
+				icon: 'water_drop',
+				current: 6,
+				max: 24,
+				unit: 'units',
+				pricePerUnit: 85
+			},
+			{
+				id: 'ING-CIT-035',
+				name: 'Fresh Lemons',
+				description: 'Organic, per kg',
+				category: 'syrups',
+				categoryDisplay: 'Ingredients',
+				icon: 'icecream',
+				current: 3,
+				max: 10,
+				unit: 'kg',
+				pricePerUnit: 120
+			},
+			{
+				id: 'ING-ICE-036',
+				name: 'Ice Cubes',
+				description: 'Filtered Water, 5kg bags',
+				category: 'dairy',
+				categoryDisplay: 'Beverages',
+				icon: 'water_drop',
+				current: 15,
+				max: 30,
+				unit: 'units',
+				pricePerUnit: 25
+			}
+		];
+	}
+
+	// Removed saveInventory - Firebase handles persistence automatically
+	// Removed init - replaced with initApp which waits for Firebase data
+
+	getStatus(item) {
+		const percentage = (item.currentStock / item.maxStock) * 100;
+		if (item.currentStock === 0) return { status: 'out', text: 'Out of Stock', color: 'red-600', bgColor: 'bg-red-50/30 dark:bg-red-900/10' };
+		if (percentage < 30) return { status: 'low', text: 'Low Stock', color: 'primary', bgColor: 'bg-amber-50/30 dark:bg-amber-900/10' };
+		return { status: 'in', text: 'In Stock', color: 'green-600', bgColor: '' };
+	}
+
+	getCategoryStyle(category) {
+		const styles = {
+			'beans': 'bg-orange-50 dark:bg-orange-900/20 text-orange-600',
+			'dairy': 'bg-blue-50 dark:bg-blue-900/20 text-blue-600',
+			'syrups': 'bg-purple-50 dark:bg-purple-900/20 text-purple-600',
+			'pastries': 'bg-yellow-50 dark:bg-yellow-900/20 text-yellow-600'
+		};
+		return styles[category] || styles['beans'];
+	}
+
+	filterItems() {
+		let filtered = this.items;
+		
+		if (this.currentFilter !== 'all') {
+			filtered = filtered.filter(item => item.category === this.currentFilter);
+		}
+		
+		if (this.searchTerm) {
+			const term = this.searchTerm.toLowerCase();
+			filtered = filtered.filter(item => 
+				item.name.toLowerCase().includes(term) ||
+				item.id.toLowerCase().includes(term) ||
+				item.category.toLowerCase().includes(term)
+			);
+		}
+		
+		return filtered;
+	}
+
+	renderInventoryTable() {
+		const tbody = document.getElementById('inventoryTableBody');
+		const filtered = this.filterItems();
+		
+		if (filtered.length === 0) {
+			tbody.innerHTML = `
+				<tr>
+					<td colspan="6" class="px-6 py-16 text-center text-slate-400">
+						<span class="material-symbols-outlined text-6xl mb-4 inline-block opacity-30">inbox</span>
+						<p class="text-lg">No items found</p>
+					</td>
+				</tr>
+			`;
+			return;
+		}
+		
+		tbody.innerHTML = filtered.map(item => {
+			const status = this.getStatus(item);
+			const percentage = Math.round((item.currentStock / item.maxStock) * 100);
+			const categoryStyle = this.getCategoryStyle(item.category);
+			
+			return `
+				<tr class="hover:bg-slate-50/80 dark:hover:bg-white/5 transition-colors ${status.bgColor}">
+					<td class="px-6 py-4">
+						<div>
+							<p class="font-bold text-slate-900 dark:text-slate-100 text-sm">${item.name}</p>
+							<p class="text-xs text-slate-500">${item.description || item.sku || 'No description'}</p>
+						</div>
+					</td>
+					<td class="px-6 py-4">
+						<span class="text-xs font-semibold px-2.5 py-1 rounded ${categoryStyle}">${item.categoryDisplay || item.category}</span>
+					</td>
+					<td class="px-6 py-4 text-sm font-mono text-slate-500">${item.sku || 'N/A'}</td>
+					<td class="px-6 py-4">
+						<div class="w-full max-w-[100px]">
+							<div class="flex justify-between text-[10px] font-bold mb-1">
+								<span class="${status.status !== 'in' ? 'text-' + status.color : ''}">${item.currentStock} ${item.unit}</span>
+								<span class="text-slate-400">/ ${item.maxStock}</span>
+							</div>
+							<div class="h-1.5 w-full bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
+								<div class="h-full ${status.status === 'in' ? 'bg-green-500' : status.status === 'low' ? 'bg-primary' : 'bg-red-600'} rounded-full" style="width: ${percentage}%"></div>
+							</div>
+						</div>
+					</td>
+					<td class="px-6 py-4">
+						<span class="flex items-center gap-1.5 text-xs font-bold text-${status.color} ${status.status === 'out' ? 'uppercase tracking-tight' : ''}">
+							${status.status !== 'out' ? `<span class="size-1.5 rounded-full bg-${status.color} ${status.status === 'low' ? 'animate-pulse' : ''}"></span>` : ''}
+							${status.text}
+						</span>
+					</td>
+					<td class="px-6 py-4 text-right">
+						<div class="flex justify-end gap-2">
+							<button onclick="inventoryManager.restock('${item.id}')" class="px-3 py-1.5 text-xs font-bold ${status.status !== 'in' ? 'bg-primary text-white shadow-sm' : 'text-primary hover:bg-primary/10'} rounded hover:brightness-110 transition-colors">
+								${status.status !== 'in' ? 'Restock Now' : 'Restock'}
+							</button>
+							<button onclick="inventoryManager.markOut('${item.id}')" class="px-3 py-1.5 text-xs font-bold text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded transition-colors" ${status.status === 'out' ? 'disabled' : ''}>
+								Mark Out
+							</button>
+							<button onclick="inventoryManager.removeItem('${item.id}')" class="px-3 py-1.5 text-xs font-bold text-red-600 hover:bg-red-500 hover:text-white rounded transition-colors" title="Delete item">
+								Remove
+							</button>
+						</div>
+					</td>
+				</tr>
+			`;
+		}).join('');
+	}
+
+	renderKPICards() {
+		const container = document.getElementById('kpiCards');
+		const lowStockItems = this.items.filter(item => {
+			const percentage = (item.currentStock / item.maxStock) * 100;
+			return percentage < 30;
+		}).length;
+		
+		const totalValue = this.items.reduce((sum, item) => sum + (item.currentStock * item.price), 0);
+		
+		container.innerHTML = `
+			<div class="bg-white dark:bg-slate-800 p-5 rounded-xl border border-primary/10 shadow-sm flex flex-col justify-between group hover:border-primary/30 transition-all">
+				<div class="flex justify-between items-start">
+					<p class="text-slate-500 dark:text-slate-400 text-sm font-semibold">Total Items</p>
+					<div class="size-8 bg-blue-100 dark:bg-blue-900/30 text-blue-600 rounded-lg flex items-center justify-center">
+						<span class="material-symbols-outlined !text-xl">inventory_2</span>
+					</div>
+				</div>
+				<div class="mt-4">
+					<p class="text-3xl font-extrabold text-slate-900 dark:text-slate-100">${this.items.length}</p>
+					<p class="text-slate-500 dark:text-slate-400 text-xs font-bold mt-1">Unique SKUs</p>
+				</div>
+			</div>
+			
+			<div class="bg-white dark:bg-slate-800 p-5 rounded-xl border ${lowStockItems > 0 ? 'border-red-100 dark:border-red-900/30' : 'border-primary/10'} shadow-sm flex flex-col justify-between group hover:border-${lowStockItems > 0 ? 'red-300' : 'primary/30'} transition-all">
+				<div class="flex justify-between items-start">
+					<p class="text-slate-500 dark:text-slate-400 text-sm font-semibold">Low Stock Alerts</p>
+					<div class="size-8 ${lowStockItems > 0 ? 'bg-red-100 dark:bg-red-900/30 text-red-600 animate-pulse' : 'bg-green-100 dark:bg-green-900/30 text-green-600'} rounded-lg flex items-center justify-center">
+						<span class="material-symbols-outlined !text-xl">${lowStockItems > 0 ? 'warning' : 'check_circle'}</span>
+					</div>
+				</div>
+				<div class="mt-4">
+					<p class="text-3xl font-extrabold ${lowStockItems > 0 ? 'text-red-600' : 'text-green-600'}">${lowStockItems}</p>
+					<p class="text-slate-500 dark:text-slate-400 text-xs font-bold mt-1">${lowStockItems > 0 ? 'Requires attention' : 'All stocked well'}</p>
+				</div>
+			</div>
+			
+			<div class="bg-white dark:bg-slate-800 p-5 rounded-xl border border-primary/10 shadow-sm flex flex-col justify-between group hover:border-primary/30 transition-all">
+				<div class="flex justify-between items-start">
+					<p class="text-slate-500 dark:text-slate-400 text-sm font-semibold">Inventory Value</p>
+					<div class="size-8 bg-primary/10 text-primary rounded-lg flex items-center justify-center">
+						<span class="material-symbols-outlined !text-xl">payments</span>
+					</div>
+				</div>
+				<div class="mt-4">
+					<p class="text-3xl font-extrabold text-slate-900 dark:text-slate-100">₱${totalValue.toFixed(2)}</p>
+					<p class="text-slate-500 dark:text-slate-400 text-xs font-bold mt-1">Current stock value</p>
+				</div>
+			</div>
+			
+			<div class="bg-white dark:bg-slate-800 p-5 rounded-xl border border-primary/10 shadow-sm flex flex-col justify-between group hover:border-primary/30 transition-all">
+				<div class="flex justify-between items-start">
+					<p class="text-slate-500 dark:text-slate-400 text-sm font-semibold">Categories</p>
+					<div class="size-8 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 rounded-lg flex items-center justify-center">
+						<span class="material-symbols-outlined !text-xl">category</span>
+					</div>
+				</div>
+				<div class="mt-4">
+					<p class="text-3xl font-extrabold text-slate-900 dark:text-slate-100">4</p>
+					<p class="text-slate-500 dark:text-slate-400 text-xs font-bold mt-1">Active categories</p>
+				</div>
+			</div>
+		`;
+	}
+
+	updateCounts() {
+		const all = this.items.length;
+		const beans = this.items.filter(i => i.category === 'beans').length;
+		const dairy = this.items.filter(i => i.category === 'dairy').length;
+		const syrups = this.items.filter(i => i.category === 'syrups').length;
+		const spices = this.items.filter(i => i.category === 'spices').length;
+		const sweetener = this.items.filter(i => i.category === 'sweetener').length;
+		const pastries = this.items.filter(i => i.category === 'pastries').length;
+		
+		document.getElementById('countAll').textContent = all;
+		document.getElementById('countBeans').textContent = beans;
+		document.getElementById('countDairy').textContent = dairy;
+		document.getElementById('countSyrups').textContent = syrups;
+		document.getElementById('countSpices').textContent = spices;
+		document.getElementById('countSweetener').textContent = sweetener;
+		document.getElementById('countPastries').textContent = pastries;
+	}
+
+	updateFooter() {
+		const lowStock = this.items.filter(item => {
+			const percentage = (item.currentStock / item.maxStock) * 100;
+			return percentage < 30;
+		}).length;
+		
+		const totalValue = this.items.reduce((sum, item) => sum + (item.currentStock * item.price), 0);
+		
+		document.getElementById('totalItems').textContent = this.items.length;
+		document.getElementById('lowStockItems').textContent = lowStock;
+		document.getElementById('totalValue').textContent = totalValue.toFixed(2);
+		document.getElementById('lastUpdated').textContent = `Last updated: ${new Date().toLocaleTimeString()}`;
+	}
+
+	renderAll() {
+		this.renderKPICards();
+		this.renderInventoryTable();
+		this.updateCounts();
+		this.updateFooter();
+	}
+
+	setupFilters() {
+		document.querySelectorAll('.filter-btn').forEach(btn => {
+			btn.addEventListener('click', () => {
+				document.querySelectorAll('.filter-btn').forEach(b => {
+					b.classList.remove('font-bold', 'text-primary', 'border-b-2', 'border-primary');
+					b.classList.add('font-semibold', 'text-slate-500', 'hover:text-slate-700', 'dark:hover:text-slate-300');
+				});
+				
+				btn.classList.remove('font-semibold', 'text-slate-500', 'hover:text-slate-700', 'dark:hover:text-slate-300');
+				btn.classList.add('font-bold', 'text-primary', 'border-b-2', 'border-primary');
+				
+				this.currentFilter = btn.dataset.filter;
+				this.renderInventoryTable();
+			});
+		});
+	}
+
+	setupSearch() {
+		const searchInput = document.getElementById('searchInput');
+		searchInput.addEventListener('input', (e) => {
+			this.searchTerm = e.target.value;
+			this.renderInventoryTable();
+		});
+	}
+
+	setupButtons() {
+		document.getElementById('logoutBtn').addEventListener('click', () => {
+			localStorage.removeItem('staffLoggedIn');
+			localStorage.removeItem('staffEmployeeId');
+			localStorage.removeItem('staffRememberMe');
+			window.location.href = 'login.html';
+		});
+
+		document.getElementById('exportBtn').addEventListener('click', () => {
+			this.exportCSV();
+		});
+
+		document.getElementById('addItemBtn').addEventListener('click', () => {
+			this.openAddModal();
+		});
+
+		document.getElementById('addItemForm').addEventListener('submit', (e) => {
+			e.preventDefault();
+			this.addNewItem();
+		});
+	}
+
+	async restock(id) {
+		try {
+			const item = this.items.find(i => i.id === id);
+			if (!item) return;
+
+			const amount = prompt(`How many ${item.unit} to add to ${item.name}?`, '10');
+			if (amount !== null) {
+				const numAmount = parseInt(amount);
+				if (!isNaN(numAmount) && numAmount > 0) {
+					const itemRef = doc(db, "inventory", id);
+					const newStock = Math.min(item.currentStock + numAmount, item.maxStock);
+					
+					await updateDoc(itemRef, {
+						currentStock: newStock,
+						lastUpdated: serverTimestamp()
+					});
+					
+					console.log("✅ Item restocked!");
+				}
+			}
+		} catch (error) {
+			console.error("❌ Error restocking:", error);
+			alert("Error: " + error.message);
+		}
+	}
+
+	async markOut(id) {
+		try {
+			const item = this.items.find(i => i.id === id);
+			if (!item) return;
+
+			if (item.currentStock <= 0) {
+				alert("This item is out of stock!");
+				return;
+			}
+
+			const amount = prompt(`How many ${item.unit} to remove from ${item.name}?`, '1');
+			if (amount !== null) {
+				const numAmount = parseInt(amount);
+				if (!isNaN(numAmount) && numAmount > 0) {
+					const itemRef = doc(db, "inventory", id);
+					const newStock = Math.max(item.currentStock - numAmount, 0);
+					
+					await updateDoc(itemRef, {
+						currentStock: newStock,
+						lastUpdated: serverTimestamp()
+					});
+					
+					console.log("✅ Stock updated!");
+				}
+			}
+		} catch (error) {
+			console.error("❌ Error updating stock:", error);
+			alert("Error: " + error.message);
+		}
+	}
+
+	exportCSV() {
+		const headers = ['SKU', 'Name', 'Category', 'Current', 'Max', 'Unit', 'Status', 'Value'];
+		const rows = this.items.map(item => {
+			const status = this.getStatus(item);
+			const value = item.currentStock * item.price;
+			return [
+				item.sku,
+				item.name,
+				item.categoryDisplay,
+				item.currentStock,
+				item.maxStock,
+				item.unit,
+				status.text,
+				value
+			];
+		});
+		
+		let csv = headers.join(',') + '\\n';
+		csv += rows.map(row => row.join(',')).join('\\n');
+		
+		const blob = new Blob([csv], { type: 'text/csv' });
+		const url = window.URL.createObjectURL(blob);
+		const a = document.createElement('a');
+		a.href = url;
+		a.download = `inventory-${new Date().toISOString().split('T')[0]}.csv`;
+		a.click();
+	}
+
+	openAddModal() {
+		document.getElementById('addItemModal').classList.remove('hidden');
+		document.getElementById('addItemForm').reset();
+	}
+
+	closeAddModal() {
+		document.getElementById('addItemModal').classList.add('hidden');
+	}
+
+	async addNewItem() {
+		try {
+			const categoryMap = {
+				'beans': { display: 'Beans', icon: 'coffee' },
+				'dairy': { display: 'Dairy', icon: 'water_drop' },
+				'syrups': { display: 'Syrups', icon: 'icecream' },
+				'spices': { display: 'Spices', icon: 'local_florist' },
+				'sweetener': { display: 'Sweetener', icon: 'honey' },
+				'pastries': { display: 'Pastries', icon: 'bakery_dining' }
+			};
+
+			const name = document.getElementById('itemName').value.trim();
+			const sku = document.getElementById('itemDescription').value.trim(); // Using description as SKU placeholder
+			const description = document.getElementById('itemDescription').value.trim();
+			const category = document.getElementById('itemCategory').value;
+			const unit = document.getElementById('itemUnit').value.trim();
+			const currentStock = parseInt(document.getElementById('itemCurrent').value);
+			const maxStock = parseInt(document.getElementById('itemMax').value);
+			const price = parseInt(document.getElementById('itemPrice').value);
+
+			if (!name || !category || !unit || isNaN(currentStock) || isNaN(maxStock) || isNaN(price)) {
+				alert('Please fill in all required fields!');
+				return;
+			}
+
+			const newItem = {
+				name,
+				sku: sku || `SKU-${Date.now()}`,
+				description,
+				category,
+				categoryDisplay: categoryMap[category].display,
+				icon: categoryMap[category].icon,
+				currentStock,
+				maxStock,
+				unit,
+				price,
+				createdAt: serverTimestamp()
+			};
+
+			const docRef = await addDoc(collection(db, "inventory"), newItem);
+
+			console.log("✅ Item added with ID:", docRef.id);
+			this.closeAddModal();
+			
+			// Show success message
+			const toast = document.createElement('div');
+			toast.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-[100] flex items-center gap-2';
+			toast.innerHTML = `
+				<span class="material-symbols-outlined">check_circle</span>
+				<span class="font-bold">${name} added successfully!</span>
+			`;
+			document.body.appendChild(toast);
+			setTimeout(() => toast.remove(), 3000);
+		} catch (error) {
+			console.error("❌ Error adding item:", error);
+			alert("Error: " + error.message);
+		}
+	}
+
+	async removeItem(id) {
+		try {
+			const item = this.items.find(i => i.id === id);
+			if (!item) return;
+
+			const confirmDelete = confirm(`Are you sure you want to remove "${item.name}" from inventory?\n\nThis action cannot be undone.`);
+			if (!confirmDelete) return;
+
+			await deleteDoc(doc(db, "inventory", id));
+
+			console.log("✅ Item deleted!");
+			
+			// Show success message
+			const toast = document.createElement('div');
+			toast.className = 'fixed top-4 right-4 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg z-[100] flex items-center gap-2';
+			toast.innerHTML = `
+				<span class="material-symbols-outlined">delete</span>
+				<span class="font-bold">${item.name} removed successfully!</span>
+			`;
+			document.body.appendChild(toast);
+			setTimeout(() => toast.remove(), 3000);
+		} catch (error) {
+			console.error("❌ Error deleting item:", error);
+			alert("Error: " + error.message);
+		}
+	}
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+	window.inventoryManager = new InventoryManager();
+});
+</script>
+</body></html>

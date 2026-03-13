@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Caffernaum Staff Dashboard</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#cf7317",
+              "background-light": "#f8f7f6",
+              "background-dark": "#211911"
+            },
+            fontFamily: {
+              display: ["Plus Jakarta Sans", "sans-serif"]
+            },
+            borderRadius: {
+              DEFAULT: "0.25rem",
+              lg: "0.5rem",
+              xl: "0.75rem",
+              full: "9999px"
+            }
+          }
+        }
+      };
+    </script>
+    <style>
+      body {
+        font-family: "Plus Jakarta Sans", sans-serif;
+      }
+      .material-symbols-outlined {
+        font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+      }
+      .active-nav {
+        background-color: rgba(207, 115, 23, 0.1);
+        border-left: 4px solid #cf7317;
+      }
+    </style>
+  </head>
+  <body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen">
+    <div class="flex h-screen overflow-hidden">
+      <!-- Sidebar Navigation -->
+      <aside class="w-64 flex-shrink-0 border-r border-primary/10 bg-white dark:bg-slate-900 flex flex-col">
+        <div class="p-6 flex items-center gap-3">
+          <div class="bg-primary p-2 rounded-lg text-white">
+            <span class="material-symbols-outlined">coffee</span>
+          </div>
+          <div>
+            <h1 class="text-lg font-bold tracking-tight text-slate-900 dark:text-white">Caffernaum</h1>
+            <p class="text-xs font-medium text-primary uppercase tracking-wider">Staff Portal</p>
+          </div>
+        </div>
+        <nav class="flex-1 px-4 space-y-1 mt-4">
+          <a
+            id="navActiveOrders"
+            class="side-nav-link flex items-center gap-3 px-4 py-3 text-sm rounded-lg active-nav text-primary font-semibold"
+            href="#"
+          >
+            <span class="material-symbols-outlined">list_alt</span>
+            Active Orders
+          </a>
+          <a
+            class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-primary/5 hover:text-primary rounded-lg transition-colors"
+            href="index.html"
+            target="_blank"
+          >
+            <span class="material-symbols-outlined">store</span>
+            Customer Site
+          </a>
+          <a
+            class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-primary/5 hover:text-primary rounded-lg transition-colors"
+            href="inventory.html"
+          >
+            <span class="material-symbols-outlined">inventory_2</span>
+            Inventory
+          </a>
+          <button
+            id="navIncome"
+            type="button"
+            class="side-nav-link w-full text-left flex items-center gap-3 px-4 py-3 text-sm rounded-lg transition-colors font-medium text-slate-600 dark:text-slate-400 hover:bg-primary/5 hover:text-primary"
+          >
+            <span class="material-symbols-outlined">payments</span>
+            Income
+          </button>
+        </nav>
+        <div class="p-4 border-t border-primary/10">
+          <div class="flex items-center gap-3 p-2 rounded-xl bg-primary/5">
+            <img
+              id="staffAvatar"
+              alt="Staff Profile"
+              class="size-10 rounded-full object-cover"
+              data-alt="Close up portrait of a male barista"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuBSnv9cze9VzPj2Q08M9IAqLo4xOJjZkaB7T90uNmYQPJ6ygv95eJUfhnpi4La-RwEot4Y_G1pZWQ_7zAaQ4WWTi2zArBbfhpMclPzY5PBloyQLkHh7GeweYhAXWUer2Iv-KUaOzXTnIBvY6rJYpehznPzfQOc6OxuP8UFD6piQAlxuK9pUzgdySjZraqo4sDktHLhKU-WSxXS0QS3pxoEF17175vzEBCxTqYn2H2vgrO49wHVyB38o9JGImBBl2bHVxWhHLErbFQ"
+            />
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-bold truncate" id="staffName">Jamil Payapag</p>
+              <p class="text-xs text-slate-500 truncate" id="staffRole">Lead Barista</p>
+            </div>
+            <button
+              id="logoutBtn"
+              class="w-10 h-10 rounded-full bg-amber-100 hover:bg-primary text-slate-600 hover:text-white transition-all duration-200 flex items-center justify-center shadow-sm hover:shadow-md transform hover:scale-105 cursor-pointer"
+              title="Logout"
+            >
+              <span class="material-symbols-outlined text-lg">logout</span>
+            </button>
+          </div>
+        </div>
+      </aside>
+      <!-- Main Content Area -->
+      <main class="flex-1 flex flex-col min-w-0 bg-background-light dark:bg-background-dark overflow-hidden">
+        <!-- Header -->
+        <header class="h-20 bg-white dark:bg-slate-900 border-b border-primary/10 px-8 flex items-center justify-between z-10">
+          <div class="flex items-center gap-6 flex-1">
+            <h2 id="pageTitle" class="text-xl font-bold">Order Management</h2>
+            <div class="relative w-full max-w-md">
+              <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+              <input
+                id="ordersSearch"
+                class="w-full bg-slate-100 dark:bg-slate-800 border-none rounded-xl pl-10 pr-4 py-2 text-sm focus:ring-2 focus:ring-primary/50 transition-all"
+                placeholder="Search orders, customers, or items..."
+                type="text"
+              />
+            </div>
+          </div>
+          <div class="flex items-center gap-4">
+            <div class="flex items-center gap-2 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 px-3 py-1.5 rounded-full text-sm font-bold border border-emerald-100 dark:border-emerald-800">
+              <span class="relative flex h-2 w-2">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+              </span>
+              Store Open
+            </div>
+          </div>
+        </header>
+        <section id="activeOrdersSection" class="flex-1 flex flex-col min-h-0">
+          <!-- Filter Tabs -->
+          <div class="px-8 pt-6">
+            <div class="flex items-center gap-2 border-b border-slate-200 dark:border-slate-800">
+              <button
+                id="filterAll"
+                class="filter-btn px-6 py-3 text-sm font-bold text-primary border-b-2 border-primary"
+                data-filter="all"
+              >
+                All Active (<span id="countAll">0</span>)
+              </button>
+              <button
+                id="filterNew"
+                class="filter-btn px-6 py-3 text-sm font-semibold text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
+                data-filter="new"
+              >
+                New (<span id="countNew">0</span>)
+              </button>
+              <button
+                id="filterPreparing"
+                class="filter-btn px-6 py-3 text-sm font-semibold text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
+                data-filter="preparing"
+              >
+                Preparing (<span id="countPreparing">0</span>)
+              </button>
+              <button
+                id="filterReady"
+                class="filter-btn px-6 py-3 text-sm font-semibold text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
+                data-filter="ready"
+              >
+                Ready (<span id="countReady">0</span>)
+              </button>
+            </div>
+          </div>
+          <!-- Scrollable Grid Content -->
+          <div class="flex-1 overflow-y-auto p-8">
+            <div id="ordersGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              <!-- Orders will be loaded here by JavaScript -->
+              <div class="col-span-full text-center text-slate-400 py-16">
+                <span class="material-symbols-outlined text-6xl mb-4 inline-block opacity-30">inbox</span>
+                <p class="text-lg">No orders yet. Waiting for customers...</p>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section id="incomeSection" class="hidden flex-1 overflow-y-auto p-8">
+          <div class="max-w-6xl w-full mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div class="rounded-xl border border-emerald-200/70 dark:border-emerald-800 bg-emerald-50/70 dark:bg-emerald-900/20 p-5">
+                <p class="text-[11px] font-black uppercase tracking-widest text-emerald-700 dark:text-emerald-300">Daily Income</p>
+                <p id="incomeDaily" class="mt-2 text-3xl font-black text-emerald-700 dark:text-emerald-200">PHP 0.00</p>
+                <p id="incomeDailyCount" class="mt-1 text-xs font-semibold text-emerald-700/80 dark:text-emerald-300/80">0 paid orders today</p>
+              </div>
+              <div class="rounded-xl border border-sky-200/70 dark:border-sky-800 bg-sky-50/70 dark:bg-sky-900/20 p-5">
+                <p class="text-[11px] font-black uppercase tracking-widest text-sky-700 dark:text-sky-300">Weekly Income</p>
+                <p id="incomeWeekly" class="mt-2 text-3xl font-black text-sky-700 dark:text-sky-200">PHP 0.00</p>
+                <p id="incomeWeeklyCount" class="mt-1 text-xs font-semibold text-sky-700/80 dark:text-sky-300/80">0 paid orders in last 7 days</p>
+              </div>
+              <div class="rounded-xl border border-primary/30 dark:border-primary/60 bg-primary/10 dark:bg-primary/20 p-5">
+                <p class="text-[11px] font-black uppercase tracking-widest text-primary">Monthly Income</p>
+                <p id="incomeMonthly" class="mt-2 text-3xl font-black text-primary">PHP 0.00</p>
+                <p id="incomeMonthlyCount" class="mt-1 text-xs font-semibold text-primary/80">0 paid orders this month</p>
+              </div>
+            </div>
+            <p class="mt-3 text-xs font-semibold text-slate-500">Income is calculated from paid orders only and updates in real time.</p>
+
+            <div class="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-5">
+              <div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5">
+                <div class="flex items-center justify-between gap-2">
+                  <h3 class="text-sm font-black tracking-wide uppercase text-slate-700 dark:text-slate-200">Income Trend</h3>
+                  <div class="flex items-center gap-2">
+                    <p id="incomeTrendRangeLabel" class="text-xs font-semibold text-slate-500">Last 7 days</p>
+                    <div class="inline-flex rounded-lg bg-slate-100 dark:bg-slate-800 p-1">
+                      <button type="button" class="income-range-btn px-2.5 py-1 text-[11px] font-bold rounded-md bg-primary text-white" data-days="7">7D</button>
+                      <button type="button" class="income-range-btn px-2.5 py-1 text-[11px] font-bold rounded-md text-slate-600 dark:text-slate-300" data-days="30">30D</button>
+                      <button type="button" class="income-range-btn px-2.5 py-1 text-[11px] font-bold rounded-md text-slate-600 dark:text-slate-300" data-days="90">90D</button>
+                    </div>
+                    <button id="incomeResetBtn" type="button" class="px-2.5 py-1 text-[11px] font-bold rounded-md border border-slate-300 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-primary/50 hover:text-primary transition-colors">
+                      Reset
+                    </button>
+                  </div>
+                </div>
+                <div id="incomeTrendChart" class="mt-4"></div>
+              </div>
+
+              <div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5">
+                <div class="flex items-center justify-between gap-2">
+                  <h3 class="text-sm font-black tracking-wide uppercase text-slate-700 dark:text-slate-200">Income by Payment Method</h3>
+                  <p class="text-xs font-semibold text-slate-500">Paid orders</p>
+                </div>
+                <div id="incomeMethodChart" class="mt-4 space-y-3"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <!-- Dashboard Footer Stats -->
+        <footer class="h-14 bg-white dark:bg-slate-900 border-t border-primary/10 px-8 flex items-center justify-between text-xs font-semibold text-slate-500">
+          <div class="flex gap-8">
+            <span class="flex items-center gap-2">
+              <span class="size-2 rounded-full bg-primary"></span>
+              <span id="pendingCount">0</span> Pending Orders
+            </span>
+            <span class="flex items-center gap-2">
+              <span class="size-2 rounded-full bg-emerald-500"></span>
+              <span id="avgTime">0</span>m Avg. Service Time
+            </span>
+            <span class="flex items-center gap-2">
+              <span class="size-2 rounded-full bg-amber-500"></span>
+              <span id="stockAlerts">0</span> Low Stock Alerts
+            </span>
+          </div>
+          <div id="lastUpdated">Last updated: Just now</div>
+        </footer>
+      </main>
+    </div>
+
+    <script type="module">
+      import {
+        db,
+        collection,
+        addDoc,
+        getDocs,
+        doc,
+        setDoc,
+        updateDoc,
+        onSnapshot,
+        serverTimestamp
+      } from "./firebase-config.js";
+
+      // Check if user is logged in
+      if (!localStorage.getItem("staffLoggedIn")) {
+        window.location.href = "login.html";
+      }
+
+      const staffNameEl = document.getElementById("staffName");
+      const staffRoleEl = document.getElementById("staffRole");
+      const staffAvatarEl = document.getElementById("staffAvatar");
+      const staffName = localStorage.getItem("staffName");
+      const staffRole = localStorage.getItem("staffRole");
+      const staffAvatar = localStorage.getItem("staffAvatar");
+
+      if (staffNameEl && staffName) {
+        staffNameEl.textContent = staffName;
+      }
+      if (staffRoleEl && staffRole) {
+        staffRoleEl.textContent = staffRole;
+      }
+      if (staffAvatarEl && staffAvatar) {
+        staffAvatarEl.src = staffAvatar;
+      }
+
+      // Order Management System for Staff Dashboard
+      class OrderManager {
+        constructor() {
+          this.orders = [];
+          this.currentFilter = "all";
+          this.currentView = "orders";
+          this.incomeRangeDays = 7;
+          this.initApp();
+        }
+
+        async initApp() {
+          await this.loadOrders();
+          this.setupRealtimeListener();
+          this.renderOrders();
+          this.updateStats();
+          this.updateCounts();
+          this.updateIncomeStats();
+          this.updateIncomeCharts();
+          this.setupFilterButtons();
+          this.setupViewNavigation();
+          this.setupIncomeRangeControls();
+          this.setupIncomeResetButton();
+          this.applyInitialViewFromUrl();
+        }
+
+        applyInitialViewFromUrl() {
+          const hash = String(window.location.hash || "").toLowerCase();
+          if (hash === "#income") {
+            this.setView("income");
+            return;
+          }
+          this.setView("orders");
+        }
+
+        async loadOrders() {
+          try {
+            const querySnapshot = await getDocs(collection(db, "orders"));
+            this.orders = [];
+            querySnapshot.forEach((docSnap) => {
+              this.orders.push({ id: docSnap.id, ...docSnap.data() });
+            });
+
+            if (querySnapshot.empty) {
+              const migrated = await this.migrateOrdersFromLocalStorage();
+              if (migrated) {
+                const reloadSnapshot = await getDocs(collection(db, "orders"));
+                this.orders = [];
+                reloadSnapshot.forEach((docSnap) => {
+                  this.orders.push({ id: docSnap.id, ...docSnap.data() });
+                });
+              }
+            }
+
+            console.log("✅ Loaded", this.orders.length, "orders from Firebase");
+          } catch (error) {
+            console.error("❌ Error loading orders:", error);
+            alert("Error loading orders: " + error.message);
+          }
+        }
+
+        async migrateOrdersFromLocalStorage() {
+          const localOrders = JSON.parse(localStorage.getItem("caffeOrders")) || [];
+          if (!localOrders.length) return false;
+
+          try {
+            for (const order of localOrders) {
+              const normalized = this.normalizeOrder(order);
+              const orderId = normalized.id || `ORD-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+              await setDoc(doc(db, "orders", orderId), normalized);
+            }
+            console.log("✅ Migrated", localOrders.length, "orders from localStorage");
+            return true;
+          } catch (error) {
+            console.error("❌ Error migrating local orders:", error);
+            return false;
+          }
+        }
+
+        normalizeOrder(order) {
+          return {
+            id: order.id || order.orderId || undefined,
+            customer: order.customer || {
+              name: order.customerName || "Walk-in",
+              phone: order.customerPhone || "N/A"
+            },
+            items: order.items || [],
+            total: order.total || 0,
+            status: order.status || "new",
+            timestamp: order.timestamp || Date.now(),
+            createdAt: serverTimestamp()
+          };
+        }
+
+        setupRealtimeListener() {
+          onSnapshot(collection(db, "orders"), (snapshot) => {
+            this.orders = [];
+            snapshot.forEach((docSnap) => {
+              this.orders.push({ id: docSnap.id, ...docSnap.data() });
+            });
+
+            console.log("📡 Orders updated in real-time!");
+            this.renderOrders();
+            this.updateStats();
+            this.updateCounts();
+            this.updateIncomeStats();
+            this.updateIncomeCharts();
+          });
+        }
+
+        getStatusBadge(status) {
+          const badges = {
+            new: { bg: "bg-primary", icon: "new_releases", text: "NEW" },
+            preparing: {
+              bg: "bg-sky-100 dark:bg-sky-900/40",
+              icon: "hourglass_bottom",
+              text: "PREPARING",
+              textColor: "text-sky-600 dark:text-sky-400"
+            },
+            ready: {
+              bg: "bg-emerald-100 dark:bg-emerald-900/40",
+              icon: "check_circle",
+              text: "READY",
+              textColor: "text-emerald-600 dark:text-emerald-400"
+            },
+            completed: {
+              bg: "bg-gray-100 dark:bg-gray-900/40",
+              icon: "done_all",
+              text: "COMPLETED",
+              textColor: "text-gray-600 dark:text-gray-400"
+            }
+          };
+          return badges[status] || badges.new;
+        }
+
+        getButton(order) {
+          const status = order.status;
+          if (status === "new") {
+            return `<button onclick="orderManager.updateStatus('${order.id}', 'preparing')" class="bg-primary hover:bg-primary/90 text-white text-sm font-bold px-4 py-2.5 rounded-lg transition-colors">Start Prep</button>`;
+          } else if (status === "preparing") {
+            return `<button onclick="orderManager.updateStatus('${order.id}', 'ready')" class="bg-slate-900 dark:bg-white dark:text-slate-900 text-white text-sm font-bold px-4 py-2.5 rounded-lg transition-colors">Mark Ready</button>`;
+          } else if (status === "ready") {
+            return `<button onclick="orderManager.updateStatus('${order.id}', 'completed')" class="bg-emerald-500 hover:bg-emerald-600 text-white text-sm font-bold px-4 py-2.5 rounded-lg transition-colors">Picked Up</button>`;
+          }
+          return "";
+        }
+
+        getPaymentStatus(order) {
+          const explicitStatus = String(order?.payment?.status || "").toLowerCase();
+          if (explicitStatus === "paid") return "paid";
+          if (explicitStatus === "pending" || explicitStatus === "unpaid") return "unpaid";
+          return "unpaid";
+        }
+
+        getPaymentMethodDisplay(order) {
+          const method = String(order?.payment?.method || order?.paymentMethod || "gcash").toLowerCase();
+          if (method === "cod" || method === "cash on delivery") return "COD";
+          if (method === "pay at pickup") return "Pay at Pickup";
+          return "GCash";
+        }
+
+        getPaymentBadge(order) {
+          const status = this.getPaymentStatus(order);
+          if (status === "paid") {
+            return '<span class="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-emerald-100 text-emerald-700 text-[10px] font-black uppercase tracking-wider border border-emerald-200">Paid</span>';
+          }
+          return '<span class="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-amber-100 text-amber-700 text-[10px] font-black uppercase tracking-wider border border-amber-200">Unpaid</span>';
+        }
+
+        getPaymentActionButton(order) {
+          if (this.getPaymentStatus(order) === "paid") {
+            return '<button class="bg-emerald-100 text-emerald-700 text-xs font-bold px-3 py-2 rounded-lg cursor-default" disabled>Payment Confirmed</button>';
+          }
+          return `<button onclick="orderManager.markOrderPaid('${order.id}')" class="bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold px-3 py-2 rounded-lg transition-colors">Mark as Paid</button>`;
+        }
+
+        getTimestampMs(timestamp) {
+          if (!timestamp) return Date.now();
+          if (typeof timestamp === "number") return timestamp;
+          if (typeof timestamp?.toMillis === "function") return timestamp.toMillis();
+          const parsed = new Date(timestamp).getTime();
+          return Number.isNaN(parsed) ? Date.now() : parsed;
+        }
+
+        formatTime(timestamp) {
+          const now = Date.now();
+          const ts = this.getTimestampMs(timestamp);
+          const diff = Math.floor((now - ts) / 1000);
+          if (diff < 60) return diff + "s ago";
+          if (diff < 3600) return Math.floor(diff / 60) + "m ago";
+          return Math.floor(diff / 3600) + "h ago";
+        }
+
+        formatMoney(value) {
+          const amount = Number(value) || 0;
+          return new Intl.NumberFormat("en-PH", {
+            style: "currency",
+            currency: "PHP",
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+          }).format(amount);
+        }
+
+        getIncomeTimestampMs(order) {
+          const paidAt = order?.payment?.paidAt;
+          if (typeof paidAt?.toMillis === "function") {
+            return paidAt.toMillis();
+          }
+          if (typeof paidAt === "number") {
+            return paidAt;
+          }
+          return this.getTimestampMs(order.timestamp);
+        }
+
+        shouldCountAsIncome(order) {
+          if (this.getPaymentStatus(order) === "paid") {
+            return true;
+          }
+
+          // Keep old completed orders without payment metadata visible in totals.
+          return !order?.payment && order?.status === "completed";
+        }
+
+        getIncomeSummary() {
+          const now = new Date();
+          const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+          const startOfWeek = startOfDay - (6 * 24 * 60 * 60 * 1000);
+          const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).getTime();
+
+          const summary = {
+            dailyTotal: 0,
+            dailyCount: 0,
+            weeklyTotal: 0,
+            weeklyCount: 0,
+            monthlyTotal: 0,
+            monthlyCount: 0
+          };
+
+          this.orders.forEach((order) => {
+            if (!this.shouldCountAsIncome(order)) return;
+
+            const amount = Number(order.total) || 0;
+            const incomeTs = this.getIncomeTimestampMs(order);
+
+            if (incomeTs >= startOfDay) {
+              summary.dailyTotal += amount;
+              summary.dailyCount += 1;
+            }
+
+            if (incomeTs >= startOfWeek) {
+              summary.weeklyTotal += amount;
+              summary.weeklyCount += 1;
+            }
+
+            if (incomeTs >= startOfMonth) {
+              summary.monthlyTotal += amount;
+              summary.monthlyCount += 1;
+            }
+          });
+
+          return summary;
+        }
+
+        updateIncomeStats() {
+          const income = this.getIncomeSummary();
+
+          const dailyEl = document.getElementById("incomeDaily");
+          const weeklyEl = document.getElementById("incomeWeekly");
+          const monthlyEl = document.getElementById("incomeMonthly");
+          const dailyCountEl = document.getElementById("incomeDailyCount");
+          const weeklyCountEl = document.getElementById("incomeWeeklyCount");
+          const monthlyCountEl = document.getElementById("incomeMonthlyCount");
+
+          if (dailyEl) dailyEl.textContent = this.formatMoney(income.dailyTotal);
+          if (weeklyEl) weeklyEl.textContent = this.formatMoney(income.weeklyTotal);
+          if (monthlyEl) monthlyEl.textContent = this.formatMoney(income.monthlyTotal);
+
+          if (dailyCountEl) {
+            dailyCountEl.textContent = `${income.dailyCount} paid order${income.dailyCount === 1 ? "" : "s"} today`;
+          }
+          if (weeklyCountEl) {
+            weeklyCountEl.textContent = `${income.weeklyCount} paid order${income.weeklyCount === 1 ? "" : "s"} in last 7 days`;
+          }
+          if (monthlyCountEl) {
+            monthlyCountEl.textContent = `${income.monthlyCount} paid order${income.monthlyCount === 1 ? "" : "s"} this month`;
+          }
+        }
+
+        getIncomeSeries(days = 7) {
+          const dayMs = 24 * 60 * 60 * 1000;
+          const now = new Date();
+          const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+          const safeDays = Math.max(1, Number(days) || 7);
+
+          const series = Array.from({ length: safeDays }, (_, i) => {
+            const ts = todayStart - (safeDays - 1 - i) * dayMs;
+            return {
+              dayStart: ts,
+              dayEnd: ts + dayMs,
+              label: this.getTrendLabel(ts, safeDays),
+              total: 0
+            };
+          });
+
+          this.orders.forEach((order) => {
+            if (!this.shouldCountAsIncome(order)) return;
+            const incomeTs = this.getIncomeTimestampMs(order);
+            const amount = Number(order.total) || 0;
+
+            for (const point of series) {
+              if (incomeTs >= point.dayStart && incomeTs < point.dayEnd) {
+                point.total += amount;
+                break;
+              }
+            }
+          });
+
+          return series;
+        }
+
+        getTrendSeriesForDisplay(days) {
+          const selectedDays = Number(days) || 7;
+          const rawSeries = this.getIncomeSeries(selectedDays);
+
+          if (selectedDays <= 7) {
+            return {
+              series: rawSeries,
+              label: `Last ${selectedDays} days (daily)`
+            };
+          }
+
+          if (selectedDays <= 30) {
+            return {
+              series: this.aggregateSeriesByBucket(rawSeries, 3),
+              label: `Last ${selectedDays} days (3-day buckets)`
+            };
+          }
+
+          return {
+            series: this.aggregateSeriesByBucket(rawSeries, 7),
+            label: `Last ${selectedDays} days (weekly buckets)`
+          };
+        }
+
+        aggregateSeriesByBucket(series, bucketSize) {
+          const bucket = Math.max(1, Number(bucketSize) || 1);
+          const grouped = [];
+
+          for (let i = 0; i < series.length; i += bucket) {
+            const slice = series.slice(i, i + bucket);
+            if (!slice.length) continue;
+
+            const first = slice[0];
+            const last = slice[slice.length - 1];
+            grouped.push({
+              dayStart: first.dayStart,
+              dayEnd: last.dayEnd,
+              label: `${this.formatShortDate(first.dayStart)}-${this.formatShortDate(last.dayStart)}`,
+              total: slice.reduce((sum, item) => sum + (Number(item.total) || 0), 0)
+            });
+          }
+
+          return grouped;
+        }
+
+        formatShortDate(timestamp) {
+          const date = new Date(timestamp);
+          return `${date.getMonth() + 1}/${date.getDate()}`;
+        }
+
+        getTrendLabel(timestamp, days) {
+          const date = new Date(timestamp);
+          if (days <= 7) {
+            return ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][date.getDay()];
+          }
+          return `${date.getMonth() + 1}/${date.getDate()}`;
+        }
+
+        getIncomeByPaymentMethod() {
+          const totals = {
+            gcash: 0,
+            cod: 0,
+            pickup: 0,
+            other: 0
+          };
+
+          this.orders.forEach((order) => {
+            if (!this.shouldCountAsIncome(order)) return;
+
+            const amount = Number(order.total) || 0;
+            const methodRaw = String(order?.payment?.method || order?.paymentMethod || "gcash").toLowerCase();
+
+            if (methodRaw.includes("cod") || methodRaw.includes("cash on delivery")) {
+              totals.cod += amount;
+            } else if (methodRaw.includes("pickup")) {
+              totals.pickup += amount;
+            } else if (methodRaw.includes("gcash")) {
+              totals.gcash += amount;
+            } else {
+              totals.other += amount;
+            }
+          });
+
+          return [
+            { key: "gcash", label: "GCash", color: "bg-sky-500", value: totals.gcash },
+            { key: "cod", label: "COD", color: "bg-emerald-500", value: totals.cod },
+            { key: "pickup", label: "Pay at Pickup", color: "bg-amber-500", value: totals.pickup },
+            { key: "other", label: "Other", color: "bg-slate-500", value: totals.other }
+          ];
+        }
+
+        updateIncomeCharts() {
+          const trendContainer = document.getElementById("incomeTrendChart");
+          const methodContainer = document.getElementById("incomeMethodChart");
+          const rangeLabelEl = document.getElementById("incomeTrendRangeLabel");
+
+          if (!trendContainer || !methodContainer) return;
+
+          const selectedDays = this.incomeRangeDays || 7;
+          const trendData = this.getTrendSeriesForDisplay(selectedDays);
+          const trend = trendData.series;
+          const maxTrend = Math.max(...trend.map((item) => item.total), 1);
+          const chartMax = Math.ceil(maxTrend / 100) * 100 || 100;
+          const chartMin = 0;
+          const chartMid = chartMax / 2;
+
+          if (rangeLabelEl) {
+            rangeLabelEl.textContent = trendData.label;
+          }
+
+          const barsHtml = trend
+            .map((item) => {
+              const heightPct = Math.max((item.total / chartMax) * 100, item.total > 0 ? 6 : 2);
+              return `
+                <div class="flex-1 min-w-0 flex flex-col items-center justify-end gap-1" title="${item.label}: ${this.formatMoney(item.total)}">
+                  <div class="w-5 rounded-t-md bg-primary/70 hover:bg-primary transition-colors" style="height:${heightPct}%; min-height:${item.total > 0 ? 8 : 2}px;"></div>
+                </div>
+              `;
+            })
+            .join("");
+
+          const labelsHtml = trend
+            .map(
+              (item) =>
+                `<p class="flex-1 min-w-0 text-center text-[10px] font-bold text-slate-500 truncate" title="${item.label}">${item.label}</p>`
+            )
+            .join("");
+
+          const recentRows = [...trend]
+            .slice(-6)
+            .reverse()
+            .map(
+              (item) => `
+                <div class="flex items-center justify-between text-[11px]">
+                  <span class="font-semibold text-slate-500">${item.label}</span>
+                  <span class="font-black text-slate-700 dark:text-slate-200">${this.formatMoney(item.total)}</span>
+                </div>
+              `
+            )
+            .join("");
+
+          trendContainer.innerHTML = `
+            <div>
+              <div class="h-[180px] flex gap-3">
+                <div class="w-14 flex flex-col justify-between text-[10px] font-bold text-slate-400 text-right pr-2">
+                  <span>${this.formatMoney(chartMax).replace("PHP", "").trim()}</span>
+                  <span>${this.formatMoney(chartMid).replace("PHP", "").trim()}</span>
+                  <span>${this.formatMoney(chartMin).replace("PHP", "").trim()}</span>
+                </div>
+                <div class="flex-1 relative border-l border-b border-slate-200 dark:border-slate-700 rounded-sm">
+                  <div class="absolute inset-x-0 top-0 border-t border-dashed border-slate-200 dark:border-slate-700"></div>
+                  <div class="absolute inset-x-0 top-1/2 border-t border-dashed border-slate-200 dark:border-slate-700"></div>
+                  <div class="absolute inset-0 pt-2 pb-1 px-2 flex items-end gap-2">${barsHtml}</div>
+                </div>
+              </div>
+              <div class="mt-2 ml-[56px] px-2 flex items-start gap-2">${labelsHtml}</div>
+            </div>
+            <div class="mt-4 border-t border-slate-100 dark:border-slate-800 pt-3">
+              <p class="text-[11px] font-black uppercase tracking-wide text-slate-500 mb-2">Recent Values</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">${recentRows}</div>
+            </div>
+          `;
+
+          const methodData = this.getIncomeByPaymentMethod();
+          const totalIncome = methodData.reduce((sum, item) => sum + item.value, 0);
+
+          methodContainer.innerHTML = methodData
+            .map((item) => {
+              const pct = totalIncome > 0 ? (item.value / totalIncome) * 100 : 0;
+              return `
+                <div>
+                  <div class="flex items-center justify-between mb-1">
+                    <span class="text-xs font-bold text-slate-600 dark:text-slate-300">${item.label}</span>
+                    <span class="text-xs font-black text-slate-700 dark:text-slate-200">${this.formatMoney(item.value)} (${pct.toFixed(0)}%)</span>
+                  </div>
+                  <div class="h-2.5 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
+                    <div class="h-full ${item.color}" style="width:${pct}%;"></div>
+                  </div>
+                </div>
+              `;
+            })
+            .join("");
+        }
+
+        setupIncomeRangeControls() {
+          const buttons = document.querySelectorAll(".income-range-btn");
+          buttons.forEach((button) => {
+            button.addEventListener("click", () => {
+              const selectedDays = Number(button.dataset.days || 7);
+              this.incomeRangeDays = selectedDays;
+
+              this.setIncomeRangeButtonState(selectedDays);
+
+              this.updateIncomeCharts();
+            });
+          });
+        }
+
+        setIncomeRangeButtonState(days) {
+          const selectedDays = Number(days) || 7;
+          const buttons = document.querySelectorAll(".income-range-btn");
+          buttons.forEach((btn) => {
+            const isActive = Number(btn.dataset.days || 0) === selectedDays;
+            btn.classList.toggle("bg-primary", isActive);
+            btn.classList.toggle("text-white", isActive);
+            btn.classList.toggle("text-slate-600", !isActive);
+            btn.classList.toggle("dark:text-slate-300", !isActive);
+          });
+        }
+
+        setupIncomeResetButton() {
+          const resetBtn = document.getElementById("incomeResetBtn");
+          if (!resetBtn) return;
+
+          resetBtn.addEventListener("click", () => {
+            const confirmed = window.confirm(
+              "Reset income view to default (7D) and refresh the chart?"
+            );
+            if (!confirmed) return;
+
+            this.incomeRangeDays = 7;
+            this.setIncomeRangeButtonState(7);
+            this.updateIncomeCharts();
+
+            const incomeSection = document.getElementById("incomeSection");
+            if (incomeSection) {
+              incomeSection.scrollTo({ top: 0, behavior: "smooth" });
+            }
+          });
+        }
+
+        setView(view) {
+          this.currentView = view;
+          const isIncomeView = view === "income";
+
+          const activeOrdersSection = document.getElementById("activeOrdersSection");
+          const incomeSection = document.getElementById("incomeSection");
+          const pageTitle = document.getElementById("pageTitle");
+          const searchInput = document.getElementById("ordersSearch");
+          const navActiveOrders = document.getElementById("navActiveOrders");
+          const navIncome = document.getElementById("navIncome");
+
+          if (activeOrdersSection) {
+            activeOrdersSection.classList.toggle("hidden", isIncomeView);
+          }
+          if (incomeSection) {
+            incomeSection.classList.toggle("hidden", !isIncomeView);
+          }
+          if (pageTitle) {
+            pageTitle.textContent = isIncomeView ? "Income Overview" : "Order Management";
+          }
+          if (searchInput) {
+            searchInput.classList.toggle("hidden", isIncomeView);
+          }
+
+          this.setNavActiveState(navActiveOrders, !isIncomeView);
+          this.setNavActiveState(navIncome, isIncomeView);
+        }
+
+        setNavActiveState(element, isActive) {
+          if (!element) return;
+
+          element.classList.toggle("active-nav", isActive);
+          element.classList.toggle("text-primary", isActive);
+          element.classList.toggle("font-semibold", isActive);
+          element.classList.toggle("font-medium", !isActive);
+          element.classList.toggle("text-slate-600", !isActive);
+          element.classList.toggle("dark:text-slate-400", !isActive);
+          element.classList.toggle("hover:bg-primary/5", !isActive);
+          element.classList.toggle("hover:text-primary", !isActive);
+        }
+
+        setupViewNavigation() {
+          const navActiveOrders = document.getElementById("navActiveOrders");
+          const navIncome = document.getElementById("navIncome");
+
+          if (navActiveOrders) {
+            navActiveOrders.addEventListener("click", (event) => {
+              event.preventDefault();
+              this.setView("orders");
+            });
+          }
+
+          if (navIncome) {
+            navIncome.addEventListener("click", () => {
+              this.setView("income");
+            });
+          }
+        }
+
+        filterOrders() {
+          if (this.currentFilter === "all") {
+            return this.orders.filter((o) => o.status !== "completed");
+          }
+          return this.orders.filter((o) => o.status === this.currentFilter);
+        }
+
+        renderOrders() {
+          const grid = document.getElementById("ordersGrid");
+          const filteredOrders = this.filterOrders();
+
+          if (filteredOrders.length === 0) {
+            grid.innerHTML = `
+              <div class="col-span-full text-center text-slate-400 py-16">
+                <span class="material-symbols-outlined text-6xl mb-4 inline-block opacity-30">inbox</span>
+                <p class="text-lg">No orders in this category. Great work!</p>
+              </div>
+            `;
+            return;
+          }
+
+          // Sort orders by timestamp (newest first)
+          const sortedOrders = [...filteredOrders].sort(
+            (a, b) => this.getTimestampMs(b.timestamp) - this.getTimestampMs(a.timestamp)
+          );
+
+          grid.innerHTML = sortedOrders
+            .map((order) => {
+              const badge = this.getStatusBadge(order.status);
+              const isBordered = order.status === "new";
+              const isOpaque = order.status === "completed";
+              const displayOrderNumber = order.orderNumber || order.id;
+              const itemsList = order.items
+                .map(
+                  (item) => `
+                  <div class="flex gap-3">
+                    <span class="font-bold text-primary">${item.quantity}x</span>
+                    <div class="text-sm">
+                      <p class="font-bold">${item.product}</p>
+                    </div>
+                  </div>
+                `
+                )
+                .join("");
+
+              return `
+                <div class="bg-white dark:bg-slate-900 rounded-xl shadow-sm ${
+                  isBordered
+                    ? "border-2 border-primary"
+                    : "border border-slate-200 dark:border-slate-800"
+                } flex flex-col overflow-hidden min-h-[300px] ${isOpaque ? "opacity-60" : ""}">
+                  <div class="p-5 border-b border-slate-100 dark:border-slate-800 flex justify-between items-start gap-3 ${
+                    order.status === "new"
+                      ? "bg-primary/5"
+                      : order.status === "ready"
+                      ? "bg-emerald-50 dark:bg-emerald-900/10"
+                      : ""
+                  }">
+                    <div class="min-w-0">
+                      <div class="flex items-start gap-2">
+                        <h3 class="font-bold text-lg leading-tight break-all">${displayOrderNumber}</h3>
+                        <button onclick="orderManager.copyOrderNumber('${String(displayOrderNumber).replace(/'/g, "\\'")}')" class="shrink-0 inline-flex items-center justify-center w-7 h-7 rounded-md border border-slate-200 dark:border-slate-700 text-slate-500 hover:text-primary hover:border-primary/40 transition-colors" title="Copy order number">
+                          <span class="material-symbols-outlined text-base">content_copy</span>
+                        </button>
+                      </div>
+                      <p class="mt-1 text-sm font-semibold text-slate-600 dark:text-slate-400 break-words">${
+                        order.customer.name
+                      }</p>
+                    </div>
+                    <span class="shrink-0 px-2 py-1 ${badge.bg} ${
+                  badge.textColor || "text-white"
+                } text-[10px] font-black uppercase rounded tracking-widest border ${
+                  order.status !== "new" ? "border-sky-200 dark:border-sky-800" : ""
+                }">
+                      ${badge.text}
+                    </span>
+                  </div>
+                  <div class="p-5 flex-1 space-y-4">
+                    ${itemsList}
+                    <div class="text-xs text-slate-400 mt-2 pt-2 border-t border-slate-100 dark:border-slate-800">
+                      ₱${order.total} • ${order.customer.phone}
+                    </div>
+                    <div class="text-xs text-slate-500 dark:text-slate-400 flex items-center justify-between gap-2">
+                      <span class="font-semibold">${this.getPaymentMethodDisplay(order)}</span>
+                      ${this.getPaymentBadge(order)}
+                    </div>
+                  </div>
+                  <div class="p-5 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-100 dark:border-slate-800 space-y-3">
+                    <div class="flex items-center justify-between">
+                      ${this.getPaymentActionButton(order)}
+                    </div>
+                    <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-1.5 text-slate-600 dark:text-slate-400">
+                      <span class="material-symbols-outlined text-lg">schedule</span>
+                      <span class="text-sm font-bold">${this.formatTime(order.timestamp)}</span>
+                    </div>
+                    ${this.getButton(order)}
+                    </div>
+                  </div>
+                </div>
+              `;
+            })
+            .join("");
+        }
+
+        async updateStatus(orderId, newStatus) {
+          try {
+            const orderRef = doc(db, "orders", orderId);
+            await updateDoc(orderRef, {
+              status: newStatus,
+              updatedAt: serverTimestamp()
+            });
+            console.log("✅ Order status updated:", orderId, newStatus);
+          } catch (error) {
+            console.error("❌ Error updating order:", error);
+            alert("Error updating order: " + error.message);
+          }
+        }
+
+        async markOrderPaid(orderId) {
+          try {
+            const orderRef = doc(db, "orders", orderId);
+            await updateDoc(orderRef, {
+              "payment.status": "paid",
+              "payment.paidAt": serverTimestamp(),
+              updatedAt: serverTimestamp()
+            });
+            console.log("✅ Payment marked as paid:", orderId);
+          } catch (error) {
+            console.error("❌ Error marking payment as paid:", error);
+            alert("Error marking payment as paid: " + error.message);
+          }
+        }
+
+        async copyOrderNumber(orderNumber) {
+          try {
+            if (navigator?.clipboard?.writeText) {
+              await navigator.clipboard.writeText(orderNumber);
+            } else {
+              const temp = document.createElement("textarea");
+              temp.value = orderNumber;
+              temp.style.position = "fixed";
+              temp.style.left = "-9999px";
+              document.body.appendChild(temp);
+              temp.select();
+              document.execCommand("copy");
+              temp.remove();
+            }
+
+            const toast = document.createElement("div");
+            toast.className = "fixed bottom-4 right-4 z-[9999] bg-slate-900 text-white text-sm font-semibold px-4 py-2 rounded-lg shadow-lg";
+            toast.textContent = `Order number copied: ${orderNumber}`;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 1800);
+          } catch (error) {
+            console.error("❌ Failed to copy order number:", error);
+            alert("Could not copy order number. Please copy it manually.");
+          }
+        }
+
+        updateStats() {
+          const activeOrders = this.orders.filter((o) => o.status !== "completed");
+          document.getElementById("pendingCount").textContent = activeOrders.length;
+
+          const totalMinutes = activeOrders.reduce((sum, order) => {
+            const minutes = (Date.now() - this.getTimestampMs(order.timestamp)) / 60000;
+            return sum + Math.max(0, minutes);
+          }, 0);
+          const avgMinutes = activeOrders.length
+            ? Math.round(totalMinutes / activeOrders.length)
+            : 0;
+          document.getElementById("avgTime").textContent = avgMinutes;
+          document.getElementById("stockAlerts").textContent = 0;
+
+          const now = new Date();
+          document.getElementById("lastUpdated").textContent =
+            `Last updated: ${now.toLocaleTimeString()}`;
+        }
+
+        updateCounts() {
+          const allActive = this.orders.filter((o) => o.status !== "completed").length;
+          const newCount = this.orders.filter((o) => o.status === "new").length;
+          const preparingCount = this.orders.filter((o) => o.status === "preparing").length;
+          const readyCount = this.orders.filter((o) => o.status === "ready").length;
+
+          document.getElementById("countAll").textContent = allActive;
+          document.getElementById("countNew").textContent = newCount;
+          document.getElementById("countPreparing").textContent = preparingCount;
+          document.getElementById("countReady").textContent = readyCount;
+        }
+
+        setupFilterButtons() {
+          document.querySelectorAll(".filter-btn").forEach((btn) => {
+            btn.addEventListener("click", () => {
+              // Remove active state from all buttons
+              document.querySelectorAll(".filter-btn").forEach((b) => {
+                b.classList.remove("font-bold", "text-primary", "border-b-2", "border-primary");
+                b.classList.add(
+                  "font-semibold",
+                  "text-slate-500",
+                  "hover:text-slate-700",
+                  "dark:hover:text-slate-300"
+                );
+              });
+
+              // Add active state to clicked button
+              btn.classList.remove(
+                "font-semibold",
+                "text-slate-500",
+                "hover:text-slate-700",
+                "dark:hover:text-slate-300"
+              );
+              btn.classList.add("font-bold", "text-primary", "border-b-2", "border-primary");
+
+              // Update filter and render
+              this.currentFilter = btn.dataset.filter;
+              this.renderOrders();
+            });
+          });
+        }
+      }
+
+      window.orderManager = new OrderManager();
+
+      // Handle logout
+      document.getElementById("logoutBtn").addEventListener("click", () => {
+        localStorage.removeItem("staffLoggedIn");
+        localStorage.removeItem("staffEmployeeId");
+        localStorage.removeItem("staffRememberMe");
+        window.location.href = "login.html";
+      });
+    </script>
+  </body>

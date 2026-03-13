@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customer Login — Caffernaum</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Material Symbols -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind Config -->
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            primary: "#cf7317",
+            forest: "#183022",
+            cream: "#FDFBF7",
+            "background-light": "#f8f7f6",
+            "background-dark": "#211911",
+          },
+          fontFamily: {
+            display: ["Plus Jakarta Sans", "sans-serif"]
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: linear-gradient(135deg, #f8f7f6 0%, #FDFBF7 100%);
+    }
+
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center px-4">
+  <div class="w-full max-w-md">
+    <!-- Header -->
+    <div class="text-center mb-10">
+      <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-primary/10 mb-6">
+        <span class="material-symbols-outlined text-primary text-5xl">coffee_maker</span>
+      </div>
+      <h1 class="text-4xl font-bold text-gray-900">Caffernaum</h1>
+      <p class="text-gray-600 mt-2">Premium Coffee Experience</p>
+    </div>
+
+    <!-- Login Card -->
+    <div class="bg-white rounded-2xl shadow-xl p-8 space-y-6">
+      <!-- Tab Toggle -->
+      <div class="flex gap-2 bg-gray-100 p-1 rounded-lg mb-8">
+        <button id="loginTab" class="flex-1 py-2 px-4 rounded-md bg-white text-primary font-semibold transition-all">
+          Login
+        </button>
+        <button id="signupTab" class="flex-1 py-2 px-4 rounded-md text-gray-600 font-semibold hover:text-gray-900 transition-all">
+          Sign Up
+        </button>
+      </div>
+
+      <!-- Login Form -->
+      <form id="loginForm" class="space-y-5">
+        <div>
+          <label class="block text-sm font-semibold text-gray-900 mb-2">Email Address</label>
+          <input 
+            type="email" 
+            id="loginEmail" 
+            required 
+            placeholder="you@example.com"
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+          >
+        </div>
+
+        <div>
+          <label class="block text-sm font-semibold text-gray-900 mb-2">Password</label>
+          <div class="relative">
+            <input 
+              type="password" 
+              id="loginPassword" 
+              required 
+              placeholder="••••••••"
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+            >
+            <button type="button" id="toggleLoginPassword" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+              <span class="material-symbols-outlined text-xl">visibility</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between">
+          <label class="flex items-center gap-2">
+            <input type="checkbox" id="rememberMe" class="w-4 h-4 rounded border-gray-300 text-primary">
+            <span class="text-sm text-gray-600">Remember me</span>
+          </label>
+          <a href="#" class="text-sm text-primary hover:text-primary/80 font-semibold">Forgot password?</a>
+        </div>
+
+        <div id="loginError" class="hidden p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm"></div>
+
+        <button 
+          type="submit" 
+          class="w-full py-3 px-4 bg-primary hover:bg-primary/90 text-white font-bold rounded-lg transition-all flex items-center justify-center gap-2"
+        >
+          <span class="material-symbols-outlined">login</span>
+          Sign In
+        </button>
+      </form>
+
+      <!-- Signup Form (Hidden) -->
+      <form id="signupForm" class="space-y-5 hidden">
+        <div>
+          <label class="block text-sm font-semibold text-gray-900 mb-2">Full Name</label>
+          <input 
+            type="text" 
+            id="signupName" 
+            required 
+            placeholder="Your name"
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+          >
+        </div>
+
+        <div>
+          <label class="block text-sm font-semibold text-gray-900 mb-2">Email Address</label>
+          <input 
+            type="email" 
+            id="signupEmail" 
+            required 
+            placeholder="you@example.com"
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+          >
+        </div>
+
+        <div>
+          <label class="block text-sm font-semibold text-gray-900 mb-2">Password</label>
+          <div class="relative">
+            <input 
+              type="password" 
+              id="signupPassword" 
+              required 
+              placeholder="••••••••"
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+            >
+            <button type="button" id="toggleSignupPassword" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+              <span class="material-symbols-outlined text-xl">visibility</span>
+            </button>
+          </div>
+          <p class="text-xs text-gray-500 mt-2">At least 12 chars with uppercase, lowercase, number, and special character</p>
+        </div>
+
+        <div>
+          <label class="block text-sm font-semibold text-gray-900 mb-2">Confirm Password</label>
+          <input 
+            type="password" 
+            id="signupConfirm" 
+            required 
+            placeholder="••••••••"
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+          >
+        </div>
+
+        <div id="signupError" class="hidden p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm"></div>
+
+        <button 
+          type="submit" 
+          class="w-full py-3 px-4 bg-primary hover:bg-primary/90 text-white font-bold rounded-lg transition-all flex items-center justify-center gap-2"
+        >
+          <span class="material-symbols-outlined">person_add</span>
+          Create Account
+        </button>
+      </form>
+
+      <!-- Divider -->
+      <div class="relative my-6">
+        <div class="absolute inset-0 flex items-center">
+          <div class="w-full border-t border-gray-200"></div>
+        </div>
+        <div class="relative flex justify-center text-sm">
+          <span class="px-2 bg-white text-gray-500">OR</span>
+        </div>
+      </div>
+
+      <!-- Demo Button -->
+      <button 
+        type="button"
+        id="demoBtn"
+        class="w-full py-3 px-4 border border-gray-300 hover:border-primary/50 hover:bg-primary/5 text-gray-900 font-semibold rounded-lg transition-all"
+      >
+        <span class="material-symbols-outlined mr-2 inline">info</span>
+        Try Demo Credentials
+      </button>
+    </div>
+
+    <!-- Footer -->
+    <p class="text-center text-gray-500 text-sm mt-8">
+      © 2024 Caffernaum. All rights reserved.
+    </p>
+  </div>
+
+  <!-- Firebase Script -->
+  <script type="module">
+    import { auth, db, doc, setDoc, serverTimestamp } from './firebase-config.js';
+    import { 
+      createUserWithEmailAndPassword, 
+      signInWithEmailAndPassword,
+      updateProfile 
+    } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js';
+
+    const loginForm = document.getElementById('loginForm');
+    const signupForm = document.getElementById('signupForm');
+    const loginTab = document.getElementById('loginTab');
+    const signupTab = document.getElementById('signupTab');
+    const loginError = document.getElementById('loginError');
+    const signupError = document.getElementById('signupError');
+    const demoBtn = document.getElementById('demoBtn');
+
+    // Toggle between login and signup
+    loginTab.addEventListener('click', () => {
+      loginForm.classList.remove('hidden');
+      signupForm.classList.add('hidden');
+      loginTab.classList.add('bg-white', 'text-primary');
+      loginTab.classList.remove('text-gray-600');
+      signupTab.classList.remove('bg-white', 'text-primary');
+      signupTab.classList.add('text-gray-600');
+    });
+
+    signupTab.addEventListener('click', () => {
+      loginForm.classList.add('hidden');
+      signupForm.classList.remove('hidden');
+      signupTab.classList.add('bg-white', 'text-primary');
+      signupTab.classList.remove('text-gray-600');
+      loginTab.classList.remove('bg-white', 'text-primary');
+      loginTab.classList.add('text-gray-600');
+    });
+
+    // Password visibility toggles
+    document.getElementById('toggleLoginPassword').addEventListener('click', (e) => {
+      e.preventDefault();
+      const field = document.getElementById('loginPassword');
+      const icon = e.currentTarget.querySelector('.material-symbols-outlined');
+      if (field.type === 'password') {
+        field.type = 'text';
+        icon.textContent = 'visibility_off';
+      } else {
+        field.type = 'password';
+        icon.textContent = 'visibility';
+      }
+    });
+
+    document.getElementById('toggleSignupPassword').addEventListener('click', (e) => {
+      e.preventDefault();
+      const field = document.getElementById('signupPassword');
+      const icon = e.currentTarget.querySelector('.material-symbols-outlined');
+      if (field.type === 'password') {
+        field.type = 'text';
+        icon.textContent = 'visibility_off';
+      } else {
+        field.type = 'password';
+        icon.textContent = 'visibility';
+      }
+    });
+
+    const STRONG_PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{12,}$/;
+
+    // Handle Login
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      loginError.classList.add('hidden');
+
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+      const rememberMe = document.getElementById('rememberMe').checked;
+
+      try {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        // Store user info
+        localStorage.setItem('memberUid', user.uid);
+        localStorage.setItem('memberEmail', user.email);
+        localStorage.setItem('memberName', user.displayName || email.split('@')[0]);
+        
+        if (rememberMe) {
+          localStorage.setItem('rememberMe', 'true');
+        }
+
+        // Redirect to dashboard
+        window.location.href = 'dashboard.html';
+      } catch (error) {
+        console.error('LOGIN ERROR - Code:', error.code);
+        console.error('LOGIN ERROR - Message:', error.message);
+        loginError.classList.remove('hidden');
+        loginError.textContent = getErrorMessage(error.code);
+      }
+    });
+
+    // Handle Signup
+    signupForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      signupError.classList.add('hidden');
+
+      const name = document.getElementById('signupName').value;
+      const email = document.getElementById('signupEmail').value;
+      const password = document.getElementById('signupPassword').value;
+      const confirm = document.getElementById('signupConfirm').value;
+
+      if (password !== confirm) {
+        signupError.classList.remove('hidden');
+        signupError.textContent = 'Passwords do not match';
+        return;
+      }
+
+      if (!STRONG_PASSWORD_REGEX.test(password)) {
+        signupError.classList.remove('hidden');
+        signupError.textContent = 'Password must be at least 12 chars with uppercase, lowercase, number, and special character';
+        return;
+      }
+
+      try {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        // Update profile
+        await updateProfile(user, { displayName: name });
+
+        // Create member profile in Firestore
+        const memberProfileData = {
+          uid: user.uid,
+          email: user.email,
+          displayName: name,
+          rewardPoints: 0,
+          memberSince: serverTimestamp(),
+          tier: 'Bronze',
+          createdAt: new Date().toISOString()
+        };
+        
+        await setDoc(doc(db, 'members', user.uid), memberProfileData, { merge: true });
+
+        // Store user info
+        localStorage.setItem('memberUid', user.uid);
+        localStorage.setItem('memberEmail', user.email);
+        localStorage.setItem('memberName', name);
+        localStorage.setItem('rewardPoints', '0');
+
+        // Redirect to dashboard
+        window.location.href = 'dashboard.html';
+      } catch (error) {
+        signupError.classList.remove('hidden');
+        signupError.textContent = getErrorMessage(error.code);
+      }
+    });
+
+    // Demo credentials
+    demoBtn.addEventListener('click', () => {
+      document.getElementById('loginEmail').value = 'customer@example.com';
+      document.getElementById('loginPassword').value = 'password123';
+      loginForm.classList.remove('hidden');
+      signupForm.classList.add('hidden');
+      alert('Demo credentials:\nEmail: customer@example.com\nPassword: password123');
+    });
+
+    // Helper function for error messages
+    function getErrorMessage(code) {
+      const errors = {
+        'auth/user-not-found': 'No account found with this email. Please sign up first.',
+        'auth/wrong-password': 'Invalid email or password',
+        'auth/invalid-credential': 'Invalid email or password',
+        'auth/invalid-email': 'Invalid email address.',
+        'auth/user-disabled': 'This account has been disabled.',
+        'auth/email-already-in-use': 'Email already registered',
+        'auth/weak-password': 'Password is too weak (minimum 6 characters)',
+        'auth/network-request-failed': 'Network error. Please check your connection.',
+        'auth/too-many-requests': 'Too many login attempts. Please try again later.',
+        'auth/operation-not-allowed': 'Login is currently disabled. Please try again later.'
+      };
+      return errors[code] || 'Please create an account if you are not registered.'
+    }
+    
+
+    // Check URL parameters for tab switching
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('tab') === 'signup') {
+      loginForm.classList.add('hidden');
+      signupForm.classList.remove('hidden');
+      loginTab.classList.remove('bg-white', 'text-primary');
+      loginTab.classList.add('text-gray-600');
+      signupTab.classList.add('bg-white', 'text-primary');
+      signupTab.classList.remove('text-gray-600');
+    }
+
+    // Auto-fill if remember me was checked
+    window.addEventListener('load', () => {
+      if (localStorage.getItem('rememberMe') === 'true') {
+        const savedEmail = localStorage.getItem('memberEmail');
+        if (savedEmail) {
+          document.getElementById('loginEmail').value = savedEmail;
+          document.getElementById('rememberMe').checked = true;
+        }
+      }
+    });
+  </script>
+</body>
+</html>
