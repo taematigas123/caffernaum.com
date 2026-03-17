@@ -1680,7 +1680,7 @@
       hot: [
         { name: 'Caramel Macchiato', price: 319, img: 'images/caramel macchiato.png' },
         { name: 'Vanilla Latte', price: 475, img: 'images/warm vanila latte.png' },
-        { name: 'Cappuccino', price: 349, img: 'images/Classic cappuccino with frothy milk.png' },
+        { name: 'Cappuccino', price: 349, img: 'images/cappuccino.png' },
         { name: 'Americano', price: 279, img: 'images/Americano coffee in a white ceramic mug.png' },
         { name: 'Mocha', price: 399, img: 'images/Cafe mocha with chocolate shavings on top.png' },
         { name: 'Flat White', price: 369, img: 'images/flat-white.jpg' }
@@ -2404,6 +2404,53 @@
     // Order History Functions
     let orderHistoryUnsubscribe = null;
 
+    function resolveQuickReorderImage(item = {}) {
+      const productName = String(item.product || '').trim();
+      const rawImg = String(item.img || '').trim();
+
+      const normalizedName = productName.toLowerCase().replace(/\s+/g, ' ').trim();
+
+      // Always prefer canonical local image paths for known products.
+      const productImageMap = {
+        'caramel macchiato': 'images/caramel macchiato.png',
+        'vanilla latte': 'images/warm vanila latte.png',
+        'cappuccino': 'images/cappuccino.png',
+        'americano': 'images/Americano coffee in a white ceramic mug.png',
+        'mocha': 'images/Cafe mocha with chocolate shavings on top.png',
+        'flat white': 'images/flat-white.jpg',
+        'butter croissant': 'images/croissant.jpg',
+        'pain au chocolat': 'images/pain-au-chocolat.jpg',
+        'blueberry muffin': 'images/muffin.jpg',
+        'chocolate brownie': 'images/brownies.webp'
+      };
+
+      if (productImageMap[normalizedName]) {
+        return productImageMap[normalizedName];
+      }
+
+      // Normalize legacy path variants saved in older order records.
+      const legacyPathMap = {
+        'images/Classic cappuccino with frothy milk.png': 'images/cappuccino.png'
+      };
+
+      const decodedRawImg = rawImg ? decodeURIComponent(rawImg).replace(/\\/g, '/') : '';
+      const lowerDecodedRawImg = decodedRawImg.toLowerCase();
+
+      if (lowerDecodedRawImg.includes('cappuccino')) {
+        return 'images/cappuccino.png';
+      }
+
+      if (rawImg && legacyPathMap[rawImg]) {
+        return legacyPathMap[rawImg];
+      }
+
+      if (decodedRawImg) {
+        return decodedRawImg;
+      }
+
+      return '';
+    }
+
     async function loadQuickReorder() {
       const memberUid = localStorage.getItem('memberUid');
       if (!memberUid) {
@@ -2455,19 +2502,25 @@
             return;
           }
 
-          document.getElementById('quickReorderList').innerHTML = uniqueItems.map(item => `
+          document.getElementById('quickReorderList').innerHTML = uniqueItems.map(item => {
+            const resolvedImg = resolveQuickReorderImage(item);
+            return `
             <div class="quick-reorder-item">
-              ${item.img ? `<img src="${item.img}" alt="${item.product}" onerror="this.src='https://via.placeholder.com/56x56/cf7317/ffffff?text=Coffee'">` : '<div class="w-14 h-14 bg-primary/10 rounded-lg flex items-center justify-center"><span class="material-symbols-outlined text-primary">coffee</span></div>'}
+              ${resolvedImg ? `<img src="${resolvedImg}" alt="${item.product}" onerror="this.onerror=null;this.closest('.quick-reorder-item').querySelector('.quick-reorder-fallback')?.classList.remove('hidden');this.remove();">` : ''}
+              <div class="quick-reorder-fallback ${resolvedImg ? 'hidden' : ''} w-14 h-14 bg-primary/10 rounded-lg flex items-center justify-center">
+                <span class="material-symbols-outlined text-primary">coffee</span>
+              </div>
               <div class="flex-1 min-w-0">
                 <h4 class="font-semibold text-gray-900 text-sm">${item.product}</h4>
                 <p class="text-xs text-gray-500">Qty: ${item.quantity}</p>
                 <p class="text-primary font-bold text-sm mt-1">₱${item.price}</p>
               </div>
-              <button onclick="reorderItem('${item.product.replace(/'/g, "\\'")}', ${item.price}, '${(item.customization || '').replace(/'/g, "\\'")}', '${(item.img || '').replace(/'/g, "\\'")}', ${item.quantity})" class="text-primary hover:bg-primary/10 p-1.5 sm:p-2 rounded-lg transition-colors">
+              <button onclick="reorderItem('${item.product.replace(/'/g, "\\'")}', ${item.price}, '${(item.customization || '').replace(/'/g, "\\'")}', '${resolvedImg.replace(/'/g, "\\'")}', ${item.quantity})" class="text-primary hover:bg-primary/10 p-1.5 sm:p-2 rounded-lg transition-colors">
                 <span class="material-symbols-outlined text-xl sm:text-2xl">shopping_cart</span>
               </button>
             </div>
-          `).join('');
+          `;
+          }).join('');
         }, (error) => {
           console.error('Error loading quick reorder:', error);
           document.getElementById('quickReorderList').innerHTML = `
