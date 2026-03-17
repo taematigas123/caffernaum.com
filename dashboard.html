@@ -1783,9 +1783,11 @@
       const totalAmount = subtotalAmount + taxAmount;
       const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
 
-      container.innerHTML = cart.map((item, idx) => `
+      container.innerHTML = cart.map((item, idx) => {
+        const safeImg = getSafeImageSrc(item.img);
+        return `
         <div class="flex gap-3">
-          ${item.img ? `<div class="size-16 rounded-xl overflow-hidden border border-primary/10 flex-shrink-0 bg-gray-100"><img src="${item.img}" alt="${item.product}" class="w-full h-full object-cover"></div>` : ''}
+          ${safeImg ? `<div class="size-16 rounded-xl overflow-hidden border border-primary/10 flex-shrink-0 bg-gray-100"><img src="${safeImg}" alt="${item.product}" class="w-full h-full object-cover"></div>` : ''}
           <div class="flex-1">
             <h5 class="text-sm font-bold">${item.product}</h5>
             <p class="text-xs text-slate-500 dark:text-slate-400">₱${item.price}</p>
@@ -1799,7 +1801,8 @@
             <span class="material-symbols-outlined text-lg">delete</span>
           </button>
         </div>
-      `).join('');
+      `;
+      }).join('');
 
       subtotal.textContent = '₱' + subtotalAmount;
       tax.textContent = '₱' + taxAmount;
@@ -2002,9 +2005,11 @@
       const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
       const earnedBeans = Math.round(total * 0.1);
 
-      container.innerHTML = cart.map((item, idx) => `
+      container.innerHTML = cart.map((item, idx) => {
+        const safeImg = getSafeImageSrc(item.img);
+        return `
         <div class="flex gap-4 pb-4 border-b border-gray-200">
-          ${item.img ? `<div class="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 bg-gray-200"><img src="${item.img}" alt="${item.product}" class="w-full h-full object-cover"></div>` : ''}
+          ${safeImg ? `<div class="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 bg-gray-200"><img src="${safeImg}" alt="${item.product}" class="w-full h-full object-cover"></div>` : ''}
           <div class="flex-1">
             <h3 class="font-bold text-lg">${item.product}</h3>
             <p class="text-sm text-gray-500 mb-2"></p>
@@ -2019,7 +2024,8 @@
             <button onclick="removeCartItem(${idx})" class="text-red-500 text-sm font-bold uppercase">REMOVE</button>
           </div>
         </div>
-      `).join('');
+      `;
+      }).join('');
 
       count.textContent = totalItems + ' item' + (totalItems !== 1 ? 's' : '') + ' selected';
       subtotalEl.textContent = '₱' + subtotal;
@@ -2404,6 +2410,21 @@
     // Order History Functions
     let orderHistoryUnsubscribe = null;
 
+    function getSafeImageSrc(value) {
+      const src = String(value || '').trim().replace(/\\/g, '/');
+      if (!src) return '';
+
+      const isLocalAsset = src.startsWith('images/');
+      const isHttpUrl = /^https?:\/\//i.test(src);
+      if (!(isLocalAsset || isHttpUrl)) return '';
+
+      // Ignore broken legacy placeholder hosts that cause DNS errors.
+      if (/ffffff\?text[-=]coffee/i.test(src)) return '';
+      if (/^https?:\/\/ffffff\?text[-=]coffee/i.test(src)) return '';
+
+      return src;
+    }
+
     function resolveQuickReorderImage(item = {}) {
       const productName = String(item.product || '').trim();
       const rawImg = String(item.img || '').trim();
@@ -2445,7 +2466,7 @@
       }
 
       if (decodedRawImg) {
-        return decodedRawImg;
+        return getSafeImageSrc(decodedRawImg);
       }
 
       return '';
@@ -2503,7 +2524,7 @@
           }
 
           document.getElementById('quickReorderList').innerHTML = uniqueItems.map(item => {
-            const resolvedImg = resolveQuickReorderImage(item);
+            const resolvedImg = getSafeImageSrc(resolveQuickReorderImage(item));
             return `
             <div class="quick-reorder-item">
               ${resolvedImg ? `<img src="${resolvedImg}" alt="${item.product}" onerror="this.onerror=null;this.closest('.quick-reorder-item').querySelector('.quick-reorder-fallback')?.classList.remove('hidden');this.remove();">` : ''}
@@ -2515,7 +2536,7 @@
                 <p class="text-xs text-gray-500">Qty: ${item.quantity}</p>
                 <p class="text-primary font-bold text-sm mt-1">₱${item.price}</p>
               </div>
-              <button onclick="reorderItem('${item.product.replace(/'/g, "\\'")}', ${item.price}, '${(item.customization || '').replace(/'/g, "\\'")}', '${resolvedImg.replace(/'/g, "\\'")}', ${item.quantity})" class="text-primary hover:bg-primary/10 p-1.5 sm:p-2 rounded-lg transition-colors">
+              <button onclick="reorderItem('${item.product.replace(/'/g, "\\'")}', ${item.price}, '${(item.customization || '').replace(/'/g, "\\'")}', '${getSafeImageSrc(resolvedImg).replace(/'/g, "\\'")}', ${item.quantity})" class="text-primary hover:bg-primary/10 p-1.5 sm:p-2 rounded-lg transition-colors">
                 <span class="material-symbols-outlined text-xl sm:text-2xl">shopping_cart</span>
               </button>
             </div>
