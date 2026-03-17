@@ -316,7 +316,7 @@
         <!-- Actions -->
         <div class="flex items-center gap-2 sm:gap-4">
           <!-- Mobile Menu Button -->
-          <button class="lg:hidden text-gray-700 hover:text-primary p-2 -mr-2" aria-label="Menu">
+          <button id="mobileMenuToggle" class="lg:hidden text-gray-700 hover:text-primary p-2 -mr-2" aria-label="Open navigation menu" aria-expanded="false" aria-controls="mobileMenuPanel">
             <span class="material-symbols-outlined">menu</span>
           </button>
           <button id="openBagBtn" class="relative bg-primary hover:bg-primary/90 text-white px-3 sm:px-5 py-2 rounded-full font-semibold transition-all flex items-center gap-1 sm:gap-2 text-sm sm:text-base">
@@ -335,6 +335,20 @@
       </div>
     </div>
   </header>
+
+  <!-- Mobile Nav Panel -->
+  <div id="mobileMenuPanel" class="lg:hidden hidden bg-white border-b border-gray-200 shadow-md z-40">
+    <nav class="max-w-7xl mx-auto px-4 py-4 flex flex-col gap-1">
+      <button id="mobileOpenMenuBtn" class="flex items-center gap-3 px-4 py-3 rounded-xl text-left font-semibold text-gray-700 hover:bg-primary/5 hover:text-primary transition-colors">
+        <span class="material-symbols-outlined text-primary">coffee_maker</span>
+        Order Menu
+      </button>
+      <a href="dashboard.html" class="flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-primary bg-primary/5 transition-colors">
+        <span class="material-symbols-outlined text-primary">dashboard</span>
+        Dashboard
+      </a>
+    </nav>
+  </div>
 
   <!-- Main Content -->
   <main class="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
@@ -1833,6 +1847,28 @@
         });
       });
     }
+
+    // Mobile hamburger toggle
+    document.getElementById('mobileMenuToggle').addEventListener('click', () => {
+      const panel = document.getElementById('mobileMenuPanel');
+      const btn   = document.getElementById('mobileMenuToggle');
+      const isOpen = !panel.classList.contains('hidden');
+      panel.classList.toggle('hidden', isOpen);
+      btn.setAttribute('aria-expanded', String(!isOpen));
+      const icon = btn.querySelector('.material-symbols-outlined');
+      icon.textContent = isOpen ? 'menu' : 'close';
+    });
+
+    document.getElementById('mobileOpenMenuBtn').addEventListener('click', () => {
+      // Close the mobile nav panel first
+      document.getElementById('mobileMenuPanel').classList.add('hidden');
+      document.getElementById('mobileMenuToggle').setAttribute('aria-expanded', 'false');
+      document.getElementById('mobileMenuToggle').querySelector('.material-symbols-outlined').textContent = 'menu';
+      // Open the menu modal
+      document.getElementById('menuModal').classList.remove('hidden');
+      renderMenuProducts('hot');
+      updateMenuBag();
+    });
 
     // Menu modal event listeners
     document.getElementById('openMenuBtn').addEventListener('click', () => {
