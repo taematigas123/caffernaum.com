@@ -8,6 +8,7 @@
 
   <!-- Google Fonts: Plus Jakarta Sans -->
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+	<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet" />
 
   <!-- Material Symbols -->
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
@@ -53,13 +54,16 @@
   </style>
 </head>
 <body>
-	<header class="site-header">
+	<header id="home" class="site-header">
 		<div class="container nav-row">
 			<div class="brand">
 				<span class="material-symbols-outlined brand-icon">coffee_maker</span>
 				<span class="brand-text">Caffernaum</span>
 			</div>
 			<nav class="main-nav">
+				<a href="#home">Home</a>
+				<a href="#rewards">Rewards</a>
+				<a href="#locations">Visit Us</a>
 			</nav>
 			<div class="actions">
 				
@@ -79,11 +83,51 @@
       </p>
       <div class="cta-row">
         <button class="btn btn-cta">Start Order</button>
-        <button class="btn btn-outline">Explore Roasts</button>
       </div>
     </div>
   </div>
 </section>
+
+		<section id="roasts" class="roasts container">
+			<div class="section-head">
+				<div>
+					<span class="section-kicker">Find your profile</span>
+					<h2>Explore Our Roasts</h2>
+				</div>
+			</div>
+			<div class="roast-grid">
+				<article class="roast-card roast-medium" tabindex="0">
+					<div class="roast-topline"><span>Medium Roast</span><span class="roast-origin">Colombia</span></div>
+					<h3>Colombian Supremo</h3>
+					<p>Caramel sweetness, cocoa notes, and a smooth, balanced body.</p>
+					<div class="roast-meta"><span>☕ French press</span><span>Sweet · Smooth</span></div>
+				</article>
+				<article class="roast-card roast-dark" tabindex="0">
+					<div class="roast-topline"><span>Dark Roast</span><span class="roast-origin">House Blend</span></div>
+					<h3>Espresso Blend</h3>
+					<p>Rich chocolate, toasted nuts, and a bold, lingering finish.</p>
+					<div class="roast-meta"><span>☕ Espresso</span><span>Bold · Rich</span></div>
+				</article>
+				<article class="roast-card roast-oak" tabindex="0">
+					<div class="roast-topline"><span>Barrel-aged</span><span class="roast-origin">Signature</span></div>
+					<h3>Oak-Aged Coffee Beans</h3>
+					<p>Smoky wood notes and a deep, complex aroma from careful aging.</p>
+					<div class="roast-meta"><span>☕ Slow brew</span><span>Smoky · Complex</span></div>
+				</article>
+				<article class="roast-card roast-cold" tabindex="0">
+					<div class="roast-topline"><span>Cold Roast</span><span class="roast-origin">House Blend</span></div>
+					<h3>Cold Brew Blend</h3>
+					<p>Silky and low-acidity with chocolate notes made for slow steeping.</p>
+					<div class="roast-meta"><span>☕ Cold brew</span><span>Silky · Cocoa</span></div>
+				</article>
+				<article class="roast-card roast-vanilla" tabindex="0">
+					<div class="roast-topline"><span>Flavored Latte</span><span class="roast-origin">House Favorite</span></div>
+					<h3>Vanilla Latte</h3>
+					<p>An espresso-based coffee drink made with steamed milk and sweet vanilla syrup.</p>
+					<div class="roast-meta"><span>☕ Espresso</span><span>Sweet · Creamy</span></div>
+				</article>
+			</div>
+		</section>
 
 		<section class="core-values container">
 			<div class="core-grid">
@@ -135,7 +179,7 @@
 						<div class="rewards-progress-bar">
 							<div class="rewards-progress-fill" id="rewardProgress"></div>
 						</div>
-						<p id="rewardNext" class="mt-3 rounded-lg border border-primary/30 bg-primary/10 px-3 py-2 text-sm font-bold text-primary">IMPORTANT: Member rewards are available after registration.</p>
+						<p id="rewardNext" class="rewards-notice mt-3 rounded-lg px-3 py-2 text-sm font-bold">IMPORTANT: Member rewards are available after registration.</p>
 					</div>
 					<button onclick="window.location.href='customer-login.html?tab=signup'" class="btn btn-primary">Register now</button>
 				</div>
@@ -203,7 +247,7 @@
 					<div class="product-media">
 						<img class="product-media-img" src="images/honey latter.png" alt="Spiced Honey Latte">
 					</div>
-					<h4>Spiced Honey Latte <span class="price">₱319</span></h4>
+					<h4>Spiced Honey Latte <span class="price">₱190</span></h4>
 					<p class="muted">Warm honey with aromatic mountain spices and oat milk.</p>
 
 				</article>
@@ -211,7 +255,7 @@
 					<div class="product-media photo-2">
                         <img class="product-media-img" src="images/cold brew.png" alt="Cold Brew Tonic">
                     </div>
-					<h4>Cold Brew Tonic <span class="price">₱529</span></h4>
+					<h4>Cold Brew Tonic <span class="price">₱220</span></h4>
 					<p class="muted">Refreshing cold brew with citrus zest and botanical tonic.</p>
 
 				</article>
@@ -219,7 +263,7 @@
 					<div class="product-media photo-3">
                         <img class="product-media-img" src="images/maple-latte.webp" alt="Maple Pecan Flat White">
                     </div>
-					<h4>Maple Pecan Flat White <span class="price">₱549</span></h4>
+					<h4>Maple Pecan Flat White <span class="price">₱240</span></h4>
 					<p class="muted">Sweet maple notes with velvety microfoam.</p>
 
 				</article>
@@ -227,7 +271,7 @@
 					<div class="product-media photo-4">
                      <img class="product-media-img" src="images/small espresso.png" alt="Oak-Aged Espresso">
                     </div>
-					<h4>Oak-Aged Espresso <span class="price">₱429</span></h4>
+					<h4>Oak-Aged Espresso <span class="price">₱200</span></h4>
 					<p class="muted">Rich, intense espresso shot with smoky woody undertones.</p>
 
 				</article>
@@ -238,15 +282,22 @@
   <div class="visit-container">
     <!-- Left Column -->
     <div class="visit-copy">
+			<span class="visit-eyebrow"><span class="material-symbols-outlined">location_on</span> Our flagship location</span>
       <h2>Visit our forest roastery.</h2>
       <p class="muted">
         Experience the process firsthand. Our flagship location features a slow-bar,
         a view of our roasting facility, and guided tasting tours every weekend.
       </p>
-      <ul class="visit-list">
-        <li><strong>The Main Branch</strong><br>3378 C. Raymundo Avenue, Rosario, Pasig City</li>
-        <li><strong>Opening Hours</strong><br>Mon–Fri: 7am–6pm | Sat–Sun: 8am–8pm</li>
-      </ul>
+			<div class="visit-details">
+				<div class="visit-detail">
+					<span class="material-symbols-outlined">near_me</span>
+					<div><strong>The Main Branch</strong><span>3378 C. Raymundo Avenue, Rosario, Pasig City</span></div>
+				</div>
+				<div class="visit-detail">
+					<span class="material-symbols-outlined">schedule</span>
+					<div><strong>Opening Hours</strong><span>Mon–Fri: 7am–6pm | Sat–Sun: 8am–8pm</span></div>
+				</div>
+			</div>
      <a href="https://www.google.com/maps/place/Caffernaum/@14.587342,121.0888162,17z/data=!3m1!4b1!4m6!3m5!1s0x3397c7500371a7d3:0x845cfc60d6c1decb!8m2!3d14.587342!4d121.0888162!16s%2Fg%2F11rsrqswh0?entry=ttu"
    target="_blank" 
    rel="noopener noreferrer">
@@ -257,7 +308,11 @@
     <!-- Right Column: Photo -->
     <div class="visit-photo" style="background-image: url('images/table and chair.png');">
       <div class="photo-caption">
+				<span class="material-symbols-outlined">local_cafe</span>
+				<div>
         <strong>The perfect blend for freshness</strong>
+				<span>Slow bar · Fresh roast · Good company</span>
+				</div>
       </div>
     </div>
   </div>
@@ -587,9 +642,10 @@
 
 	<footer class="site-footer">
 		<div class="container footer-grid">
-			<div>
+			<div class="footer-intro">
 				<div class="brand">Caffernaum</div>
 				<p class="muted">Elevating the coffee experience through sustainable roasting and community rituals since 2024.</p>
+				<span class="footer-note">Roasted with care in Pasig City.</span>
 			</div>
 			<div>
 				<h4>Shop</h4>
@@ -599,8 +655,9 @@
 				<h4>Company</h4>
 				<ul class="muted small-links"><li>About Us</li><li>Sustainability</li><li>Careers</li><li>Locations</li></ul>
 			</div>
-			<div>
+			<div class="footer-access">
 				<h4>Staff Access</h4>
+				<p>Manage orders, inventory, and daily operations.</p>
 				<a href="login.html" target="_blank" class="btn btn-outline small" style="display: inline-block; text-decoration: none;">Management Portal</a>
 			</div>
 		</div>
@@ -1116,24 +1173,24 @@
 		// Menu Modal System
 		const menuProducts = {
 			hot: [
-				{ name: 'Caramel Macchiato', price: 319, img: 'images/caramel macchiato.png' },
-				{ name: 'Vanilla Latte', price: 475, img: 'images/warm vanila latte.png' },
-				{ name: 'Cappuccino', price: 349, img: 'images/Classic cappuccino with frothy milk.png' },
-				{ name: 'Americano', price: 279, img: 'images/Americano coffee in a white ceramic mug.png' },
-				{ name: 'Mocha', price: 399, img: 'images/Cafe mocha with chocolate shavings on top.png' },
-				{ name: 'Flat White', price: 369, img: 'images/flat-white.jpg' }
+				{ name: 'Caramel Macchiato', price: 185, img: 'images/caramel macchiato.png', description: 'A sweet, espresso-based coffee drink made with vanilla syrup, steamed milk, a bold shot of espresso, and a distinct caramel drizzle.', sizes: [{ label: 'Regular', price: 185 }, { label: 'Large', price: 225 }, { label: 'XL', price: 255 }] },
+				{ name: 'Vanilla Latte', price: 210, img: 'images/warm vanila latte.png', description: 'An espresso-based coffee drink made with steamed milk and sweet vanilla syrup.', sizes: [{ label: 'Regular', price: 210 }, { label: 'Large', price: 245 }, { label: 'XL', price: 280 }] },
+				{ name: 'Cappuccino', price: 170, img: 'images/cappuccino.png', description: 'A classic Italian coffee drink made with equal parts espresso, steamed milk, and milk foam.', sizes: [{ label: 'Regular', price: 170 }, { label: 'Large', price: 210 }, { label: 'XL', price: 240 }] },
+				{ name: 'Americano', price: 140, img: 'images/Americano coffee in a white ceramic mug.png', description: 'A simple yet bold coffee drink made with a shot of espresso and hot water.', sizes: [{ label: 'Regular', price: 140 }, { label: 'Large', price: 175 }, { label: 'XL', price: 205 }] },
+				{ name: 'Mocha', price: 195, img: 'images/Cafe mocha with chocolate shavings on top.png', description: 'A rich, chocolate-flavored coffee drink made with espresso, steamed milk, and chocolate syrup.', sizes: [{ label: 'Regular', price: 195 }, { label: 'Large', price: 235 }, { label: 'XL', price: 265 }] },
+				{ name: 'Flat White', price: 180, img: 'images/flat-white.jpg', description: 'A smooth and creamy coffee drink made with a shot of espresso and steamed milk.', sizes: [{ label: 'Regular', price: 180 }, { label: 'Large', price: 220 }, { label: 'XL', price: 250 }] }
 			],
 			existing: [
-				{ name: 'Spiced Honey Latte', price: 319, img: 'images/honey latter.png' },
-				{ name: 'Cold Brew Tonic', price: 529, img: 'images/cold brew.png' },
-				{ name: 'Maple Pecan Flat White', price: 549, img: 'images/maple-latte.webp' },
-				{ name: 'Oak-Aged Espresso', price: 429, img: 'images/small espresso.png' }
+				{ name: 'Spiced Honey Latte', price: 190, img: 'images/honey latter.png', description: 'A warm and comforting coffee drink made with espresso, steamed milk, honey, and a blend of spices.', sizes: [{ label: 'Regular', price: 190 }, { label: 'Large', price: 230 }, { label: 'XL', price: 260 }] },
+				{ name: 'Cold Brew Tonic', price: 220, img: 'images/cold brew.png', description: 'A refreshing cold brew coffee drink with a hint of citrus.', sizes: [{ label: 'Regular', price: 220 }, { label: 'Large', price: 260 }, { label: 'XL', price: 295 }] },
+				{ name: 'Maple Pecan Flat White', price: 240, img: 'images/maple-latte.webp', description: 'A creamy flat white coffee drink with maple and pecan flavors.', sizes: [{ label: 'Regular', price: 240 }, { label: 'Large', price: 280 }, { label: 'XL', price: 320 }] },
+				{ name: 'Oak-Aged Espresso', price: 200, img: 'images/small espresso.png', description: 'A bold espresso shot with a hint of oak aging.', sizes: [{ label: 'Single Shot', price: 200 }, { label: 'Double Shot', price: 245 }, { label: 'Large', price: 285 }] }
 			],
 			pastries: [
-				{ name: 'Butter Croissant', price: 95, img: 'images/croissant.jpg' },
-				{ name: 'Pain au Chocolat', price: 120, img: 'images/pain-au-chocolat.jpg' },
-				{ name: 'Blueberry Muffin', price: 85, img: 'images/muffin.jpg' },
-				{ name: 'Chocolate Brownie', price: 95, img: 'images/brownies.webp' }
+				{ name: 'Butter Croissant', price: 95, img: 'images/croissant.jpg', description: 'A flaky, buttery pastry perfect for breakfast.' },
+				{ name: 'Pain au Chocolat', price: 120, img: 'images/pain-au-chocolat.jpg', description: 'A French pastry filled with dark chocolate.' },
+				{ name: 'Blueberry Muffin', price: 85, img: 'images/muffin.jpg', description: 'A moist and flavorful muffin packed with fresh blueberries.' },
+				{ name: 'Chocolate Brownie', price: 95, img: 'images/brownies.webp', description: 'A rich and fudgy chocolate brownie.' }
 			]
 		};
 
@@ -1148,36 +1205,105 @@
 			
 			document.getElementById('menuCategoryTitle').textContent = categoryTitles[category] || 'Menu';
 			
-			grid.innerHTML = products.map((product, idx) => `
-				<div class="group bg-white dark:bg-slate-900 rounded-2xl border border-primary/5 hover:border-primary/30 hover:shadow-xl hover:shadow-primary/5 transition-all p-4 flex flex-col">
-					<div class="relative aspect-square overflow-hidden rounded-xl mb-4 bg-gray-200">
-							${product.img ? `<img src="${product.img}" alt="${product.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">` : `<div class="w-full h-full flex items-center justify-center text-gray-400">${product.name}</div>`}
-					</div>
-					<div class="flex-1">
-						<h4 class="text-lg font-bold text-slate-900 dark:text-slate-100">${product.name}</h4>
-					<p class="text-sm text-slate-500 dark:text-slate-400 mt-1">${category === 'pastries' ? 'Premium quality pastry' : 'Premium quality coffee'}</p>
-					</div>
-					<div class="flex items-center justify-between mt-4">
-						<span class="text-lg font-bold text-primary">₱${product.price}</span>
-						<button class="menu-add-btn bg-primary text-white px-4 py-2 rounded-lg font-bold text-sm hover:bg-opacity-90 transition-all" data-product="${product.name}" data-price="${product.price}" data-img="${product.img || ''}">
-							Add to Bag
+			grid.innerHTML = products.map((product, idx) => {
+				const sizeOptions = Array.isArray(product.sizes) && product.sizes.length ? `
+					<div class="size-dropdown mt-3" data-selected-label="${product.sizes[0].label}" data-selected-price="${product.sizes[0].price}">
+						<label class="block text-[10px] uppercase tracking-widest text-slate-500 font-semibold mb-1">Size</label>
+						<button type="button" class="size-trigger w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-left text-sm text-slate-700 shadow-sm transition-all hover:border-primary/60 hover:bg-white focus:outline-none focus:border-primary">
+							<span class="size-value">${product.sizes[0].label} - ₱${product.sizes[0].price}</span>
+							<span class="size-arrow ml-2 inline-block text-base text-slate-500 transition-transform duration-200">⌄</span>
 						</button>
+						<div class="size-menu overflow-hidden rounded-xl border border-slate-200 bg-white shadow-lg">
+							${product.sizes.map((size) => `
+								<button type="button" class="size-option flex w-full items-center justify-between px-3 py-2.5 text-left text-sm text-slate-700 transition hover:bg-primary/5 hover:text-primary" data-label="${size.label}" data-price="${size.price}">
+									<span>${size.label}</span>
+									<span>₱${size.price}</span>
+								</button>
+							`).join('')}
+						</div>
 					</div>
-				</div>
-			`).join('');
+				` : '';
+				const defaultPrice = Array.isArray(product.sizes) && product.sizes.length ? product.sizes[0].price : product.price;
+				return `
+					<div class="product-card group bg-white dark:bg-slate-900 rounded-2xl border border-primary/5 hover:border-primary/30 hover:shadow-xl hover:shadow-primary/5 transition-all p-4 flex flex-col">
+						<div class="relative aspect-square overflow-hidden rounded-xl mb-4 bg-gray-200">
+							${product.img ? `<img src="${product.img}" alt="${product.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">` : `<div class="w-full h-full flex items-center justify-center text-gray-400">${product.name}</div>`}
+						</div>
+						<div class="flex-1">
+							<h4 class="text-lg font-bold text-slate-900 dark:text-slate-100">${product.name}</h4>
+							<p class="text-sm text-slate-500 dark:text-slate-400 mt-1">${product.description || (category === 'pastries' ? 'Premium quality pastry' : 'Premium quality coffee')}</p>
+							${sizeOptions}
+						</div>
+						<div class="flex items-center justify-between mt-4 gap-3">
+							${Array.isArray(product.sizes) && product.sizes.length ? '' : `<span class="product-price text-lg font-bold text-primary">₱${defaultPrice}</span>`}
+							<button class="menu-add-btn bg-primary text-white px-4 py-2 rounded-lg font-bold text-sm hover:bg-opacity-90 transition-all" data-product="${product.name}" data-price="${defaultPrice}" data-img="${product.img || ''}">
+								Add to Bag
+							</button>
+						</div>
+					</div>
+				`;
+			}).join('');
 
-			// Attach event listeners to new buttons
+			document.querySelectorAll('.size-trigger').forEach(trigger => {
+				trigger.addEventListener('click', () => {
+					const dropdown = trigger.closest('.size-dropdown');
+					const isOpen = dropdown.classList.contains('open');
+					document.querySelectorAll('.size-dropdown').forEach(item => {
+						item.classList.remove('open');
+						const arrow = item.querySelector('.size-arrow');
+						if (arrow) arrow.style.transform = 'rotate(0deg)';
+					});
+					if (!isOpen) {
+						dropdown.classList.add('open');
+						const arrow = dropdown.querySelector('.size-arrow');
+						if (arrow) arrow.style.transform = 'rotate(180deg)';
+					}
+				});
+			});
+
+			document.querySelectorAll('.size-option').forEach(option => {
+				option.addEventListener('click', () => {
+					const dropdown = option.closest('.size-dropdown');
+					const valueEl = dropdown.querySelector('.size-value');
+					const trigger = dropdown.querySelector('.size-trigger');
+					const priceEl = dropdown.closest('.product-card')?.querySelector('.product-price');
+					const btn = dropdown.closest('.product-card')?.querySelector('.menu-add-btn');
+					const label = option.dataset.label;
+					const price = parseInt(option.dataset.price || '0');
+					if (valueEl) valueEl.textContent = `${label} - ₱${price}`;
+					dropdown.dataset.selectedLabel = label;
+					dropdown.dataset.selectedPrice = String(price);
+					if (trigger) trigger.setAttribute('data-selected-label', label);
+					if (priceEl) priceEl.textContent = `₱${price}`;
+					if (btn) btn.dataset.price = String(price);
+					document.querySelectorAll('.size-dropdown').forEach(item => item.classList.remove('open'));
+					document.querySelectorAll('.size-arrow').forEach(arrow => arrow.style.transform = 'rotate(0deg)');
+				});
+			});
+
+			document.addEventListener('click', (event) => {
+				if (!event.target.closest('.size-dropdown')) {
+					document.querySelectorAll('.size-dropdown').forEach(item => item.classList.remove('open'));
+					document.querySelectorAll('.size-arrow').forEach(arrow => arrow.style.transform = 'rotate(0deg)');
+				}
+			});
+
 			document.querySelectorAll('.menu-add-btn').forEach(btn => {
 				btn.addEventListener('click', (e) => {
 					const product = btn.dataset.product;
-					const price = parseInt(btn.dataset.price);
+					const basePrice = parseInt(btn.dataset.price);
 					const img = btn.dataset.img;
-					const existingItem = cart.items.find(item => item.product === product);
+					const card = btn.closest('.product-card');
+					const dropdown = card ? card.querySelector('.size-dropdown') : null;
+					const selectedLabel = dropdown ? dropdown.dataset.selectedLabel : null;
+					const finalProductName = selectedLabel ? `${product} (${selectedLabel})` : product;
+					const finalPrice = dropdown && dropdown.dataset.selectedPrice ? parseInt(dropdown.dataset.selectedPrice) : basePrice;
+					const existingItem = cart.items.find(item => item.product === finalProductName);
 					
 					if (existingItem) {
 						existingItem.quantity += 1;
 					} else {
-						cart.items.push({ product, price, quantity: 1, img });
+						cart.items.push({ product: finalProductName, price: finalPrice, quantity: 1, img, size: selectedLabel || null });
 					}
 					
 					cart.save();
@@ -1211,7 +1337,7 @@
 			container.innerHTML = cart.items.map((item, idx) => `
 				<div class="flex gap-3">						${item.img ? `<div class="size-16 rounded-xl overflow-hidden border border-primary/10 flex-shrink-0 bg-gray-100"><img src="${item.img}" alt="${item.product}" class="w-full h-full object-cover"></div>` : ''}					<div class="flex-1">
 						<h5 class="text-sm font-bold">${item.product}</h5>
-						<p class="text-xs text-slate-500 dark:text-slate-400">₱${item.price}</p>
+						<p class="text-xs text-slate-500 dark:text-slate-400">${item.size ? item.size + ' • ' : ''}₱${item.price}</p>
 					</div>
 					<div class="flex items-center border border-primary/10 rounded-lg overflow-hidden bg-primary/5">
 						<button class="px-2 py-0.5 hover:bg-primary/10 text-primary transition-colors text-sm" onclick="cart.updateQuantity(${idx}, ${item.quantity - 1}); updateMenuBag();">−</button>
@@ -1279,6 +1405,62 @@
 				card.classList.add('is-active');
 			});
 		});
+
+		const roastGrid = document.querySelector('.roast-grid');
+		if (roastGrid) {
+			let roastScrollDirection = 0;
+			let roastScrollFrame = null;
+			let roastPointerInside = false;
+
+			const scrollRoasts = () => {
+				const maxScrollLeft = roastGrid.scrollWidth - roastGrid.clientWidth;
+				const atScrollLimit = roastScrollDirection < 0
+					? roastGrid.scrollLeft <= 0
+					: roastGrid.scrollLeft >= maxScrollLeft;
+
+				if (!roastScrollDirection || !roastPointerInside || atScrollLimit) {
+					roastScrollFrame = null;
+					roastGrid.classList.remove('is-auto-scrolling');
+					return;
+				}
+
+				roastGrid.scrollLeft = Math.max(
+					0,
+					Math.min(maxScrollLeft, roastGrid.scrollLeft + roastScrollDirection * 6)
+				);
+				roastScrollFrame = window.requestAnimationFrame(scrollRoasts);
+			};
+
+			const updateRoastScrollDirection = (event) => {
+				if (!roastPointerInside) return;
+				const bounds = roastGrid.getBoundingClientRect();
+				const edgeDistance = 90;
+
+				if (event.clientX >= bounds.right - edgeDistance) {
+					roastScrollDirection = 1;
+				} else if (event.clientX <= bounds.left + edgeDistance) {
+					roastScrollDirection = -1;
+				} else {
+					roastScrollDirection = 0;
+				}
+
+				if (roastScrollDirection && !roastScrollFrame) {
+					roastGrid.classList.add('is-auto-scrolling');
+					roastScrollFrame = window.requestAnimationFrame(scrollRoasts);
+				}
+		};
+
+			roastGrid.addEventListener('mouseenter', () => {
+				roastPointerInside = true;
+			});
+			roastGrid.addEventListener('mousemove', updateRoastScrollDirection);
+
+			roastGrid.addEventListener('mouseleave', () => {
+				roastPointerInside = false;
+				roastScrollDirection = 0;
+				roastGrid.classList.remove('is-auto-scrolling');
+			});
+		}
 
 		const memberLoginModal = document.getElementById('memberLoginModal');
 		const openMemberLoginButtons = [
