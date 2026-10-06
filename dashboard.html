@@ -969,6 +969,10 @@
                 <span class="material-symbols-outlined">bakery_dining</span>
                 <span class="font-medium text-sm">Pastries</span>
               </a>
+              <a class="menu-category flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-primary/5 text-slate-600 dark:text-slate-400 transition-all" data-category="pasta" href="#">
+                <span class="material-symbols-outlined">ramen_dining</span>
+                <span class="font-medium text-sm">Pasta</span>
+              </a>
             </nav>
           </div>
         </aside>
@@ -1678,26 +1682,72 @@
     // Menu Products Data
     const menuProducts = {
       hot: [
-        { name: 'Caramel Macchiato', price: 319, img: 'images/caramel macchiato.png' },
-        { name: 'Vanilla Latte', price: 475, img: 'images/warm vanila latte.png' },
-        { name: 'Cappuccino', price: 349, img: 'images/cappuccino.png' },
-        { name: 'Americano', price: 279, img: 'images/Americano coffee in a white ceramic mug.png' },
-        { name: 'Mocha', price: 399, img: 'images/Cafe mocha with chocolate shavings on top.png' },
-        { name: 'Flat White', price: 369, img: 'images/flat-white.jpg' }
+        { name: 'Caramel Macchiato', price: 185, img: 'images/caramel macchiato.png', description: 'A sweet, espresso-based coffee drink made with vanilla syrup, steamed milk, a bold shot of espresso, and a distinct caramel drizzle.', sizes: [{ label: 'Regular', price: 185 }, { label: 'Large', price: 225 }, { label: 'XL', price: 255 }] },
+        { name: 'Vanilla Latte', price: 210, img: 'images/warm vanila latte.png', description: 'An espresso-based coffee drink made with steamed milk and sweet vanilla syrup.', sizes: [{ label: 'Regular', price: 210 }, { label: 'Large', price: 245 }, { label: 'XL', price: 280 }] },
+        { name: 'Cappuccino', price: 170, img: 'images/Classic cappuccino with frothy milk.png', description: 'A classic Italian coffee drink made with equal parts espresso, steamed milk, and milk foam.', sizes: [{ label: 'Regular', price: 170 }, { label: 'Large', price: 210 }, { label: 'XL', price: 240 }] },
+        { name: 'Americano', price: 140, img: 'images/Americano coffee in a white ceramic mug.png', description: 'A simple yet bold coffee drink made with a shot of espresso and hot water.', sizes: [{ label: 'Regular', price: 140 }, { label: 'Large', price: 175 }, { label: 'XL', price: 205 }] },
+        { name: 'Mocha', price: 195, img: 'images/Cafe mocha with chocolate shavings on top.png', description: 'A rich, chocolate-flavored coffee drink made with espresso, steamed milk, and chocolate syrup.', sizes: [{ label: 'Regular', price: 195 }, { label: 'Large', price: 235 }, { label: 'XL', price: 265 }] },
+        { name: 'Flat White', price: 180, img: 'images/flat-white.jpg', description: 'A smooth and creamy coffee drink made with a shot of espresso and steamed milk.', sizes: [{ label: 'Regular', price: 180 }, { label: 'Large', price: 220 }, { label: 'XL', price: 250 }] }
       ],
       existing: [
-        { name: 'Spiced Honey Latte', price: 319, img: 'images/honey latter.png' },
-        { name: 'Cold Brew Tonic', price: 529, img: 'images/cold brew.png' },
-        { name: 'Maple Pecan Flat White', price: 549, img: 'images/maple-latte.webp' },
-        { name: 'Oak-Aged Espresso', price: 429, img: 'images/small espresso.png' }
+        { name: 'Spiced Honey Latte', price: 190, img: 'images/honey latter.png', description: 'A warm and comforting coffee drink made with espresso, steamed milk, honey, and a blend of spices.', sizes: [{ label: 'Regular', price: 190 }, { label: 'Large', price: 230 }, { label: 'XL', price: 260 }] },
+        { name: 'Cold Brew Tonic', price: 220, img: 'images/cold brew.png', description: 'A refreshing cold brew coffee drink with a hint of citrus.', sizes: [{ label: 'Regular', price: 220 }, { label: 'Large', price: 260 }, { label: 'XL', price: 295 }] },
+        { name: 'Maple Pecan Flat White', price: 240, img: 'images/maple-latte.webp', description: 'A creamy flat white coffee drink with maple and pecan flavors.', sizes: [{ label: 'Regular', price: 240 }, { label: 'Large', price: 280 }, { label: 'XL', price: 320 }] },
+        { name: 'Oak-Aged Espresso', price: 200, img: 'images/small espresso.png', description: 'A bold espresso shot with a hint of oak aging.', sizes: [{ label: 'Single Shot', price: 200 }, { label: 'Double Shot', price: 245 }, { label: 'Large', price: 285 }] }
       ],
       pastries: [
-        { name: 'Butter Croissant', price: 95, img: 'images/croissant.jpg' },
-        { name: 'Pain au Chocolat', price: 120, img: 'images/pain-au-chocolat.jpg' },
-        { name: 'Blueberry Muffin', price: 85, img: 'images/muffin.jpg' },
-        { name: 'Chocolate Brownie', price: 95, img: 'images/brownies.webp' }
+        { name: 'Butter Croissant', price: 95, img: 'images/croissant.jpg', description: 'A flaky, buttery pastry perfect for breakfast.' },
+        { name: 'Pain au Chocolat', price: 120, img: 'images/pain-au-chocolat.jpg', description: 'A French pastry filled with dark chocolate.' },
+        { name: 'Blueberry Muffin', price: 85, img: 'images/muffin.jpg', description: 'A moist and flavorful muffin packed with fresh blueberries.' },
+        { name: 'Chocolate Brownie', price: 95, img: 'images/brownies.webp', description: 'A rich and fudgy chocolate brownie.' }
+      ],
+      pasta: [
+        { name: 'Mac & Cheese', price: 220, img: 'images/white-cheddar-mac-and-cheese.jpg', description: 'Creamy macaroni pasta in a rich cheese sauce.' }
       ]
     };
+    const menuProductIngredients = {
+      'Caramel Macchiato': ['Espresso Blend', 'Whole Milk', 'Vanilla Syrup', 'Caramel Syrup'],
+      'Vanilla Latte': ['Espresso Blend', 'Whole Milk', 'Vanilla Syrup'],
+      'Cappuccino': ['Espresso Blend', 'Whole Milk'],
+      'Americano': ['Espresso Blend'],
+      'Mocha': ['Espresso Blend', 'Whole Milk', 'Cocoa Powder'],
+      'Flat White': ['Espresso Blend', 'Whole Milk'],
+      'Spiced Honey Latte': ['Espresso Blend', 'Whole Milk', 'Honey', 'Spice Mix'],
+      'Cold Brew Tonic': ['Cold Brew Blend', 'Tonic Water', 'Fresh Lemons', 'Ice Cubes'],
+      'Maple Pecan Flat White': ['Espresso Blend', 'Whole Milk', 'Maple Syrup', 'Roasted Pecans'],
+      'Oak-Aged Espresso': ['Oak-Aged Coffee Beans'],
+      'Butter Croissant': ['Butter Croissant'],
+      'Pain au Chocolat': ['Pain au Chocolat'],
+      'Blueberry Muffin': ['Blueberry Muffin'],
+      'Chocolate Brownie': ['Chocolate Brownie'],
+      'Mac & Cheese': ['Mac & Cheese']
+    };
+    let menuInventory = [];
+    let menuInventoryStatus = 'loading';
+
+    function getMenuProductStockStatus(product) {
+      if (menuInventoryStatus === 'loading') return { unavailable: true, message: 'Checking stock...' };
+      if (menuInventoryStatus === 'error') return { unavailable: true, message: 'Stock status unavailable' };
+
+      const ingredients = menuProductIngredients[product.name] || [];
+      const unavailableIngredients = ingredients.filter((ingredientName) => {
+        const item = menuInventory.find((inventoryItem) =>
+          String(inventoryItem.name || '').trim().toLowerCase() === ingredientName.toLowerCase()
+        );
+        return !item || Number(item.currentStock ?? item.current ?? 0) <= 0;
+      });
+      if (!unavailableIngredients.length) return { unavailable: false, message: '' };
+
+      const missingIngredients = unavailableIngredients.filter((ingredientName) =>
+        !menuInventory.some((item) => String(item.name || '').trim().toLowerCase() === ingredientName.toLowerCase())
+      );
+      return {
+        unavailable: true,
+        message: missingIngredients.length
+          ? `Stock not tracked: ${missingIngredients.join(', ')}`
+          : `Out of stock: ${unavailableIngredients.join(', ')}`
+      };
+    }
 
     function renderMenuProducts(category) {
       const grid = document.getElementById('menuProductGrid');
@@ -1705,28 +1755,55 @@
       const categoryTitles = {
         hot: 'Hot Coffees',
         existing: 'Your Products',
-        pastries: 'Pastries'
+        pastries: 'Pastries',
+        pasta: 'Pasta'
       };
       
       document.getElementById('menuCategoryTitle').textContent = categoryTitles[category] || 'Menu';
       
-      grid.innerHTML = products.map((product, idx) => `
-        <div class="group bg-white dark:bg-slate-900 rounded-2xl border border-primary/5 hover:border-primary/30 hover:shadow-xl hover:shadow-primary/5 transition-all p-4 flex flex-col">
-          <div class="relative aspect-square overflow-hidden rounded-xl mb-4 bg-gray-200">
-            ${product.img ? `<img src="${product.img}" alt="${product.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">` : `<div class="w-full h-full flex items-center justify-center text-gray-400">${product.name}</div>`}
+      grid.innerHTML = products.map((product) => {
+        const stockStatus = getMenuProductStockStatus(product);
+        const firstSize = product.sizes?.[0];
+        const initialPrice = firstSize?.price ?? product.price;
+        const sizeOptions = product.sizes?.length ? `
+          <label class="block text-xs font-semibold text-slate-500 mt-3 mb-1" for="menu-size-${product.name.replace(/[^a-z0-9]/gi, '-')}">Size</label>
+          <select id="menu-size-${product.name.replace(/[^a-z0-9]/gi, '-')}" class="menu-size-select w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-700" data-product="${product.name}">
+            ${product.sizes.map((size) => `<option value="${size.label}" data-price="${size.price}">${size.label} - ₱${size.price}</option>`).join('')}
+          </select>
+        ` : '';
+
+        return `
+          <div class="group bg-white dark:bg-slate-900 rounded-2xl border border-primary/5 hover:border-primary/30 hover:shadow-xl hover:shadow-primary/5 transition-all p-4 flex flex-col">
+            <div class="relative aspect-square overflow-hidden rounded-xl mb-4 bg-gray-200">
+              ${product.img ? `<img src="${product.img}" alt="${product.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">` : `<div class="w-full h-full flex items-center justify-center text-gray-400">${product.name}</div>`}
+            </div>
+            <div class="flex-1">
+              <h4 class="text-lg font-bold text-slate-900 dark:text-slate-100">${product.name}</h4>
+              <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">${product.description}</p>
+              ${stockStatus.unavailable ? `<p class="mt-2 text-sm font-bold text-red-600" role="status">${stockStatus.message}</p>` : ''}
+              ${sizeOptions}
+            </div>
+            <div class="flex items-center justify-between mt-4 gap-3">
+              <span class="menu-product-price text-lg font-bold text-primary">₱${initialPrice}</span>
+              <button class="menu-add-btn bg-primary text-white px-4 py-2 rounded-lg font-bold text-sm hover:bg-opacity-90 transition-all disabled:cursor-not-allowed disabled:bg-slate-400 disabled:hover:bg-slate-400" data-product="${product.name}" data-price="${initialPrice}" data-size="${firstSize?.label || ''}" data-img="${product.img || ''}" ${stockStatus.unavailable ? 'disabled aria-disabled="true"' : ''}>
+                ${stockStatus.unavailable ? 'Unavailable' : 'Add to Bag'}
+              </button>
+            </div>
           </div>
-          <div class="flex-1">
-            <h4 class="text-lg font-bold text-slate-900 dark:text-slate-100">${product.name}</h4>
-            <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">${category === 'pastries' ? 'Premium quality pastry' : 'Premium quality coffee'}</p>
-          </div>
-          <div class="flex items-center justify-between mt-4">
-            <span class="text-lg font-bold text-primary">₱${product.price}</span>
-            <button class="menu-add-btn bg-primary text-white px-4 py-2 rounded-lg font-bold text-sm hover:bg-opacity-90 transition-all" data-product="${product.name}" data-price="${product.price}" data-img="${product.img || ''}">
-              Add to Bag
-            </button>
-          </div>
-        </div>
-      `).join('');
+        `;
+      }).join('');
+
+      document.querySelectorAll('.menu-size-select').forEach((select) => {
+        select.addEventListener('change', () => {
+          const option = select.selectedOptions[0];
+          const card = select.closest('.group');
+          const button = card.querySelector('.menu-add-btn');
+          const price = Number(option.dataset.price);
+          button.dataset.price = String(price);
+          button.dataset.size = option.value;
+          card.querySelector('.menu-product-price').textContent = `₱${price}`;
+        });
+      });
 
       // Attach event listeners to new buttons
       document.querySelectorAll('.menu-add-btn').forEach(btn => {
@@ -1734,15 +1811,17 @@
           const product = btn.dataset.product;
           const price = parseInt(btn.dataset.price);
           const img = btn.dataset.img;
+          const size = btn.closest('.group')?.querySelector('.menu-size-select')?.value || btn.dataset.size || null;
+          const productName = size ? `${product} (${size})` : product;
           
           // Get cart from localStorage
           let cart = JSON.parse(localStorage.getItem('caffeCart') || '[]');
-          const existingItem = cart.find(item => item.product === product);
+          const existingItem = cart.find(item => item.product === productName);
           
           if (existingItem) {
             existingItem.quantity += 1;
           } else {
-            cart.push({ product, price, quantity: 1, img });
+            cart.push({ product: productName, price, quantity: 1, img, size });
           }
           
           localStorage.setItem('caffeCart', JSON.stringify(cart));
@@ -1767,6 +1846,25 @@
 
       // Get cart from localStorage
       let cart = JSON.parse(localStorage.getItem('caffeCart') || '[]');
+      let cartWasUpdated = false;
+      cart.forEach((item) => {
+        const match = String(item.product || '').match(/^(.*?)(?:\s+\(([^()]*)\))?$/);
+        const productName = match?.[1]?.trim();
+        const selectedSize = item.size || match?.[2] || null;
+        const product = Object.values(menuProducts).flat().find((menuItem) => menuItem.name === productName);
+        if (!product) return;
+
+        const currentSize = selectedSize && product.sizes?.find((size) => size.label === selectedSize);
+        const currentPrice = currentSize?.price ?? product.price;
+        const currentProductName = selectedSize ? `${product.name} (${selectedSize})` : product.name;
+        if (item.product !== currentProductName || item.price !== currentPrice || item.size !== selectedSize) {
+          item.product = currentProductName;
+          item.price = currentPrice;
+          item.size = selectedSize;
+          cartWasUpdated = true;
+        }
+      });
+      if (cartWasUpdated) localStorage.setItem('caffeCart', JSON.stringify(cart));
 
       if (cart.length === 0) {
         container.innerHTML = '<div class="flex flex-col items-center justify-center h-48 text-center text-slate-400"><span class="material-symbols-outlined text-4xl mb-2 opacity-50">shopping_basket</span><p class="text-sm">Your bag is empty.<br>Select something delicious!</p></div>';
@@ -1909,6 +2007,21 @@
         updateMenuBag();
       });
     });
+
+    onSnapshot(collection(db, 'inventory'), (snapshot) => {
+      menuInventory = snapshot.docs.map((inventoryDoc) => ({ id: inventoryDoc.id, ...inventoryDoc.data() }));
+      menuInventoryStatus = 'ready';
+      const activeCategory = document.querySelector('.menu-category.active-category')?.dataset.category || 'hot';
+      renderMenuProducts(activeCategory);
+      updateMenuBag();
+    }, (error) => {
+      console.error('Error loading menu inventory:', error);
+      menuInventoryStatus = 'error';
+      const activeCategory = document.querySelector('.menu-category.active-category')?.dataset.category || 'hot';
+      renderMenuProducts(activeCategory);
+    });
+
+    updateMenuBag();
 
     // Make functions globally accessible
     window.renderMenuProducts = renderMenuProducts;

@@ -146,10 +146,10 @@
 </nav>
 <div class="p-4 border-t border-primary/10">
 <div class="flex items-center gap-3 p-2 rounded-xl bg-primary/5">
-<img alt="Staff Profile" class="size-10 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBSnv9cze9VzPj2Q08M9IAqLo4xOJjZkaB7T90uNmYQPJ6ygv95eJUfhnpi4La-RwEot4Y_G1pZWQ_7zAaQ4WWTi2zArBbfhpMclPzY5PBloyQLkHh7GeweYhAXWUer2Iv-KUaOzXTnIBvY6rJYpehznPzfQOc6OxuP8UFD6piQAlxuK9pUzgdySjZraqo4sDktHLhKU-WSxXS0QS3pxoEF17175vzEBCxTqYn2H2vgrO49wHVyB38o9JGImBBl2bHVxWhHLErbFQ"/>
+<img id="staffAvatar" alt="Staff Profile" class="size-10 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBSnv9cze9VzPj2Q08M9IAqLo4xOJjZkaB7T90uNmYQPJ6ygv95eJUfhnpi4La-RwEot4Y_G1pZWQ_7zAaQ4WWTi2zArBbfhpMclPzY5PBloyQLkHh7GeweYhAXWUer2Iv-KUaOzXTnIBvY6rJYpehznPzfQOc6OxuP8UFD6piQAlxuK9pUzgdySjZraqo4sDktHLhKU-WSxXS0QS3pxoEF17175vzEBCxTqYn2H2vgrO49wHVyB38o9JGImBBl2bHVxWhHLErbFQ"/>
 <div class="flex-1 min-w-0">
-<p class="text-sm font-bold truncate" id="staffName">Jamill Payapag</p>
-<p class="text-xs text-slate-500 truncate">Lead Barista</p>
+<p class="text-sm font-bold truncate" id="staffName">Staff Member</p>
+<p class="text-xs text-slate-500 truncate" id="staffRole">Staff</p>
 </div>
 <button id="logoutBtn" class="w-10 h-10 rounded-full bg-amber-100 hover:bg-primary text-slate-600 hover:text-white transition-all duration-200 flex items-center justify-center shadow-sm hover:shadow-md transform hover:scale-105 cursor-pointer" title="Logout">
 <span class="material-symbols-outlined text-lg">logout</span>
@@ -173,6 +173,10 @@
 <span class="material-symbols-outlined !text-lg">file_download</span>
                         Export
                     </button>
+<button id="scanBarcodeBtn" class="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-300 font-bold text-sm hover:border-primary/50 transition-all shadow-sm" title="Scan an inventory barcode">
+<span class="material-symbols-outlined !text-lg">barcode_scanner</span>
+						Scan Barcode
+					</button>
 <button id="addItemBtn" class="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg font-bold text-sm hover:brightness-110 transition-all shadow-lg shadow-primary/20">
 <span class="material-symbols-outlined !text-lg">add</span>
                         Add Item
@@ -189,6 +193,7 @@
 <button id="filterSpices" class="filter-btn px-6 py-3 text-sm font-semibold text-slate-500 hover:text-slate-700 dark:hover:text-slate-300" data-filter="spices">Spices (<span id="countSpices">0</span>)</button>
 <button id="filterSweetener" class="filter-btn px-6 py-3 text-sm font-semibold text-slate-500 hover:text-slate-700 dark:hover:text-slate-300" data-filter="sweetener">Sweetener (<span id="countSweetener">0</span>)</button>
 <button id="filterPastries" class="filter-btn px-6 py-3 text-sm font-semibold text-slate-500 hover:text-slate-700 dark:hover:text-slate-300" data-filter="pastries">Pastries (<span id="countPastries">0</span>)</button>
+<button id="filterPasta" class="filter-btn px-6 py-3 text-sm font-semibold text-slate-500 hover:text-slate-700 dark:hover:text-slate-300" data-filter="pasta">Pasta (<span id="countPasta">0</span>)</button>
 </div>
 </div>
 <!-- Scrollable Content -->
@@ -284,6 +289,65 @@
 </main>
 </div>
 
+<!-- Barcode Scanner Modal -->
+<div id="barcodeScannerModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[60] flex items-center justify-center p-4">
+	<div class="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl max-w-xl w-full p-6">
+		<div class="flex items-center justify-between mb-4">
+			<h3 class="text-xl font-bold text-slate-900 dark:text-slate-100">Scan inventory barcode</h3>
+			<button type="button" id="closeBarcodeScanner" class="size-9 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700" aria-label="Close scanner">
+				<span class="material-symbols-outlined">close</span>
+			</button>
+		</div>
+		<video id="barcodeVideo" class="w-full aspect-video rounded-xl bg-slate-950 object-cover" muted playsinline></video>
+		<p id="barcodeScannerStatus" class="mt-3 text-sm text-slate-600 dark:text-slate-300" role="status" aria-live="polite">Allow camera access to scan an item barcode.</p>
+		<div class="mt-3">
+			<label for="barcodeImageInput" class="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-primary/30 px-4 py-2.5 text-sm font-bold text-primary hover:bg-primary/5">
+				<span class="material-symbols-outlined">photo_camera</span>
+				Take photo or choose image
+			</label>
+			<input id="barcodeImageInput" type="file" accept="image/*" capture="environment" class="sr-only">
+		</div>
+		<div class="mt-5 border-t border-slate-200 dark:border-slate-700 pt-4">
+			<label for="manualBarcodeInput" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Or enter the SKU manually</label>
+			<div class="flex gap-2">
+				<input id="manualBarcodeInput" type="text" class="min-w-0 flex-1 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-3 py-2 text-slate-900 dark:text-slate-100" placeholder="Scan with a handheld reader or type SKU">
+				<button type="button" id="useManualBarcode" class="rounded-lg bg-primary px-4 py-2 font-bold text-white hover:brightness-110">Use Code</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Restock Existing Item Modal -->
+<div id="restockModal" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-[55] flex items-center justify-center p-4">
+	<div class="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl max-w-md w-full p-6">
+		<div class="flex items-center justify-between mb-5">
+			<h3 class="text-xl font-bold text-slate-900 dark:text-slate-100">Restock Item</h3>
+			<button type="button" id="closeRestockModal" class="size-9 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700" aria-label="Close restock dialog">
+				<span class="material-symbols-outlined">close</span>
+			</button>
+		</div>
+		<form id="restockForm" class="space-y-4">
+			<div class="rounded-xl bg-primary/5 p-4">
+				<p id="restockItemName" class="font-bold text-slate-900 dark:text-slate-100"></p>
+				<p class="mt-1 text-sm text-slate-600 dark:text-slate-300">Current stock: <span id="restockCurrentStock" class="font-semibold"></span></p>
+			</div>
+			<div>
+				<label for="restockAmount" class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Quantity to add</label>
+				<input id="restockAmount" type="number" min="1" step="1" value="1" required class="w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-4 py-3 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-primary/50">
+			</div>
+			<div class="flex justify-between rounded-lg border border-slate-200 dark:border-slate-700 px-4 py-3 text-sm">
+				<span class="text-slate-600 dark:text-slate-300">New total</span>
+				<span id="restockNewTotal" class="font-bold text-slate-900 dark:text-slate-100"></span>
+			</div>
+			<p id="restockMessage" class="hidden text-sm font-semibold text-red-600" role="alert"></p>
+			<div class="flex gap-3 pt-2">
+				<button type="submit" id="confirmRestockBtn" class="flex-1 rounded-lg bg-primary px-5 py-3 font-bold text-white hover:brightness-110 disabled:cursor-not-allowed disabled:bg-slate-400">Confirm Restock</button>
+				<button type="button" id="cancelRestockBtn" class="rounded-lg bg-slate-200 dark:bg-slate-700 px-5 py-3 font-bold text-slate-700 dark:text-slate-300">Cancel</button>
+			</div>
+		</form>
+	</div>
+</div>
+
 <!-- Add Item Modal -->
 <div id="addItemModal" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
 	<div class="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
@@ -294,6 +358,7 @@
 			</button>
 		</div>
 		<form id="addItemForm" class="p-6 space-y-4">
+			<div id="addItemMessage" class="hidden rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700" role="alert"></div>
 			<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 				<div>
 					<label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Item Name *</label>
@@ -319,6 +384,7 @@
 						<option value="spices">Spices</option>
 						<option value="sweetener">Sweetener</option>
 						<option value="pastries">Pastries</option>
+						<option value="pasta">Pasta</option>
 					</select>
 				</div>
 				<div>
@@ -375,12 +441,22 @@
 		window.location.href = 'login.html';
 	}
 
+	const staffName = localStorage.getItem('staffName');
+	const staffRole = localStorage.getItem('staffRole');
+	const staffAvatar = localStorage.getItem('staffAvatar');
+	if (staffName) document.getElementById('staffName').textContent = staffName;
+	if (staffRole) document.getElementById('staffRole').textContent = staffRole;
+	if (staffAvatar) document.getElementById('staffAvatar').src = staffAvatar;
+
 	// Inventory Management System
 	class InventoryManager {
 	constructor() {
 		this.items = [];
 		this.currentFilter = 'all';
 		this.searchTerm = '';
+		this.scannerControls = null;
+		this.scannerHandled = false;
+		this.restockItemId = null;
 		this.initApp();
 	}
 
@@ -882,7 +958,8 @@
 			'beans': 'bg-orange-50 dark:bg-orange-900/20 text-orange-600',
 			'dairy': 'bg-blue-50 dark:bg-blue-900/20 text-blue-600',
 			'syrups': 'bg-purple-50 dark:bg-purple-900/20 text-purple-600',
-			'pastries': 'bg-yellow-50 dark:bg-yellow-900/20 text-yellow-600'
+			'pastries': 'bg-yellow-50 dark:bg-yellow-900/20 text-yellow-600',
+			'pasta': 'bg-rose-50 dark:bg-rose-900/20 text-rose-600'
 		};
 		return styles[category] || styles['beans'];
 	}
@@ -1031,7 +1108,7 @@
 					</div>
 				</div>
 				<div class="mt-4">
-					<p class="text-3xl font-extrabold text-slate-900 dark:text-slate-100">4</p>
+					<p class="text-3xl font-extrabold text-slate-900 dark:text-slate-100">${new Set(this.items.map(item => item.category)).size}</p>
 					<p class="text-slate-500 dark:text-slate-400 text-xs font-bold mt-1">Active categories</p>
 				</div>
 			</div>
@@ -1046,6 +1123,7 @@
 		const spices = this.items.filter(i => i.category === 'spices').length;
 		const sweetener = this.items.filter(i => i.category === 'sweetener').length;
 		const pastries = this.items.filter(i => i.category === 'pastries').length;
+		const pasta = this.items.filter(i => i.category === 'pasta').length;
 		
 		document.getElementById('countAll').textContent = all;
 		document.getElementById('countBeans').textContent = beans;
@@ -1054,6 +1132,7 @@
 		document.getElementById('countSpices').textContent = spices;
 		document.getElementById('countSweetener').textContent = sweetener;
 		document.getElementById('countPastries').textContent = pastries;
+		document.getElementById('countPasta').textContent = pasta;
 	}
 
 	updateFooter() {
@@ -1118,35 +1197,211 @@
 			this.openAddModal();
 		});
 
+		document.getElementById('scanBarcodeBtn').addEventListener('click', () => {
+			this.openBarcodeScanner();
+		});
+		document.getElementById('closeBarcodeScanner').addEventListener('click', () => {
+			this.closeBarcodeScanner();
+		});
+		document.getElementById('barcodeScannerModal').addEventListener('click', (event) => {
+			if (event.target.id === 'barcodeScannerModal') this.closeBarcodeScanner();
+		});
+		document.getElementById('useManualBarcode').addEventListener('click', () => {
+			this.handleBarcodeValue(document.getElementById('manualBarcodeInput').value);
+		});
+		document.getElementById('manualBarcodeInput').addEventListener('keydown', (event) => {
+			if (event.key === 'Enter') {
+				event.preventDefault();
+				this.handleBarcodeValue(event.currentTarget.value);
+			}
+		});
+		document.getElementById('barcodeImageInput').addEventListener('change', (event) => {
+			const image = event.currentTarget.files?.[0];
+			if (image) this.decodeBarcodeImage(image);
+		});
+
 		document.getElementById('addItemForm').addEventListener('submit', (e) => {
 			e.preventDefault();
 			this.addNewItem();
 		});
+		document.getElementById('closeRestockModal').addEventListener('click', () => this.closeRestockModal());
+		document.getElementById('cancelRestockBtn').addEventListener('click', () => this.closeRestockModal());
+		document.getElementById('restockModal').addEventListener('click', (event) => {
+			if (event.target.id === 'restockModal') this.closeRestockModal();
+		});
+		document.getElementById('restockAmount').addEventListener('input', () => this.updateRestockPreview());
+		document.getElementById('restockForm').addEventListener('submit', (event) => this.submitRestock(event));
 	}
 
-	async restock(id) {
-		try {
-			const item = this.items.find(i => i.id === id);
-			if (!item) return;
+	async openBarcodeScanner() {
+		const modal = document.getElementById('barcodeScannerModal');
+		const status = document.getElementById('barcodeScannerStatus');
+		modal.classList.remove('hidden');
+		this.scannerHandled = false;
+		status.textContent = 'Starting camera...';
 
-			const amount = prompt(`How many ${item.unit} to add to ${item.name}?`, '10');
-			if (amount !== null) {
-				const numAmount = parseInt(amount);
-				if (!isNaN(numAmount) && numAmount > 0) {
-					const itemRef = doc(db, "inventory", id);
-					const newStock = Math.min(item.currentStock + numAmount, item.maxStock);
-					
-					await updateDoc(itemRef, {
-						currentStock: newStock,
-						lastUpdated: serverTimestamp()
-					});
-					
-					console.log("✅ Item restocked!");
+		try {
+			const { BrowserMultiFormatReader } = await import('https://cdn.jsdelivr.net/npm/@zxing/browser@0.1.5/+esm');
+			const reader = new BrowserMultiFormatReader();
+			this.scannerControls = await reader.decodeFromConstraints(
+				{ audio: false, video: { facingMode: { ideal: 'environment' } } },
+				document.getElementById('barcodeVideo'),
+				(result, error) => {
+					if (result && !this.scannerHandled) {
+						this.scannerHandled = true;
+						this.handleBarcodeValue(result.getText());
+						return;
+					}
+					const errorName = error?.name || error?.constructor?.name;
+					const isExpectedDecodeMiss = ['NotFoundException', 'ChecksumException', 'FormatException'].includes(errorName) ||
+						/No MultiFormat Readers were able to detect the code/i.test(error?.message || '');
+					if (isExpectedDecodeMiss) {
+						status.textContent = 'Scanning... center the barcode in view and hold it steady.';
+					} else if (error) {
+						status.textContent = `Could not read the barcode: ${error.message || 'hold it steady in the camera view, or enter the SKU manually.'}`;
+					}
 				}
-			}
+			);
+			if (modal.classList.contains('hidden')) this.stopBarcodeScanner();
+			else status.textContent = 'Camera is ready. Center the barcode in view and hold it steady.';
 		} catch (error) {
-			console.error("❌ Error restocking:", error);
-			alert("Error: " + error.message);
+			console.error('Barcode scanner could not start:', error);
+			const reason = error.name === 'NotAllowedError'
+				? 'Camera permission was denied.'
+				: error.name === 'NotFoundError'
+					? 'No camera was found.'
+					: error.message || 'Camera scanning could not start.';
+			status.textContent = `${reason} Use the manual SKU field below, or check camera permission and reload.`;
+		}
+	}
+
+	async decodeBarcodeImage(imageFile) {
+		const status = document.getElementById('barcodeScannerStatus');
+		const imageUrl = URL.createObjectURL(imageFile);
+		this.stopBarcodeScanner();
+		status.textContent = 'Reading barcode from photo...';
+
+		try {
+			const { BrowserMultiFormatReader } = await import('https://cdn.jsdelivr.net/npm/@zxing/browser@0.1.5/+esm');
+			const reader = new BrowserMultiFormatReader();
+			const result = await reader.decodeFromImageUrl(imageUrl);
+			this.handleBarcodeValue(result.getText());
+		} catch (error) {
+			console.warn('Could not decode barcode image:', error);
+			status.textContent = /No MultiFormat Readers were able to detect the code/i.test(error.message || '')
+				? 'No barcode found in that photo. Take a closer, well-lit photo with the whole barcode visible.'
+				: `Could not read that photo: ${error.message || 'try another image or enter the SKU manually.'}`;
+		} finally {
+			URL.revokeObjectURL(imageUrl);
+			document.getElementById('barcodeImageInput').value = '';
+		}
+	}
+
+	stopBarcodeScanner() {
+		if (this.scannerControls) {
+			this.scannerControls.stop();
+			this.scannerControls = null;
+		}
+		const video = document.getElementById('barcodeVideo');
+		video.srcObject?.getTracks().forEach(track => track.stop());
+		video.srcObject = null;
+	}
+
+	closeBarcodeScanner() {
+		document.getElementById('barcodeScannerModal').classList.add('hidden');
+		this.stopBarcodeScanner();
+	}
+
+	handleBarcodeValue(value) {
+		const code = String(value || '').trim();
+		if (!code) {
+			document.getElementById('barcodeScannerStatus').textContent = 'Enter or scan a barcode first.';
+			return;
+		}
+
+		this.scannerHandled = true;
+		const matchingItem = this.items.find(item =>
+			[String(item.sku || ''), String(item.id || '')].some(identifier => identifier.trim().toLowerCase() === code.toLowerCase())
+		);
+		this.closeBarcodeScanner();
+
+		if (matchingItem) {
+			this.restock(matchingItem.id);
+			return;
+		}
+
+		this.openAddModal(code);
+	}
+
+	restock(id) {
+		const item = this.items.find(i => i.id === id);
+		if (!item) return;
+
+		this.restockItemId = id;
+		document.getElementById('restockItemName').textContent = item.name;
+		document.getElementById('restockCurrentStock').textContent = `${item.currentStock} ${item.unit}`;
+		document.getElementById('restockAmount').value = '1';
+		document.getElementById('restockMessage').classList.add('hidden');
+		document.getElementById('restockModal').classList.remove('hidden');
+		this.updateRestockPreview();
+	}
+
+	updateRestockPreview() {
+		const item = this.items.find(i => i.id === this.restockItemId);
+		if (!item) return;
+
+		const amount = Number(document.getElementById('restockAmount').value);
+		const currentStock = Number(item.currentStock) || 0;
+		const newStock = currentStock + (Number.isSafeInteger(amount) && amount > 0 ? amount : 0);
+		const maxStock = Number(item.maxStock);
+		const exceedsMaximum = Number.isFinite(maxStock) && newStock > maxStock;
+		const message = document.getElementById('restockMessage');
+
+		document.getElementById('restockNewTotal').textContent = `${newStock} ${item.unit}`;
+		if (exceedsMaximum) {
+			message.textContent = `New total exceeds the maximum of ${maxStock} ${item.unit}.`;
+			message.classList.remove('hidden');
+		} else {
+			message.classList.add('hidden');
+		}
+		document.getElementById('confirmRestockBtn').disabled = !Number.isSafeInteger(amount) || amount <= 0 || exceedsMaximum;
+	}
+
+	closeRestockModal() {
+		document.getElementById('restockModal').classList.add('hidden');
+		this.restockItemId = null;
+	}
+
+	async submitRestock(event) {
+		event.preventDefault();
+		const item = this.items.find(i => i.id === this.restockItemId);
+		if (!item) return;
+
+		const amount = Number(document.getElementById('restockAmount').value);
+		const newStock = (Number(item.currentStock) || 0) + amount;
+		if (!Number.isSafeInteger(amount) || amount <= 0 || (Number.isFinite(Number(item.maxStock)) && newStock > Number(item.maxStock))) {
+			this.updateRestockPreview();
+			return;
+		}
+
+		const id = item.id;
+		const button = document.getElementById('confirmRestockBtn');
+		button.disabled = true;
+		button.textContent = 'Saving...';
+		try {
+			await updateDoc(doc(db, 'inventory', id), {
+				currentStock: newStock,
+				lastUpdated: serverTimestamp()
+			});
+			this.closeRestockModal();
+		} catch (error) {
+			console.error('Error restocking:', error);
+			const message = document.getElementById('restockMessage');
+			message.textContent = `Could not update stock: ${error.message}`;
+			message.classList.remove('hidden');
+		} finally {
+			button.disabled = false;
+			button.textContent = 'Confirm Restock';
 		}
 	}
 
@@ -1209,9 +1464,18 @@
 		a.click();
 	}
 
-	openAddModal() {
+	openAddModal(prefilledSku = '') {
 		document.getElementById('addItemModal').classList.remove('hidden');
 		document.getElementById('addItemForm').reset();
+		document.getElementById('itemId').value = prefilledSku;
+		const message = document.getElementById('addItemMessage');
+		if (prefilledSku) {
+			message.textContent = 'No matching item found. Complete the details to add this as a new inventory item.';
+			message.className = 'rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 text-sm font-semibold text-blue-800';
+		} else {
+			message.textContent = '';
+			message.className = 'hidden rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700';
+		}
 	}
 
 	closeAddModal() {
@@ -1226,26 +1490,47 @@
 				'syrups': { display: 'Syrups', icon: 'icecream' },
 				'spices': { display: 'Spices', icon: 'local_florist' },
 				'sweetener': { display: 'Sweetener', icon: 'honey' },
-				'pastries': { display: 'Pastries', icon: 'bakery_dining' }
+				'pastries': { display: 'Pastries', icon: 'bakery_dining' },
+				'pasta': { display: 'Pasta', icon: 'ramen_dining' }
 			};
 
 			const name = document.getElementById('itemName').value.trim();
-			const sku = document.getElementById('itemDescription').value.trim(); // Using description as SKU placeholder
+			const sku = document.getElementById('itemId').value.trim();
 			const description = document.getElementById('itemDescription').value.trim();
 			const category = document.getElementById('itemCategory').value;
 			const unit = document.getElementById('itemUnit').value.trim();
 			const currentStock = parseInt(document.getElementById('itemCurrent').value);
 			const maxStock = parseInt(document.getElementById('itemMax').value);
-			const price = parseInt(document.getElementById('itemPrice').value);
+			const price = parseFloat(document.getElementById('itemPrice').value);
+			const message = document.getElementById('addItemMessage');
+			message.className = 'hidden rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700';
 
-			if (!name || !category || !unit || isNaN(currentStock) || isNaN(maxStock) || isNaN(price)) {
-				alert('Please fill in all required fields!');
+			if (!name || !sku || !description || !categoryMap[category] || !unit || !Number.isInteger(currentStock) || !Number.isInteger(maxStock) || !Number.isFinite(price) || price < 0) {
+				message.textContent = 'Complete all required fields with valid stock amounts and price.';
+				message.classList.remove('hidden');
+				return;
+			}
+			if (currentStock > maxStock) {
+				message.textContent = 'Current stock cannot be greater than maximum stock.';
+				message.classList.remove('hidden');
+				return;
+			}
+
+			const normalizedSku = sku.toLowerCase();
+			const normalizedName = name.toLowerCase();
+			const duplicate = this.items.find(item =>
+				String(item.sku || item.id || '').trim().toLowerCase() === normalizedSku ||
+				(String(item.name || '').trim().toLowerCase() === normalizedName && item.category === category)
+			);
+			if (duplicate) {
+				message.textContent = `${duplicate.name} is already in inventory (${duplicate.currentStock} ${duplicate.unit} in stock). Use its Restock action instead of adding it again.`;
+				message.classList.remove('hidden');
 				return;
 			}
 
 			const newItem = {
 				name,
-				sku: sku || `SKU-${Date.now()}`,
+				sku,
 				description,
 				category,
 				categoryDisplay: categoryMap[category].display,

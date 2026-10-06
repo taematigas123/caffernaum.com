@@ -19,8 +19,16 @@
    - `table and chair.png` — Cafe interior image (locations section)
 
 3. **Preview the site**:
-   - Open `index.html` directly in your browser, or
-   - Use VS Code's Live Preview extension for real-time updates.
+   - Open the project folder in VS Code and start `index.html` with the Live Server extension.
+   - Use the local address shown by Live Server on the computer.
+
+4. **Open the site on a phone or another device on the same Wi-Fi**:
+   - Restart Live Server after opening this workspace so it loads the network host setting.
+   - Find the computer's IPv4 address with `ipconfig` in PowerShell.
+   - On the other device, open `http://<computer-ip>:5500/index.html` (replace `<computer-ip>` with the computer's IPv4 address). Use `/inventory.html` or another page to open a different section.
+   - If Windows Firewall asks, allow Live Server on the private network. Sign in separately on each device.
+
+   Live Server's local-network address is HTTP. Camera scanning on a phone requires a secure HTTPS origin, so use an HTTPS deployment for the barcode camera; the manual SKU entry remains available in the local preview.
 
 ## Pricing & Customization
 
@@ -33,5 +41,5 @@ The site uses Philippine Peso (₱) for pricing. You can edit prices, text, and 
 - Product showcase with image cards
 - Location & rewards sections
 - Dark green & orange accent colors
-## Access the inventory 
-You can access the staff dashboard at your local server path like: file:///C:/Users/JAMIL%20KEITH/Desktop/caffernaum/staff.html or open the file directly.
+## Access the inventory
+Open `inventory.html` through Live Server or use the same-Wi-Fi phone address described above. Avoid opening the file directly when testing Firebase features.

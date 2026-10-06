@@ -488,7 +488,12 @@
 							</a>						<a class="menu-category flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-primary/5 text-slate-600 dark:text-slate-400 transition-all" data-category="pastries" href="#">
 							<span class="material-symbols-outlined">bakery_dining</span>
 							<span class="font-medium text-sm">Pastries</span>
-						</a>						</nav>
+							</a>
+							<a class="menu-category flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-primary/5 text-slate-600 dark:text-slate-400 transition-all" data-category="pasta" href="#">
+								<span class="material-symbols-outlined">ramen_dining</span>
+								<span class="font-medium text-sm">Pasta</span>
+							</a>
+						</nav>
 					</div>
 				</aside>
 
@@ -674,6 +679,7 @@
 			getDocs,
 			query,
 			where,
+			onSnapshot,
 			serverTimestamp,
 			signInWithEmailAndPassword
 		} from './firebase-config.js';
@@ -1191,8 +1197,58 @@
 				{ name: 'Pain au Chocolat', price: 120, img: 'images/pain-au-chocolat.jpg', description: 'A French pastry filled with dark chocolate.' },
 				{ name: 'Blueberry Muffin', price: 85, img: 'images/muffin.jpg', description: 'A moist and flavorful muffin packed with fresh blueberries.' },
 				{ name: 'Chocolate Brownie', price: 95, img: 'images/brownies.webp', description: 'A rich and fudgy chocolate brownie.' }
+			],
+			pasta: [
+				{ name: 'Mac & Cheese', price: 220, img: 'images/white-cheddar-mac-and-cheese.jpg', description: 'Creamy macaroni pasta in a rich cheese sauce.' }
 			]
 		};
+		const menuProductIngredients = {
+			'Caramel Macchiato': ['Espresso Blend', 'Whole Milk', 'Vanilla Syrup', 'Caramel Syrup'],
+			'Vanilla Latte': ['Espresso Blend', 'Whole Milk', 'Vanilla Syrup'],
+			'Cappuccino': ['Espresso Blend', 'Whole Milk'],
+			'Americano': ['Espresso Blend'],
+			'Mocha': ['Espresso Blend', 'Whole Milk', 'Cocoa Powder'],
+			'Flat White': ['Espresso Blend', 'Whole Milk'],
+			'Spiced Honey Latte': ['Espresso Blend', 'Whole Milk', 'Honey', 'Spice Mix'],
+			'Cold Brew Tonic': ['Cold Brew Blend', 'Tonic Water', 'Fresh Lemons', 'Ice Cubes'],
+			'Maple Pecan Flat White': ['Espresso Blend', 'Whole Milk', 'Maple Syrup', 'Roasted Pecans'],
+			'Oak-Aged Espresso': ['Oak-Aged Coffee Beans'],
+			'Butter Croissant': ['Butter Croissant'],
+			'Pain au Chocolat': ['Pain au Chocolat'],
+			'Blueberry Muffin': ['Blueberry Muffin'],
+			'Chocolate Brownie': ['Chocolate Brownie'],
+			'Mac & Cheese': ['Mac & Cheese']
+		};
+		let menuInventory = [];
+		let menuInventoryStatus = 'loading';
+
+		function getMenuProductStockStatus(product) {
+			if (menuInventoryStatus === 'loading') {
+				return { unavailable: true, message: 'Checking stock...' };
+			}
+			if (menuInventoryStatus === 'error') {
+				return { unavailable: true, message: 'Stock status unavailable' };
+			}
+
+			const ingredients = menuProductIngredients[product.name] || [];
+			const unavailableIngredients = ingredients.filter((ingredientName) => {
+				const inventoryItem = menuInventory.find((item) =>
+					String(item.name || '').trim().toLowerCase() === ingredientName.toLowerCase()
+				);
+				return !inventoryItem || Number(inventoryItem.currentStock ?? inventoryItem.current ?? 0) <= 0;
+			});
+
+			if (unavailableIngredients.length === 0) return { unavailable: false, message: '' };
+			const missingIngredients = unavailableIngredients.filter((ingredientName) =>
+				!menuInventory.some((item) => String(item.name || '').trim().toLowerCase() === ingredientName.toLowerCase())
+			);
+			return {
+				unavailable: true,
+				message: missingIngredients.length
+					? `Stock not tracked: ${missingIngredients.join(', ')}`
+					: `Out of stock: ${unavailableIngredients.join(', ')}`
+			};
+		}
 
 		function renderMenuProducts(category) {
 			const grid = document.getElementById('menuProductGrid');
@@ -1200,12 +1256,14 @@
 			const categoryTitles = {
 				hot: 'Hot Coffees',
 				existing: 'Your Products',
-				pastries: 'Pastries'
+				pastries: 'Pastries',
+				pasta: 'Pasta'
 			};
 			
 			document.getElementById('menuCategoryTitle').textContent = categoryTitles[category] || 'Menu';
 			
 			grid.innerHTML = products.map((product, idx) => {
+				const stockStatus = getMenuProductStockStatus(product);
 				const sizeOptions = Array.isArray(product.sizes) && product.sizes.length ? `
 					<div class="size-dropdown mt-3" data-selected-label="${product.sizes[0].label}" data-selected-price="${product.sizes[0].price}">
 						<label class="block text-[10px] uppercase tracking-widest text-slate-500 font-semibold mb-1">Size</label>
@@ -1232,12 +1290,13 @@
 						<div class="flex-1">
 							<h4 class="text-lg font-bold text-slate-900 dark:text-slate-100">${product.name}</h4>
 							<p class="text-sm text-slate-500 dark:text-slate-400 mt-1">${product.description || (category === 'pastries' ? 'Premium quality pastry' : 'Premium quality coffee')}</p>
+							${stockStatus.unavailable ? `<p class="mt-2 text-sm font-bold text-red-600" role="status">${stockStatus.message}</p>` : ''}
 							${sizeOptions}
 						</div>
 						<div class="flex items-center justify-between mt-4 gap-3">
 							${Array.isArray(product.sizes) && product.sizes.length ? '' : `<span class="product-price text-lg font-bold text-primary">₱${defaultPrice}</span>`}
-							<button class="menu-add-btn bg-primary text-white px-4 py-2 rounded-lg font-bold text-sm hover:bg-opacity-90 transition-all" data-product="${product.name}" data-price="${defaultPrice}" data-img="${product.img || ''}">
-								Add to Bag
+							<button class="menu-add-btn bg-primary text-white px-4 py-2 rounded-lg font-bold text-sm hover:bg-opacity-90 transition-all disabled:cursor-not-allowed disabled:bg-slate-400 disabled:hover:bg-slate-400" data-product="${product.name}" data-price="${defaultPrice}" data-img="${product.img || ''}" ${stockStatus.unavailable ? 'disabled aria-disabled="true"' : ''}>
+								${stockStatus.unavailable ? 'Unavailable' : 'Add to Bag'}
 							</button>
 						</div>
 					</div>
@@ -1395,6 +1454,17 @@
 
 		// Initial render
 		renderMenuProducts('hot');
+		onSnapshot(collection(db, 'inventory'), (snapshot) => {
+			menuInventory = snapshot.docs.map((inventoryDoc) => ({ id: inventoryDoc.id, ...inventoryDoc.data() }));
+			menuInventoryStatus = 'ready';
+			const activeCategory = document.querySelector('.menu-category.active-category')?.dataset.category || 'hot';
+			renderMenuProducts(activeCategory);
+		}, (error) => {
+			console.error('Error loading menu stock:', error);
+			menuInventoryStatus = 'error';
+			const activeCategory = document.querySelector('.menu-category.active-category')?.dataset.category || 'hot';
+			renderMenuProducts(activeCategory);
+		});
 
 		updateRewardsUI();
 
